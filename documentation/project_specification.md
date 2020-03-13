@@ -6,7 +6,7 @@ Initial implementation will contain only one layer of the data accross the lands
 
 The terrain generation starts with a generator, and the user is then able to apply different tools to further modify the terrain.
 
-Generators contain simple flat land generator, different fractal generators, and other useful algorithms that produce suitable results.
+Generators contain simple flat land generator, different noise generators, and other useful algorithms that produce suitable results.
 
 The tools user can apply include water source, earthquake, erosion, meteor hit, etc. Water source adds water to the given point, and from that point the water starts to flow carving rivers and possibly ponds/lakes. Earthquake causes rough erosion and shifts in the landscape. Erosion smooths the landscape and rolls loose land mass downhill. Meteor hit produces a crater and blows up land mass around. Other tools can be added.
 
