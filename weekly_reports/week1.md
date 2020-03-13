@@ -1,0 +1,5 @@
+# Week 1
+
+Spent large number of hours tinkering what the project should be. Initially juggled between generating improved AI for one of my roguelike game, generating improved map generator for the same game, and a planet physics simulator and viewer. Did some reading about planet rendering, and decided it was a bit too large scope for the time available. Then went to somewhere middleground and focused on terrain generation.
+
+Did a quick, about 1 hour, survey on some of the available software, to see what they approximately are, by looking their wikipedia and/or home pages. Slept over night, and occasionally during the day gave some more thought on the matter before finally settling on the target. Wrote the project specification, which took about 30 minutes. Because the deadline is so soon after receiving the initial assignment, there is no time to do any real planning, so the project specification does not have any hard information about complexity or data structures to be used (except for the obvious heightmap).
