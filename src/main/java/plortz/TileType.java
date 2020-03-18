@@ -16,24 +16,12 @@
  */
 package plortz;
 
-import plortz.tool.Tool;
-import plortz.ui.ConsoleUI;
-import plortz.ui.UserInterface;
-
 /**
- * The starting point of the application.
- * 
+ *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class Main {
-    public static void main(String args[]) {
-        Terrain terrain = null;
-        
-        UserInterface console = new ConsoleUI();
-        while(console.isRunning()) {
-            Tool tool = console.getNextCommand();
-            if(tool != null)
-                terrain = tool.apply(terrain);
-        }
-    }
+public enum TileType {
+    DIRT,
+    SAND,
+    CLIFF
 }

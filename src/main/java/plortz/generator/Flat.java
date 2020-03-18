@@ -14,26 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.generator;
 
-import plortz.tool.Tool;
-import plortz.ui.ConsoleUI;
-import plortz.ui.UserInterface;
+import plortz.Tile;
 
 /**
- * The starting point of the application.
- * 
+ *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class Main {
-    public static void main(String args[]) {
-        Terrain terrain = null;
+public class Flat extends Generator {
+
+    public Flat(int width, int height) {
+        super(width, height);
+    }
+    
+    @Override
+    public void run() {
+        Double altitude = this.getDoubleParameter("altitude");
+        if(altitude == null)
+            altitude = 0.0;
         
-        UserInterface console = new ConsoleUI();
-        while(console.isRunning()) {
-            Tool tool = console.getNextCommand();
-            if(tool != null)
-                terrain = tool.apply(terrain);
-        }
+        for(Tile t : this.getTerrain()) 
+            t.setAltitude(altitude);
     }
 }
