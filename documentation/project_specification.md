@@ -11,7 +11,7 @@ Two user interfaces are provided, commands can be given through the standard inp
 ## Generators
 The following is a preliminary list of generators to include:
 * flat land generator, complexity O(n)
-* [Perlin noise](https://en.wikipedia.org/wiki/Perlin_noise), the "mother" of noise generators, complexity O(2^n) for n dimensions (n=2 will be used)
+* [Perlin noise](https://en.wikipedia.org/wiki/Perlin_noise), a very common noise generator used in computer graphics, complexity O(2^n) for n dimensions (n=2 will be used)
 * [Diamond-square algorithm](https://en.wikipedia.org/wiki/Diamond-square_algorithm), O(n)
 Possibly the following if time permits:
 * [Wavelet noise](https://en.wikipedia.org/wiki/Wavelet_noise)
@@ -20,7 +20,7 @@ Possibly the following if time permits:
 
 
 ## User tools
-"Water source" adds water to the given point, and from that point the water starts to flow carving rivers and possibly ponds/lakes. Path finding algorithm (some form of the best search algorithm) is used to find the general path of the water flow, then the terrain is modified along that path. The path generally goes downwards, but is allowed to go slightly up. The path can end at the edge of the map, on another water, or on "dead end". In the case of "dead end", a lake/pond is formed around it by adding water around the location until the water source is exhausted. The edges of the lake/pond are tested to see if new rivers can be created.
+"Water source" adds water to the given point, and from that point the water starts to flow carving rivers and possibly ponds/lakes. Path finding algorithm (some form of the best search algorithm) is used to find the general path of the water flow, then the terrain is modified along that path. The path generally goes downwards, but is allowed to go slightly up. The path can end at the edge of the map, on another water, or on "dead end". The "dead end" situation is determined when the path has no room to expand. In the case of "dead end", a lake/pond is formed around it by adding water around the location until the water source is exhausted. The edges of the lake/pond are tested to see if new rivers can be created. In the postprocessing phase, the river and lake borders are smoothed to eliminate unnaturally sharp turns and edges.
 
 "Earthquake" causes rough erosion and shifts in the landscape.
 
