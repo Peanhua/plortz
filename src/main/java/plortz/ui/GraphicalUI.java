@@ -16,8 +16,6 @@
  */
 package plortz.ui;
 
-import plortz.tool.Tool;
-
 /**
  *
  * @author Joni Yrjana <joniyrjana@gmail.com>
@@ -25,13 +23,12 @@ import plortz.tool.Tool;
 public class GraphicalUI extends UserInterface {
 
     @Override
-    public Tool getNextCommand() {
+    public String getNextCommand() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean isRunning() {
+    public void showError(String error_message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }

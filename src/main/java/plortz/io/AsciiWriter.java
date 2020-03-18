@@ -14,42 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.ui;
+package plortz.io;
 
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Scanner;
+import plortz.Terrain;
 
 /**
- * User interface reading commands operating with stdin and stdout.
- *
+ * Writes ascii representation of the terrain.
+ * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class ConsoleUI extends UserInterface {
-    private final Scanner     input;
-    private final PrintStream output;
+public class AsciiWriter extends Writer {
 
-    public ConsoleUI(InputStream input, PrintStream output) {
-        super();
-        this.input   = new Scanner(input);
-        this.output  = output;
-    }
-    
-    public ConsoleUI() {
-        this(System.in, System.out);
-    }
-    
     @Override
-    public String getNextCommand() {
-        if(!this.input.hasNextLine()) {
-            this.stop();
-            return null;
+    public boolean write(Terrain terrain, OutputStream output) {
+        PrintStream ps = (PrintStream) output;
+        if(ps == null)
+            return false;
+        ps.println(terrain.getTile(0, 0));
+        ps.println(terrain.getTile(0, 0).getAltitude(false));
+        for(int y = 0; y < terrain.getHeight(); y++) {
+            for(int x = 0; x < terrain.getWidth(); x++) {
+                ps.printf("%4.2f ", terrain.getTile(x, y).getAltitude(false));
+            }
+            ps.println();
         }
-        return this.input.nextLine();
-    }
-
-    @Override
-    public void showError(String error_message) {
-        this.output.println("Error: " + error_message);
+        return true;
     }
 }

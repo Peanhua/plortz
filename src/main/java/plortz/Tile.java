@@ -32,6 +32,18 @@ public class Tile {
         this.water_height  = -1;
     }
     
+    @Override
+    public String toString() {
+        return "Tile[type=" + this.type + ", surface_level=" + this.surface_level + ", water_height=" + this.water_height + "]";
+    }
+    
+    
+    public double getAltitude(boolean with_water) {
+        double alt = this.surface_level;
+        if(with_water)
+            alt += this.water_height;
+        return alt;
+    }
     
     public void setAltitude(double altitude) {
         this.surface_level = altitude;

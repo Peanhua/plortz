@@ -16,13 +16,51 @@
  */
 package plortz.ui;
 
+import plortz.Terrain;
 import plortz.tool.Tool;
+import plortz.ui.command.Command;
+import plortz.ui.command.CommandFactory;
 
 /**
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class UserInterface {
-    public abstract boolean isRunning();
-    public abstract Tool    getNextCommand();
+    private boolean              running;
+    private final CommandFactory command_factory;
+    private Terrain              terrain;
+    
+    public UserInterface() {
+        this.running         = true;
+        this.command_factory = CommandFactory.getInstance();
+        this.terrain         = null;
+    }
+    
+    public boolean isRunning() {
+        return this.running;
+    }
+    
+    public void stop() {
+        this.running = false;
+    }
+    
+    public Terrain getTerrain() {
+        return this.terrain;
+    }
+    
+    public void setTerrain(Terrain terrain) {
+        this.terrain = terrain;
+    }
+    
+    public void tick() {
+        if(!this.running)
+            return;
+        
+        Command cmd = this.command_factory.create(this.getNextCommand());
+        if(cmd != null)
+            cmd.execute(this);
+    }
+    
+    public abstract String getNextCommand();
+    public abstract void   showError(String error_message);
 }

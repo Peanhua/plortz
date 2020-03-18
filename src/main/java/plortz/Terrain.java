@@ -17,7 +17,6 @@
 package plortz;
 
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 
 /**
@@ -35,6 +34,19 @@ public class Terrain implements Iterable<Tile> {
         this.width  = width;
         this.height = height;
         this.tiles  = new Tile[width * height];
+        for(int i = 0; i < width * height; i++)
+            this.tiles[i] = new Tile(TileType.DIRT, 0.0);
+    }
+    
+    public Terrain(Terrain terrain) {
+        this(terrain.width, terrain.height);
+        /*
+        this.width  = terrain.width;
+        this.height = terrain.height;
+        this.tiles  = terrain.tiles.clone();
+        */
+        for(int i = 0; i < width * height; i++)
+            this.tiles[i] = terrain.tiles[i];
     }
 
     @Override
@@ -60,5 +72,42 @@ public class Terrain implements Iterable<Tile> {
             }
         };
     }
+    
+    public int getWidth() {
+        return this.width;
+    }
+    
+    public int getHeight() {
+        return this.height;
+    }
+    
+    public Tile getTile(int x, int y) {
+        if(x < 0 || x >= this.width ||y < 0 || y >= this.height)
+            throw new IndexOutOfBoundsException();
+        return this.tiles[x + y * this.width];
+    }
 
+    /**
+     * Normalize altitudes to range 0..1
+     */
+    public void normalize() {
+        double min = this.tiles[0].getAltitude(false);
+        double max = this.tiles[0].getAltitude(false);
+        
+        for(int i = 0; i < this.width * this.height; i++) {
+            double alt = this.tiles[i].getAltitude(false);
+            min = Math.min(min, alt);
+            max = Math.max(max, alt);
+        }
+        
+        final double range = max - min;
+        
+        if(range > 0.0)
+            for(int i = 0; i < this.width * this.height; i++) {
+                double alt = this.tiles[i].getAltitude(false);
+                alt -= min;
+                alt /= range;
+                this.tiles[i].setAltitude(alt);
+            }
+    }
 }

@@ -14,23 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.ui.command;
 
-import plortz.ui.ConsoleUI;
+import plortz.Terrain;
 import plortz.ui.UserInterface;
 
 /**
- * The starting point of the application.
- * 
+ *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class Main {
-    public static void main(String args[]) {
-        Terrain terrain = null;
-        
-        UserInterface console = new ConsoleUI();
-        while(console.isRunning()) {
-            console.tick();
-        }
+public abstract class Command {
+    protected final String[] args;
+    
+    public Command(String[] args) {
+        this.args = args;
     }
+    
+    public abstract void execute(UserInterface ui);
 }

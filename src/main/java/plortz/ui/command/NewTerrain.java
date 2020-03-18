@@ -14,42 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.ui;
+package plortz.ui.command;
 
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
+import plortz.Terrain;
+import plortz.ui.UserInterface;
 
 /**
- * User interface reading commands operating with stdin and stdout.
  *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class ConsoleUI extends UserInterface {
-    private final Scanner     input;
-    private final PrintStream output;
+public class NewTerrain extends Command {
 
-    public ConsoleUI(InputStream input, PrintStream output) {
-        super();
-        this.input   = new Scanner(input);
-        this.output  = output;
-    }
-    
-    public ConsoleUI() {
-        this(System.in, System.out);
+    public NewTerrain(String[] args) {
+        super(args);
     }
     
     @Override
-    public String getNextCommand() {
-        if(!this.input.hasNextLine()) {
-            this.stop();
-            return null;
+    public void execute(UserInterface ui) {
+        if(this.args.length != 3) {
+            ui.showError("Incorrect number of arguments.");
+            ui.showError("Usage: " + args[0] + " <width> <height>");
+            return;
         }
-        return this.input.nextLine();
+        
+        int width = Integer.parseInt(args[1]);
+        int height = Integer.parseInt(args[2]);
+        
+        if(width <= 0) {
+            ui.showError("Minimum width is 1.");
+            return;
+        }
+        if(height <= 0) {
+            ui.showError("Minimum height is 1.");
+            return;
+        }
+        
+        ui.setTerrain(new Terrain(width, height));
     }
-
-    @Override
-    public void showError(String error_message) {
-        this.output.println("Error: " + error_message);
-    }
+    
 }
