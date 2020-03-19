@@ -23,5 +23,5 @@ import plortz.Terrain;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Tool {
-    public abstract Terrain apply(Terrain terrain);
+    public abstract void apply(Terrain terrain);
 }

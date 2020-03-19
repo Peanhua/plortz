@@ -16,7 +16,9 @@
  */
 package plortz.io;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import plortz.Terrain;
 
 /**
@@ -25,5 +27,13 @@ import plortz.Terrain;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Writer {
-    public abstract boolean write(Terrain terrain, OutputStream output);
+    public void write(Terrain terrain, OutputStream output) throws IOException {
+        output.write(this.getBytes(terrain));
+    }
+    
+    public void write(Terrain terrain, RandomAccessFile file) throws IOException {
+        file.write(this.getBytes(terrain));
+    }
+
+    protected abstract byte[] getBytes(Terrain terrain);
 }

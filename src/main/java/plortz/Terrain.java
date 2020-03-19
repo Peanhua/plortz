@@ -39,14 +39,9 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public Terrain(Terrain terrain) {
-        this(terrain.width, terrain.height);
-        /*
         this.width  = terrain.width;
         this.height = terrain.height;
         this.tiles  = terrain.tiles.clone();
-        */
-        for(int i = 0; i < width * height; i++)
-            this.tiles[i] = terrain.tiles[i];
     }
 
     @Override
@@ -83,7 +78,7 @@ public class Terrain implements Iterable<Tile> {
     
     public Tile getTile(int x, int y) {
         if(x < 0 || x >= this.width ||y < 0 || y >= this.height)
-            throw new IndexOutOfBoundsException();
+            return null;
         return this.tiles[x + y * this.width];
     }
 

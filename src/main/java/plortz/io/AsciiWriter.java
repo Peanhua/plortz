@@ -16,8 +16,7 @@
  */
 package plortz.io;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
 import plortz.Terrain;
 
 /**
@@ -28,18 +27,21 @@ import plortz.Terrain;
 public class AsciiWriter extends Writer {
 
     @Override
-    public boolean write(Terrain terrain, OutputStream output) {
-        PrintStream ps = (PrintStream) output;
-        if(ps == null)
-            return false;
-        ps.println(terrain.getTile(0, 0));
-        ps.println(terrain.getTile(0, 0).getAltitude(false));
+    protected byte[] getBytes(Terrain terrain) {
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        byte[] newline = { '\n' };
+        byte[] buf = new byte[128];
+        
         for(int y = 0; y < terrain.getHeight(); y++) {
             for(int x = 0; x < terrain.getWidth(); x++) {
-                ps.printf("%4.2f ", terrain.getTile(x, y).getAltitude(false));
+                String s = String.format("%4.2f ", terrain.getTile(x, y).getAltitude(false));
+                char[] chars = s.toCharArray();
+                for(int i = 0; i < chars.length; i++)
+                    buf[i] = (byte) chars[i];
+                bs.write(buf, 0, chars.length);
             }
-            ps.println();
+            bs.writeBytes(newline);
         }
-        return true;
+        return bs.toByteArray();
     }
 }

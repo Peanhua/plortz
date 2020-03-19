@@ -16,43 +16,46 @@
  */
 package plortz.ui.command;
 
+import java.io.RandomAccessFile;
 import plortz.Terrain;
-import plortz.io.AsciiWriter;
+import plortz.io.TargaWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;
 
 /**
- * Command to write the terrain to the console.
- * 
- * Note that this does not use the user interface, but writes directly to stdout as the name of the command suggests,
- * might need to be changed later to use the user interface.
- * 
+ *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class WriteToConsole extends Command {
+public class WriteToTargaFile extends Command {
 
-    public WriteToConsole(String[] args) {
+    public WriteToTargaFile(String[] args) {
         super(args);
     }
-    
+
     @Override
     public void execute(UserInterface ui) {
-        Terrain original = ui.getTerrain();
-        if(original == null) {
-            ui.showError("No terrain.");
+        if(this.args.length != 2) {
+            ui.showError("Incorrect number of arguments.");
+            ui.showError("Usage: " + this.args[0] + " <filename>");
             return;
         }
         
-        Terrain terrain = new Terrain(original);
-        if(this.args.length > 1)
-            terrain.normalize();
-        
-        Writer writer = new AsciiWriter();
+        RandomAccessFile fp;
         try {
-            writer.write(terrain, System.out);
+            fp = new RandomAccessFile(this.args[1], "rw");
         } catch(Exception e) {
-            ui.showError(this.args[0] + " failed: " + e.getMessage());
+            ui.showError("Failed to create file '" + this.args[1] + "': " + e.getMessage());
+            return;
+        }
+    
+        Terrain terrain = new Terrain(ui.getTerrain());
+        terrain.normalize();
+    
+        Writer writer = new TargaWriter();
+        try {
+            writer.write(terrain, fp);
+        } catch(Exception e) {
+            ui.showError("Failed to save to file '" + this.args[1] + "': " + e.getMessage());
         }
     }
-    
 }

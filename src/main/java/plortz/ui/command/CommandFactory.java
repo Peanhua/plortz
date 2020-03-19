@@ -46,8 +46,12 @@ public class CommandFactory {
             return new Quit(args);
         else if(args[0].equals("dump"))
             return new WriteToConsole(args);
+        else if(args[0].equals("save"))
+            return new WriteToTargaFile(args);
         else if(args[0].equals("new"))
             return new NewTerrain(args);
+        else if(args[0].equals("gauss"))
+            return new GaussianDistribution(args);
         
         return null;
     }
