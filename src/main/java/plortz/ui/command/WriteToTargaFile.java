@@ -34,7 +34,7 @@ public class WriteToTargaFile extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if(this.args.length != 2) {
+        if (this.args.length != 2) {
             ui.showError("Incorrect number of arguments.");
             ui.showError("Usage: " + this.args[0] + " <filename>");
             return;
@@ -43,7 +43,7 @@ public class WriteToTargaFile extends Command {
         RandomAccessFile fp;
         try {
             fp = new RandomAccessFile(this.args[1], "rw");
-        } catch(Exception e) {
+        } catch (Exception e) {
             ui.showError("Failed to create file '" + this.args[1] + "': " + e.getMessage());
             return;
         }
@@ -54,7 +54,7 @@ public class WriteToTargaFile extends Command {
         Writer writer = new TargaWriter();
         try {
             writer.write(terrain, fp);
-        } catch(Exception e) {
+        } catch (Exception e) {
             ui.showError("Failed to save to file '" + this.args[1] + "': " + e.getMessage());
         }
     }

@@ -55,7 +55,7 @@ public class TerrainTest {
     @Test
     public void testIteration() {
         int count = 0;
-        for(Tile t : terrain)
+        for (Tile t : terrain)
             count++;
         assertEquals(10, count);
     }
@@ -86,7 +86,7 @@ public class TerrainTest {
         terrain.getTile(1, 0).setAltitude(-0.5);
         terrain.getTile(1, 1).setAltitude(1.5);
         terrain.normalize();
-        for(Tile t : terrain) {
+        for (Tile t : terrain) {
             assertTrue(t.getAltitude(false) >= 0.0);
             assertTrue(t.getAltitude(false) <= 1.0);
         }
@@ -95,7 +95,7 @@ public class TerrainTest {
     @Test
     public void normalizingWorksWhenNothingToNormalize() {
         terrain.normalize();
-        for(Tile t : terrain) {
+        for (Tile t : terrain) {
             assertTrue(t.getAltitude(false) >= 0.0);
             assertTrue(t.getAltitude(false) <= 1.0);
         }

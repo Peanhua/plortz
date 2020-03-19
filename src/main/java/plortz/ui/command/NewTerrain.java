@@ -31,7 +31,7 @@ public class NewTerrain extends Command {
     
     @Override
     public void execute(UserInterface ui) {
-        if(this.args.length != 3) {
+        if (this.args.length != 3) {
             ui.showError("Incorrect number of arguments.");
             ui.showError("Usage: " + args[0] + " <width> <height>");
             return;
@@ -40,11 +40,11 @@ public class NewTerrain extends Command {
         int width = Integer.parseInt(args[1]);
         int height = Integer.parseInt(args[2]);
         
-        if(width <= 0) {
+        if (width <= 0) {
             ui.showError("Minimum width is 1.");
             return;
         }
-        if(height <= 0) {
+        if (height <= 0) {
             ui.showError("Minimum height is 1.");
             return;
         }

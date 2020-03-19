@@ -31,12 +31,12 @@ public class GaussianDistribution extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if(ui.getTerrain() == null) {
+        if (ui.getTerrain() == null) {
             ui.showError("No terrain.");
             return;
         }
         
-        if(this.args.length != 6) {
+        if (this.args.length != 6) {
             ui.showError("Incorrect number of arguments.");
             ui.showError("Usage: " + this.args[0] + " <x> <y> <var> <h> <v>");
             ui.showError("  <x> <y> the center coordinates");
@@ -53,7 +53,7 @@ public class GaussianDistribution extends Command {
             var = Double.parseDouble(args[3]);
             h   = Double.parseDouble(args[4]);
             v   = Double.parseDouble(args[5]);
-        } catch(Exception e) {
+        } catch (Exception e) {
             ui.showError(this.args[0] + ": Failed to parse arguments: " + e.getMessage());
             return;
         }

@@ -45,13 +45,13 @@ public class GaussianDistribution extends Tool {
     @Override
     public void apply(Terrain terrain) {
         // todo: do a circle, calculate only 1/8th of the circle, fill from inside, stop when change reaches 0
-        for(int y = 0; y < terrain.getHeight(); y++) {
-            for(int x = 0; x < terrain.getWidth(); x++) {
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile t = terrain.getTile(x, y);
                 double delta_x = center_x - x;
                 double delta_y = center_y - y;
-                double distance = Math.sqrt(delta_x*delta_x + delta_y*delta_y) / (double) horizontal_scale;
-                double change = (1.0/(variance*Math.sqrt(2.0*Math.PI))) * Math.exp((-0.5)*Math.pow(distance/variance, 2.0));
+                double distance = Math.sqrt(delta_x * delta_x + delta_y * delta_y) / (double) horizontal_scale;
+                double change = (1.0 / (variance * Math.sqrt(2.0 * Math.PI))) * Math.exp((-0.5) * Math.pow(distance / variance, 2.0));
                 t.setAltitude(t.getAltitude(false) + vertical_scale * change);
             }
         }

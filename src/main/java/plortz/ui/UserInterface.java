@@ -53,12 +53,14 @@ public abstract class UserInterface {
     }
     
     public void tick() {
-        if(!this.running)
+        if (!this.running) {
             return;
+        }
         
         Command cmd = this.command_factory.create(this.getNextCommand());
-        if(cmd != null)
+        if (cmd != null) {
             cmd.execute(this);
+        }
     }
     
     public abstract String getNextCommand();

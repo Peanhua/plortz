@@ -46,8 +46,9 @@ public class Tile {
     
     public double getAltitude(boolean with_water) {
         double alt = this.surface_level;
-        if(with_water && this.water_height > 0.0)
+        if (with_water && this.water_height > 0.0) {
             alt += this.water_height;
+        }
         return alt;
     }
     

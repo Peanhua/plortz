@@ -34,16 +34,18 @@ public class Terrain implements Iterable<Tile> {
         this.width  = width;
         this.height = height;
         this.tiles  = new Tile[width * height];
-        for(int i = 0; i < width * height; i++)
+        for (int i = 0; i < width * height; i++) {
             this.tiles[i] = new Tile(TileType.DIRT, 0.0);
+        }
     }
     
     public Terrain(Terrain source) {
         this.width  = source.width;
         this.height = source.height;
         this.tiles  = new Tile[width * height];
-        for(int i = 0; i < width * height; i++)
+        for (int i = 0; i < width * height; i++) {
             this.tiles[i] = new Tile(source.tiles[i]);
+        }
     }
 
     @Override
@@ -79,8 +81,9 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public Tile getTile(int x, int y) {
-        if(x < 0 || x >= this.width ||y < 0 || y >= this.height)
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             return null;
+        }
         return this.tiles[x + y * this.width];
     }
 
@@ -91,7 +94,7 @@ public class Terrain implements Iterable<Tile> {
         double min = this.tiles[0].getAltitude(false);
         double max = this.tiles[0].getAltitude(false);
         
-        for(int i = 0; i < this.width * this.height; i++) {
+        for (int i = 0; i < this.width * this.height; i++) {
             double alt = this.tiles[i].getAltitude(false);
             min = Math.min(min, alt);
             max = Math.max(max, alt);
@@ -99,12 +102,13 @@ public class Terrain implements Iterable<Tile> {
         
         final double range = max - min;
         
-        if(range > 0.0)
-            for(int i = 0; i < this.width * this.height; i++) {
+        if (range > 0.0) {
+            for (int i = 0; i < this.width * this.height; i++) {
                 double alt = this.tiles[i].getAltitude(false);
                 alt -= min;
                 alt /= range;
                 this.tiles[i].setAltitude(alt);
             }
+        }
     }
 }

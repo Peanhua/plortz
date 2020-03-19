@@ -25,8 +25,9 @@ public class CommandFactory {
     private static CommandFactory instance = null;
     
     public static CommandFactory getInstance() {
-        if(CommandFactory.instance == null)
+        if (CommandFactory.instance == null) {
             CommandFactory.instance = new CommandFactory();
+        }
         return CommandFactory.instance;
     }
     
@@ -34,24 +35,27 @@ public class CommandFactory {
     }
     
     public Command create(String string) {
-        if(string == null)
+        if (string == null) {
             return null;
+        }
         
         String[] args = string.split(" ");
-        if(args.length == 0)
+        if (args.length == 0) {
             return null;
+        }
 
         // todo: use a hashmap to map these
-        if(args[0].equals("quit"))
+        if (args[0].equals("quit")) {
             return new Quit(args);
-        else if(args[0].equals("dump"))
+        } else if (args[0].equals("dump")) {
             return new WriteToConsole(args);
-        else if(args[0].equals("save"))
+        } else if (args[0].equals("save")) {
             return new WriteToTargaFile(args);
-        else if(args[0].equals("new"))
+        } else if (args[0].equals("new")) {
             return new NewTerrain(args);
-        else if(args[0].equals("gauss"))
+        } else if (args[0].equals("gauss")) {
             return new GaussianDistribution(args);
+        }
         
         return null;
     }

@@ -31,10 +31,12 @@ public class Flat extends Generator {
     @Override
     public void run() {
         Double altitude = this.getDoubleParameter("altitude");
-        if(altitude == null)
+        if (altitude == null) {
             altitude = 0.0;
+        }
         
-        for(Tile t : this.getTerrain()) 
+        for (Tile t : this.getTerrain()) {
             t.setAltitude(altitude);
+        }
     }
 }

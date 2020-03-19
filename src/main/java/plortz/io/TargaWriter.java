@@ -26,9 +26,23 @@ import plortz.Terrain;
 public class TargaWriter extends Writer {
     @Override
     protected byte[] getBytes(Terrain terrain) {
-        if(terrain.getWidth() > 0xffff || terrain.getHeight() > 0xffff)
+        if (terrain.getWidth() > 0xffff || terrain.getHeight() > 0xffff) {
             throw new IllegalArgumentException("Targa file can not exceed the size of 65535 pixels.");
+        }
+
+        byte[] header = this.getHeader(terrain);
+        byte[] body   = this.getBody(terrain);
         
+        // todo: get rid of bs
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+        bs.writeBytes(header);
+        bs.writeBytes(body);
+
+        return bs.toByteArray();
+    }
+
+    
+    private byte[] getHeader(Terrain terrain) {
         byte[] header = new byte[18];
         header[0] = 0; // Image ID length
         header[1] = 0; // Color map type, 0 = no color map
@@ -43,16 +57,17 @@ public class TargaWriter extends Writer {
         header[15] = (byte) (terrain.getHeight() >> 8);
         header[16] = 8; // Pixel depth
         header[17] = 0; // Image descriptor
-        
-        byte[] image = new byte[terrain.getWidth() * terrain.getHeight()];
-        for(int y = 0; y < terrain.getHeight(); y++)
-            for(int x = 0; x < terrain.getWidth(); x++)
-                image[x + (terrain.getHeight() - y - 1) * terrain.getWidth()] = (byte) (terrain.getTile(x, y).getAltitude(false) * 255.0);
-
-        // todo: get rid of bs
-        ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        bs.writeBytes(header);
-        bs.writeBytes(image);
-        return bs.toByteArray();
+        return header;
     }
+
+    
+    private byte[] getBody(Terrain terrain) {
+        byte[] image = new byte[terrain.getWidth() * terrain.getHeight()];
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                image[x + (terrain.getHeight() - y - 1) * terrain.getWidth()] = (byte) (terrain.getTile(x, y).getAltitude(false) * 255.0);
+            }
+        }
+        return image;
+    }        
 }

@@ -38,19 +38,20 @@ public class WriteToConsole extends Command {
     @Override
     public void execute(UserInterface ui) {
         Terrain original = ui.getTerrain();
-        if(original == null) {
+        if (original == null) {
             ui.showError("No terrain.");
             return;
         }
         
         Terrain terrain = new Terrain(original);
-        if(this.args.length > 1)
+        if (this.args.length > 1) {
             terrain.normalize();
+        }
         
         Writer writer = new AsciiWriter();
         try {
             writer.write(terrain, System.out);
-        } catch(Exception e) {
+        } catch (Exception e) {
             ui.showError(this.args[0] + " failed: " + e.getMessage());
         }
     }

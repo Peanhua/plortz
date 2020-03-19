@@ -41,7 +41,7 @@ public class ConsoleUI extends UserInterface {
     
     @Override
     public String getNextCommand() {
-        if(!this.input.hasNextLine()) {
+        if (!this.input.hasNextLine()) {
             this.stop();
             return null;
         }

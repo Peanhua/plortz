@@ -29,7 +29,7 @@ public class Main {
         Terrain terrain = null;
         
         UserInterface console = new ConsoleUI();
-        while(console.isRunning()) {
+        while (console.isRunning()) {
             console.tick();
         }
     }

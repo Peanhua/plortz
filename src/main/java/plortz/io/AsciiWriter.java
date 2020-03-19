@@ -32,16 +32,18 @@ public class AsciiWriter extends Writer {
         byte[] newline = { '\n' };
         byte[] buf = new byte[128];
         
-        for(int y = 0; y < terrain.getHeight(); y++) {
-            for(int x = 0; x < terrain.getWidth(); x++) {
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
                 String s = String.format("%4.2f ", terrain.getTile(x, y).getAltitude(false));
                 char[] chars = s.toCharArray();
-                for(int i = 0; i < chars.length; i++)
+                for (int i = 0; i < chars.length; i++) {
                     buf[i] = (byte) chars[i];
+                }
                 bs.write(buf, 0, chars.length);
             }
             bs.writeBytes(newline);
         }
+        
         return bs.toByteArray();
     }
 }
