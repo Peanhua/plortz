@@ -38,10 +38,12 @@ public class Terrain implements Iterable<Tile> {
             this.tiles[i] = new Tile(TileType.DIRT, 0.0);
     }
     
-    public Terrain(Terrain terrain) {
-        this.width  = terrain.width;
-        this.height = terrain.height;
-        this.tiles  = terrain.tiles.clone();
+    public Terrain(Terrain source) {
+        this.width  = source.width;
+        this.height = source.height;
+        this.tiles  = new Tile[width * height];
+        for(int i = 0; i < width * height; i++)
+            this.tiles[i] = new Tile(source.tiles[i]);
     }
 
     @Override

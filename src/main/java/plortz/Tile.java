@@ -32,6 +32,12 @@ public class Tile {
         this.water_height  = -1;
     }
     
+    public Tile(Tile source) {
+        this.type          = source.type;
+        this.surface_level = source.surface_level;
+        this.water_height  = source.water_height;
+    }
+    
     @Override
     public String toString() {
         return "Tile[type=" + this.type + ", surface_level=" + this.surface_level + ", water_height=" + this.water_height + "]";

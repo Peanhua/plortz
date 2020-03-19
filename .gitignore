@@ -25,7 +25,8 @@ hs_err_pid*
 *~
 # Added by netbeans or maven:
 /target/
+/nbproject/
 
 # Locally installed netbeans:
-/netbeans
+/netbeans/
 
