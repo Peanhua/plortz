@@ -57,9 +57,12 @@ public abstract class UserInterface {
             return;
         }
         
-        Command cmd = this.command_factory.create(this.getNextCommand());
+        String input = this.getNextCommand();
+        Command cmd = this.command_factory.create(input);
         if (cmd != null) {
             cmd.execute(this);
+        } else if (input != null && input.length() > 0) {
+            this.showError("Unknown command: " + input);
         }
     }
     
