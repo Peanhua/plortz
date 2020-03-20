@@ -22,29 +22,29 @@ package plortz;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class Position {
-   private int x;
-   private int y;
-   
-   public Position(int x, int y) {
-       this.x = x;
-       this.y = y;
-   }
-   
-   public void set(int x, int y) {
-       this.x = x;
-       this.y = y;
-   }
-   
-   public int getX() {
-       return this.x;
-   }
-   
-   public int getY() {
-       return this.y;
-   }
-   
-   @Override
-   public String toString() {
-       return "(x=" + this.x + ",y=" + this.y + ")";
-   }
+    private int x;
+    private int y;
+
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(x=" + this.x + ",y=" + this.y + ")";
+    }
 }
