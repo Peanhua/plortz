@@ -3,23 +3,23 @@ Plortz is a software written in Java to generate rectangular areas of terrains s
 
 Initial implementation will contain only one layer of the data accross the landscape. Optionally this is extended into multiple layers so that underground land formation can be taken into account when applying tools and physics simulation.
 
-The terrain generation starts with a generator, and the user is then able to apply different tools to further modify the terrain.
+The terrain generation starts with flat empty ground, the user is then able to apply different tools to modify the terrain.
 
 Two user interfaces are provided, commands can be given through the standard input, or via a GUI with the help of mouse. The output will be two 2d images, a grayscale image with the elevation information, and a color image with the land type information. Optionally a 3d viewer is created to see the result from any angle.
 
 
-## Generators
-The following is a preliminary list of generators to include:
-* flat land generator, complexity O(n)
+## User tools
+Elevation changes to the terrain using different methods:
+* Random values
+* [Diamond-square algorithm](https://en.wikipedia.org/wiki/Diamond-square_algorithm), complexity O(n)
 * [Perlin noise](https://en.wikipedia.org/wiki/Perlin_noise), a very common noise generator used in computer graphics, complexity O(2^n) for n dimensions (n=2 will be used)
-* [Diamond-square algorithm](https://en.wikipedia.org/wiki/Diamond-square_algorithm), O(n)
-Possibly the following if time permits:
+Possibly also the following if time permits:
 * [Wavelet noise](https://en.wikipedia.org/wiki/Wavelet_noise)
 * [Value noise](https://en.wikipedia.org/wiki/Value_noise)
 * [Worley noise](https://en.wikipedia.org/wiki/Worley_noise)
 
+Randomly set the type of the ground (sand, dirt, cliff, etc.).
 
-## User tools
 "Water source" adds water to the given point, and from that point the water starts to flow carving rivers and possibly ponds/lakes. Path finding algorithm (some form of the best search algorithm) is used to find the general path of the water flow, then the terrain is modified along that path. The path generally goes downwards, but is allowed to go slightly up. The path can end at the edge of the map, on another water, or on "dead end". The "dead end" situation is determined when the path has no room to expand. In the case of "dead end", a lake/pond is formed around it by adding water around the location until the water source is exhausted. The edges of the lake/pond are tested to see if new rivers can be created. In the postprocessing phase, the river and lake borders are smoothed to eliminate unnaturally sharp turns and edges.
 
 "Earthquake" causes rough erosion and shifts in the landscape.
