@@ -43,22 +43,22 @@ public class DiamondSquareTest {
     
     private class TestTile extends Tile {
         
-        public int altitude_set_counter;
+        public int altitude_adjust_counter;
 
         public TestTile(TileType type, double altitude) {
             super(type, altitude);
-            this.altitude_set_counter = 0;
+            this.altitude_adjust_counter = 0;
         }
         
         public TestTile(Tile tile) {
             super(tile);
-            this.altitude_set_counter = 0;
+            this.altitude_adjust_counter = 0;
         }
         
         @Override
-        public void setAltitude(double altitude) {
+        public void adjustAltitude(double altitude) {
             super.setAltitude(altitude);
-            this.altitude_set_counter++;
+            this.altitude_adjust_counter++;
         }
     }
     
@@ -86,33 +86,38 @@ public class DiamondSquareTest {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
         }
-        double[] corners = { 0, 0, 0, 0 };
-        tool = new DiamondSquare(corners, 1, new TestRandom());
+        tool = new DiamondSquare(1, new TestRandom());
     }
     
     @After
     public void tearDown() {
     }
+    
+    private boolean isCorner(Terrain terrain, int x, int y) {
+        if (x == 0 && y == 0) {
+            return true;
+        }
+        if (x == terrain.getWidth() - 1 && y == 0) {
+            return true;
+        }
+        if (x == 0 && y == terrain.getHeight() - 1) {
+            return true;
+        }
+        if (x == terrain.getWidth() - 1 && y == terrain.getHeight() - 1) {
+            return true;
+        }
+        return false;
+    }
+        
 
     @Test
     public void allTilesAreAltered() {
         tool.apply(terrain);
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                // Ignore corners
-                if (x == 0 && y == 0) {
-                    continue;
+                if (!isCorner(terrain, x, y)) {
+                    assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
                 }
-                if (x == terrain.getWidth() - 1 && y == 0) {
-                    continue;
-                }
-                if (x == 0 && y == terrain.getHeight() - 1) {
-                    continue;
-                }
-                if (x == terrain.getWidth() - 1 && y == terrain.getHeight() - 1) {
-                    continue;
-                }
-                assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
             }
         }
     }
@@ -120,10 +125,14 @@ public class DiamondSquareTest {
     @Test
     public void allTilesAreAlteredOnlyOnce() {
         tool.apply(terrain);
-        for (Tile t : terrain) {
-            TestTile tt = (TestTile) t;
-            assertNotNull(tt);
-            assertEquals(1, tt.altitude_set_counter);
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                if (!isCorner(terrain, x, y)) {
+                    TestTile tt = (TestTile) terrain.getTile(x, y);
+                    assertNotNull(tt);
+                    assertEquals(1, tt.altitude_adjust_counter);
+                }
+            }
         }
     }
 }

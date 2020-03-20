@@ -46,8 +46,7 @@ public class DiamondSquare extends Command {
             return;
         }
         
-        double[] corners = { 0, 0, 0, 0 };
-        Tool ds = new plortz.tool.DiamondSquare(corners, scale, new Random());
+        Tool ds = new plortz.tool.DiamondSquare(scale, new Random());
         ds.apply(ui.getTerrain());
     }
     

@@ -26,29 +26,25 @@ import plortz.ValidPositionList;
 /**
  * Adjusts the altitudes using the diamond-square algorithm.
  * 
+ * Altitude changes are in the range [-scale, +scale].
+ *
  * https://en.wikipedia.org/wiki/Diamond-square_algorithm
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class DiamondSquare extends Tool {
 
-    private final double[] initial_values;
     private final double   scale;
     private Random         random;
 
     /**
      * 
-     * @param initial_values The four initial values for each corner: top left, top right, bottom left, and bottom right.
      * @param scale          Scaling factor.
      * @param random         Random number generator.
      */
-    public DiamondSquare(double[] initial_values, double scale, Random random) {
-        if (initial_values.length != 4) {
-            throw new InvalidParameterException();
-        }
-        this.initial_values = initial_values;
-        this.scale          = scale;
-        this.random         = random;
+    public DiamondSquare(double scale, Random random) {
+        this.scale  = scale;
+        this.random = random;
     }
 
     
@@ -57,30 +53,10 @@ public class DiamondSquare extends Tool {
         if (terrain.getWidth() != terrain.getHeight() || !this.checkSize(terrain.getWidth())) {
             throw new InvalidParameterException("Invalid terrain dimensions (must be 2^n+1)");
         }
-        this.applyInitialValues(terrain);
         
         for (int distance = terrain.getWidth() - 1; distance > 1; distance /= 2) {
             diamondStep(terrain, distance);
             squareStep(terrain, distance);
-        }
-    }
-    
-    
-    private void applyInitialValues(Terrain terrain) {
-        final int left   = 0;
-        final int top    = 0;
-        final int right  = terrain.getWidth() - 1;
-        final int bottom = terrain.getHeight() - 1;
-        
-        final int[] order = {
-            left,  top,
-            right, top,
-            left,  bottom,
-            right, bottom
-        };
-        
-        for (int i = 0; i < order.length / 2; i++) {
-            terrain.getTile(order[i * 2 + 0], order[i * 2 + 1]).setAltitude(initial_values[i]);
         }
     }
     
