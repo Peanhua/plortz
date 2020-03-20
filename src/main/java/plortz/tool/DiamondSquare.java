@@ -97,7 +97,7 @@ public class DiamondSquare extends Tool {
                 positions.add(x + distance, y + distance);
                 middle.set(x + distance / 2, y + distance / 2);
                 Tile tile = terrain.getTile(middle);
-                tile.setAltitude(tile.getAltitude(false) + this.getAltitudeChange(terrain, positions));
+                tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
             }
         }
     }
@@ -117,7 +117,7 @@ public class DiamondSquare extends Tool {
                     positions.add(x + distance,     y);
                     positions.add(x + distance / 2, y + distance / 2);
                     Tile tile = terrain.getTile(middle);
-                    tile.setAltitude(tile.getAltitude(false) + this.getAltitudeChange(terrain, positions));
+                    tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
                 }
                 // The middle is centered to below of x, y:
                 middle.set(x, y + distance / 2);
@@ -127,7 +127,7 @@ public class DiamondSquare extends Tool {
                     positions.add(x + distance / 2, y + distance / 2);
                     positions.add(x,                y + distance);
                     Tile tile = terrain.getTile(middle);
-                    tile.setAltitude(tile.getAltitude(false) + this.getAltitudeChange(terrain, positions));
+                    tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
                 }
             }
         }

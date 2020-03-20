@@ -29,6 +29,7 @@ Commands are read from stdin and produce no output on success.
 * Create new terrain: ```new```
 * Apply gaussian distribution to generate a bump (a mountain/hill/hole): ```gauss```
 * Apply diamond-square algorithm to adjust altitudes: ```ds```
+* Apply random noise to adjust altitudes: ```random```
 * Simple ascii dump: ```dump``` (any extra argument dumps normalized values)
 * Save to .TGA file: ```save```
 * Quit: ```quit``` (or EOF)

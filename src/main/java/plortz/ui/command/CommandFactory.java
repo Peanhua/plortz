@@ -57,6 +57,8 @@ public class CommandFactory {
             return new GaussianDistribution(args);
         } else if (args[0].equals("ds")) {
             return new DiamondSquare(args);
+        } else if (args[0].equals("random")) {
+            return new RandomNoise(args);
         }
         
         return null;

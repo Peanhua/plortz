@@ -55,6 +55,10 @@ public class Tile {
     public void setAltitude(double altitude) {
         this.surface_level = altitude;
     }
+    
+    public void adjustAltitude(double change) {
+        this.surface_level += change;
+    }
 
     /**
      * Set the water height of this tile.
