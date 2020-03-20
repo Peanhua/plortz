@@ -96,6 +96,9 @@ public class Terrain implements Iterable<Tile> {
     }
 
     public boolean isValidTilePosition(Position position) {
+        if (position == null) {
+            return false;
+        }
         return this.isValidTilePosition(position.getX(), position.getY());
     }
     
