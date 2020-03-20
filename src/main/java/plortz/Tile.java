@@ -57,7 +57,7 @@ public class Tile {
     }
     
     public void adjustAltitude(double change) {
-        this.surface_level += change;
+        this.setAltitude(this.surface_level + change);
     }
 
     /**
