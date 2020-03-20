@@ -71,7 +71,7 @@ public class Terrain implements Iterable<Tile> {
             }
         };
     }
-    
+
     public int getWidth() {
         return this.width;
     }
@@ -93,6 +93,14 @@ public class Terrain implements Iterable<Tile> {
             return null;
         }
         return this.getTile(position.getX(), position.getY());
+    }
+    
+    public void setTile(Position position, Tile tile) {
+        if (position == null || tile == null || !this.isValidTilePosition(position)) {
+            return;
+        }
+        int index = position.getX() + position.getY() * this.width;
+        this.tiles[index] = tile;
     }
 
     public boolean isValidTilePosition(Position position) {

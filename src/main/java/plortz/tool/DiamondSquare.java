@@ -59,7 +59,7 @@ public class DiamondSquare extends Tool {
         }
         this.applyInitialValues(terrain);
         
-        for (int distance = terrain.getWidth() - 1; distance > 1; distance -= 2) {
+        for (int distance = terrain.getWidth() - 1; distance > 1; distance /= 2) {
             diamondStep(terrain, distance);
             squareStep(terrain, distance);
         }
