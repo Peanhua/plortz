@@ -16,7 +16,6 @@
  */
 package plortz;
 
-import java.util.Iterator;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -72,11 +71,43 @@ public class TerrainTest {
     }
     
     @Test
+    public void getTileWithPositionReturnsTile() {
+        assertNotNull(terrain.getTile(new Position(0, 0)));
+    }
+    
+    @Test
     public void getTileForIncorrectCoordinatesReturnsNull() {
         assertNull(terrain.getTile(-1, 0));
         assertNull(terrain.getTile(0, -1));
         assertNull(terrain.getTile(99, 0));
         assertNull(terrain.getTile(0, 99));
+    }
+
+    @Test
+    public void getTileForIncorrectPositionReturnsNull() {
+        assertNull(terrain.getTile(null));
+        assertNull(terrain.getTile(new Position(-1, 0)));
+        assertNull(terrain.getTile(new Position(0, -1)));
+        assertNull(terrain.getTile(new Position(99, 0)));
+        assertNull(terrain.getTile(new Position(0, 99)));
+    }
+    
+    @Test
+    public void isValidTilePositionWorksForValidPositions() {
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                assertTrue(terrain.isValidTilePosition(new Position(x, y)));
+            }
+        }
+    }
+    
+    @Test
+    public void isValidTilePositionReturnsFalseForInvalidPositions() {
+        assertFalse(terrain.isValidTilePosition(null));
+        assertFalse(terrain.isValidTilePosition(new Position(-1, 0)));
+        assertFalse(terrain.isValidTilePosition(new Position(0, -1)));
+        assertFalse(terrain.isValidTilePosition(new Position(99, 0)));
+        assertFalse(terrain.isValidTilePosition(new Position(0, 99)));
     }
     
     @Test
