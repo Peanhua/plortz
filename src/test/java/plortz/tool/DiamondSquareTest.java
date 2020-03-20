@@ -16,6 +16,7 @@
  */
 package plortz.tool;
 
+import java.security.InvalidParameterException;
 import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -133,6 +134,29 @@ public class DiamondSquareTest {
                     assertEquals(1, tt.altitude_adjust_counter);
                 }
             }
+        }
+    }
+    
+    @Test
+    public void invalidTerrainSizeThrowException() {
+        int[] sizes = {
+            1, 1,
+            2, 2,
+            3, 2,
+            10, 9,
+            9, 10,
+            8, 8,
+            1024, 1024
+        };
+        for (int i = 0; i < sizes.length; i += 2) {
+            boolean thrown = false;
+            Terrain t = new Terrain(sizes[i + 0], sizes[i + 1]);
+            try {
+                tool.apply(t);
+            } catch (InvalidParameterException e) {
+                thrown = true;
+            }
+            assertTrue(thrown);
         }
     }
 }
