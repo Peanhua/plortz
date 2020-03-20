@@ -81,12 +81,32 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public Tile getTile(int x, int y) {
-        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+        if (!this.isValidTilePosition(x, y)) {
             return null;
         }
-        return this.tiles[x + y * this.width];
+        int index = x + y * this.width;
+        return this.tiles[index];
+    }
+    
+    public Tile getTile(Position position) {
+        if (position == null) {
+            return null;
+        }
+        return this.getTile(position.getX(), position.getY());
     }
 
+    public boolean isValidTilePosition(Position position) {
+        return this.isValidTilePosition(position.getX(), position.getY());
+    }
+    
+    public boolean isValidTilePosition(int x, int y) {
+        if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+            return false;
+        }
+        return true;
+    }
+
+    
     /**
      * Normalize altitudes to range 0..1
      */

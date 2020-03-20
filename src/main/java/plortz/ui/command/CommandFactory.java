@@ -55,6 +55,8 @@ public class CommandFactory {
             return new NewTerrain(args);
         } else if (args[0].equals("gauss")) {
             return new GaussianDistribution(args);
+        } else if (args[0].equals("ds")) {
+            return new DiamondSquare(args);
         }
         
         return null;
