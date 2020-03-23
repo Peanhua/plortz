@@ -48,7 +48,7 @@ public class GaussianDistributionTest {
     
     @Before
     public void setUp() {
-        testdelta = 0.000001;
+        testdelta = 0.00001;
         terrain = new Terrain(10, 10);
         gauss = new GaussianDistribution(5, 5, 0.4, 3, 1);
     }

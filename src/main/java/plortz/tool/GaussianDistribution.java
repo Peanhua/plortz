@@ -22,38 +22,87 @@ import plortz.Tile;
 /**
  * Elevates terrain to create a mountain/hill.
  * 
- * For each tile within range, calculate the increase in altitude based on distance to the center.
- * 
+ * For each tile within range, calculate the change in altitude based on distance to the center using Gaussian distribution.
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class GaussianDistribution extends Tool {
-    private final double center_x;
-    private final double center_y;
+    private final int    center_x;
+    private final int    center_y;
     private final double variance;
+    private final double gauss_factor;
     private final double horizontal_scale;
     private final double vertical_scale;
+    // Temporary working variables:
+    private boolean[]    processed;      // Holds true for each tile already processed, used to avoid processing same tile multiple times.
+    private int          processed_size; // The number of elements in processed array is processed_size * processed_size.
 
-    public GaussianDistribution(double x, double y, double variance, double horizontal_scale, double vertical_scale) {
+    
+    public GaussianDistribution(int x, int y, double variance, double horizontal_scale, double vertical_scale) {
         this.center_x         = x;
         this.center_y         = y;
         this.variance         = variance;
+        this.gauss_factor     = 1.0 / (variance * Math.sqrt(2.0 * Math.PI));
         this.horizontal_scale = horizontal_scale;
         this.vertical_scale   = vertical_scale;
     }
     
+    
     @Override
     public void apply(Terrain terrain) {
-        // todo: do a circle, calculate only 1/8th of the circle, fill from inside, stop when change reaches 0
-        for (int y = 0; y < terrain.getHeight(); y++) {
-            for (int x = 0; x < terrain.getWidth(); x++) {
-                Tile t = terrain.getTile(x, y);
-                double delta_x = center_x - x;
-                double delta_y = center_y - y;
-                double distance = Math.sqrt(delta_x * delta_x + delta_y * delta_y) / (double) horizontal_scale;
-                double change = (1.0 / (variance * Math.sqrt(2.0 * Math.PI))) * Math.exp((-0.5) * Math.pow(distance / variance, 2.0));
-                t.adjustAltitude(vertical_scale * change);
+        int radius = calculateRadius(0.00001);
+
+        // Make sure the circle drawing routine adjusts each tile only once using a 2d boolean array:
+        this.processed_size = 2 * radius + 1; // +1 for the center
+        this.processed      = new boolean[this.processed_size * this.processed_size];
+        
+        // Process the circle, divided into 8 identical sections:
+        for (int dy = 0; dy <= radius; dy++) {
+            for (int dx = dy; dx <= radius; dx++) {
+                double distance = Math.sqrt(dx * dx + dy * dy) / this.horizontal_scale;
+                double change = this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+                if (change > 0.00001) {
+                    double scaled_change = change * vertical_scale;
+                    this.adjustAltitude(terrain, radius, +dx, +dy, scaled_change);
+                    this.adjustAltitude(terrain, radius, +dx, -dy, scaled_change);
+                    this.adjustAltitude(terrain, radius, -dx, +dy, scaled_change);
+                    this.adjustAltitude(terrain, radius, -dx, -dy, scaled_change);
+                    this.adjustAltitude(terrain, radius, +dy, +dx, scaled_change);
+                    this.adjustAltitude(terrain, radius, +dy, -dx, scaled_change);
+                    this.adjustAltitude(terrain, radius, -dy, +dx, scaled_change);
+                    this.adjustAltitude(terrain, radius, -dy, -dx, scaled_change);
+                }
             }
         }
+    }
+
+    private void adjustAltitude(Terrain terrain, int radius, int dx, int dy, double change) {
+        int pos = (radius + dx) + (radius + dy) * processed_size;
+        if (this.processed[pos]) {
+            return;
+        }
+        this.processed[pos] = true;
+        Tile t = terrain.getTile(this.center_x + dx, this.center_y + dy);
+        if (t != null) {
+            t.adjustAltitude(this.vertical_scale * change);
+        }
+    }
+    
+    
+    /**
+     * Find the radius of the circle containing the affected tiles:
+     * 
+     * @param altitude_change_threshold When the change goes below this threshold value, the radius has been found.
+     */
+    private int calculateRadius(double altitude_change_threshold) {
+        Integer radius = null;
+        for (int i = 0; radius == null; i++) {
+            double distance = Math.sqrt(i * i) / this.horizontal_scale;
+            double change = this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+            if (change < altitude_change_threshold) {
+                radius = i;
+            }
+        }
+        return radius;
     }
 }

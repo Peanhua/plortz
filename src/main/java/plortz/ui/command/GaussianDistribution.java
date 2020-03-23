@@ -46,10 +46,11 @@ public class GaussianDistribution extends Command {
             return;
         }
         
-        double x, y, var, h, v;
+        int x, y;
+        double var, h, v;
         try {
-            x   = Double.parseDouble(args[1]);
-            y   = Double.parseDouble(args[2]);
+            x   = Integer.parseInt(args[1]);
+            y   = Integer.parseInt(args[2]);
             var = Double.parseDouble(args[3]);
             h   = Double.parseDouble(args[4]);
             v   = Double.parseDouble(args[5]);
