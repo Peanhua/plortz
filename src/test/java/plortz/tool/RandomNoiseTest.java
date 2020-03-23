@@ -16,7 +16,6 @@
  */
 package plortz.tool;
 
-import java.security.InvalidParameterException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,13 +29,13 @@ import plortz.Terrain;
  *
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
-public class DiamondSquareTest {
+public class RandomNoiseTest {
     
-    private double        testdelta;
-    private Terrain       terrain;
-    private DiamondSquare tool;
+    private double  testdelta;
+    private Terrain terrain;
+    private Tool    tool;
     
-    public DiamondSquareTest() {
+    public RandomNoiseTest() {
     }
     
     @BeforeClass
@@ -56,38 +55,19 @@ public class DiamondSquareTest {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
         }
-        tool = new DiamondSquare(1, new TestRandom());
+        tool = new RandomNoise(1, new TestRandom());
     }
     
     @After
     public void tearDown() {
     }
-    
-    private boolean isCorner(Terrain terrain, int x, int y) {
-        if (x == 0 && y == 0) {
-            return true;
-        }
-        if (x == terrain.getWidth() - 1 && y == 0) {
-            return true;
-        }
-        if (x == 0 && y == terrain.getHeight() - 1) {
-            return true;
-        }
-        if (x == terrain.getWidth() - 1 && y == terrain.getHeight() - 1) {
-            return true;
-        }
-        return false;
-    }
-        
 
     @Test
     public void allTilesAreAltered() {
         tool.apply(terrain);
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                if (!isCorner(terrain, x, y)) {
-                    assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
-                }
+                assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
             }
         }
     }
@@ -97,35 +77,10 @@ public class DiamondSquareTest {
         tool.apply(terrain);
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                if (!isCorner(terrain, x, y)) {
-                    TestTile tt = (TestTile) terrain.getTile(x, y);
-                    assertNotNull(tt);
-                    assertEquals(1, tt.altitude_adjust_counter);
-                }
+                TestTile tt = (TestTile) terrain.getTile(x, y);
+                assertNotNull(tt);
+                assertEquals(1, tt.altitude_adjust_counter);
             }
-        }
-    }
-    
-    @Test
-    public void invalidTerrainSizeThrowException() {
-        int[] sizes = {
-            1, 1,
-            2, 2,
-            3, 2,
-            10, 9,
-            9, 10,
-            8, 8,
-            1024, 1024
-        };
-        for (int i = 0; i < sizes.length; i += 2) {
-            boolean thrown = false;
-            Terrain t = new Terrain(sizes[i + 0], sizes[i + 1]);
-            try {
-                tool.apply(t);
-            } catch (InvalidParameterException e) {
-                thrown = true;
-            }
-            assertTrue(thrown);
         }
     }
 }
