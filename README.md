@@ -12,6 +12,7 @@ This project is made for a course named "tiralabra", one of the requirements in 
 
 
 ## Maven goals:
+Java 11 is required.
 * Checkstyle: ```mvn jxr:jxr checkstyle:checkstyle```
 * Run tests:  ```mvn test```
 * List possible plugin updates: ```mvn versions:display-plugin-updates```
