@@ -34,7 +34,7 @@
             <property name="countEmpty" value="false"/>
         </module>
 
-        <!--- Naming Conventions -->
+        <!-- Naming Conventions -->
 
         <module name="ClassTypeParameterName" />
         <module name="ConstantName" />
