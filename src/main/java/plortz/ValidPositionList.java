@@ -16,8 +16,8 @@
  */
 package plortz;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import plortz.collections.MyArrayList;
 
 /**
  * A list containing only valid positions.
@@ -25,12 +25,12 @@ import java.util.Iterator;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class ValidPositionList implements Iterable<Position> {
-    private final Terrain             terrain;
-    private final ArrayList<Position> positions;
+    private final Terrain               terrain;
+    private final MyArrayList<Position> positions;
     
     public ValidPositionList(Terrain terrain) {
         this.terrain   = terrain;
-        this.positions = new ArrayList<>();
+        this.positions = new MyArrayList<>(Position.class);
     }
     
     public void clear() {
