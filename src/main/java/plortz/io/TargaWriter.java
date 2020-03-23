@@ -24,6 +24,12 @@ import plortz.Terrain;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class TargaWriter extends Writer {
+    private final boolean compressed;
+    
+    public TargaWriter(boolean compress) {
+        this.compressed = compress;
+    }
+    
     @Override
     protected byte[] getBytes(Terrain terrain) {
         if (terrain.getWidth() > 0xffff || terrain.getHeight() > 0xffff) {
@@ -31,7 +37,12 @@ public class TargaWriter extends Writer {
         }
 
         byte[] header = this.getHeader(terrain);
-        byte[] body   = this.getBody(terrain);
+        byte[] body;
+        if (this.compressed) {
+            body = this.getCompressedBody(terrain);
+        } else {
+            body = this.getBody(terrain);
+        }
         
         // todo: get rid of bs
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -46,7 +57,7 @@ public class TargaWriter extends Writer {
         byte[] header = new byte[18];
         header[0] = 0; // Image ID length
         header[1] = 0; // Color map type, 0 = no color map
-        header[2] = 3; // Image type, 3 = uncompressed grayscale image
+        header[2] = (byte) (this.compressed ? 11 : 3); // Image type, 3 = uncompressed grayscale image, 11 = compressed grayscale image
         header[8] = 0; // x-origin (2 bytes)
         header[9] = 0;
         header[10] = 0; // y-origin
@@ -61,13 +72,82 @@ public class TargaWriter extends Writer {
     }
 
     
+    private byte getImageByte(Terrain terrain, int x, int y) {
+        return (byte) (terrain.getTile(x, y).getAltitude(false) * 255.0);
+    }
+    
+    
+    /**
+     * Returns the terrain in uncompressed format.
+     * 
+     * @param terrain
+     * @return
+     */
     private byte[] getBody(Terrain terrain) {
         byte[] image = new byte[terrain.getWidth() * terrain.getHeight()];
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                image[x + (terrain.getHeight() - y - 1) * terrain.getWidth()] = (byte) (terrain.getTile(x, y).getAltitude(false) * 255.0);
+                image[x + (terrain.getHeight() - y - 1) * terrain.getWidth()] = this.getImageByte(terrain, x, y);
             }
         }
         return image;
-    }        
+    }
+    
+
+    /**
+     * Returns the terrain in RLE encoded format.
+     * 
+     * Following v2.0 TGA specification and limiting RLE packets to scanline boundaries.
+     * 
+     * @param terrain
+     * @return 
+     */
+    private byte[] getCompressedBody(Terrain terrain) {
+        byte[] tmp = new byte[terrain.getWidth() * terrain.getHeight() * 2]; // Workspace, reserve some extra in case compression yields very bad result
+        int pos = 0;
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            int x = 0;
+            while (x < terrain.getWidth()) {
+                int count = this.countNextRlePacketSizeOfSameBytes(terrain, x, y);
+                if (count > 1) { // RLE encoded
+                    tmp[pos++] = (byte) (128 + (count - 1));
+                    tmp[pos++] = this.getImageByte(terrain, x, y);
+                    x += count;
+                } else { // Raw
+                    count = this.countNextRlePacketSizeOfDifferentBytes(terrain, x, y);
+                    tmp[pos++] = (byte) (count - 1);
+                    for (int i = 0; i < count; i++) {
+                        tmp[pos++] = this.getImageByte(terrain, x, y);
+                        x++;
+                    }
+                }
+            }
+        }
+        
+        // todo: avoid copying
+        byte[] image = new byte[pos];
+        for (int i = 0; i < pos; i++) {
+            image[i] = tmp[i];
+        }
+        return image;
+    }
+
+    private int countNextRlePacketSizeOfSameBytes(Terrain terrain, int start_x, int y) {
+        final byte b = this.getImageByte(terrain, start_x, y);
+        int count = 1;
+        for (int x = start_x + 1; x < terrain.getWidth() && this.getImageByte(terrain, x, y) == b && count < 128; x++) {
+            count++;
+        }
+        return count;
+    }
+
+    private int countNextRlePacketSizeOfDifferentBytes(Terrain terrain, int start_x, int y) {
+        byte b = this.getImageByte(terrain, start_x, y);
+        int count = 1;
+        for (int x = start_x + 1; x < terrain.getWidth() && this.getImageByte(terrain, x, y) != b && count < 128; x++) {
+            count++;
+            b = this.getImageByte(terrain, x, y);
+        }
+        return count;
+    }
 }

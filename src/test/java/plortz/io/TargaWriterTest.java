@@ -33,6 +33,7 @@ public class TargaWriterTest {
     private Terrain[] empty_terrains;
     private Terrain   constructed_terrain;
     private Writer    writer;
+    private Writer    rle_writer;
     
     public TargaWriterTest() {
     }
@@ -58,7 +59,8 @@ public class TargaWriterTest {
             this.constructed_terrain.getTile(1 + y, y).setAltitude(1.0);
             this.constructed_terrain.getTile(9 - y, y).setAltitude(1.0);
         }
-        writer = new TargaWriter();
+        writer = new TargaWriter(false);
+        rle_writer = new TargaWriter(true);
     }
     
     @After
@@ -67,17 +69,26 @@ public class TargaWriterTest {
 
     @Test
     public void getBytesReturnMoreThanHeader() {
-        for (int i = 0; i < empty_terrains.length; i++) {
-            assertTrue(writer.getBytes(empty_terrains[i]).length > 18);
+        for (Terrain t : empty_terrains) {
+            assertTrue(writer.getBytes(t).length > 18);
         }
         assertTrue(writer.getBytes(constructed_terrain).length > 18);
     }
     
     @Test
     public void getBytesReturnCorrectNumberOfBytes() {
-        for (int i = 0; i < empty_terrains.length; i++) {
-            assertEquals(18 + empty_terrains[i].getWidth() * empty_terrains[i].getHeight(), writer.getBytes(empty_terrains[i]).length);
+        for (Terrain t : empty_terrains) {
+            assertEquals(18 + t.getWidth() * t.getHeight(), writer.getBytes(t).length);
         }
         assertEquals(18 + constructed_terrain.getWidth() * constructed_terrain.getHeight(), writer.getBytes(constructed_terrain).length);
     }
+    
+    @Test
+    public void compressedUsesLessBytesThanUncompressed() {
+        for (Terrain t : empty_terrains) {
+            assertTrue(writer.getBytes(t).length > rle_writer.getBytes(t).length);
+        }
+        assertTrue(writer.getBytes(constructed_terrain).length > rle_writer.getBytes(constructed_terrain).length);
+    }
+    
 }

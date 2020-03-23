@@ -51,7 +51,7 @@ public class WriteToTargaFile extends Command {
         Terrain terrain = new Terrain(ui.getTerrain());
         terrain.normalize();
     
-        Writer writer = new TargaWriter();
+        Writer writer = new TargaWriter(true);
         try {
             writer.write(terrain, fp);
         } catch (Exception e) {
