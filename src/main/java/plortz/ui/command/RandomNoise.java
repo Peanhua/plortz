@@ -16,7 +16,7 @@
  */
 package plortz.ui.command;
 
-import java.util.Random;
+import plortz.MersenneTwister;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
@@ -46,7 +46,7 @@ public class RandomNoise extends Command {
             return;
         }
         
-        Tool tool = new plortz.tool.RandomNoise(scale, new Random());
+        Tool tool = new plortz.tool.RandomNoise(scale, new MersenneTwister());
         tool.apply(ui.getTerrain());
     }
 }
