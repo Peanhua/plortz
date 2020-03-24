@@ -16,7 +16,6 @@
  */
 package plortz.ui.command;
 
-import plortz.Terrain;
 import plortz.ui.UserInterface;
 
 /**
@@ -24,9 +23,9 @@ import plortz.ui.UserInterface;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Command {
-    protected final String[] args;
+    protected String[] args;
     
-    public Command(String[] args) {
+    public void setArgs(String[] args) {
         this.args = args;
     }
     

@@ -25,10 +25,6 @@ import plortz.ui.UserInterface;
  */
 public class NewTerrain extends Command {
 
-    public NewTerrain(String[] args) {
-        super(args);
-    }
-    
     @Override
     public void execute(UserInterface ui) {
         if (this.args.length != 3) {

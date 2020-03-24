@@ -26,10 +26,6 @@ import plortz.ui.UserInterface;
  */
 public class RandomNoise extends Command {
 
-    public RandomNoise(String[] args) {
-        super(args);
-    }
-
     @Override
     public void execute(UserInterface ui) {
         if (this.args.length != 2) {

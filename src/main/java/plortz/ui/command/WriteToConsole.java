@@ -31,10 +31,6 @@ import plortz.ui.UserInterface;
  */
 public class WriteToConsole extends Command {
 
-    public WriteToConsole(String[] args) {
-        super(args);
-    }
-    
     @Override
     public void execute(UserInterface ui) {
         Terrain original = ui.getTerrain();

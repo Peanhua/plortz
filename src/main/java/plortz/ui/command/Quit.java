@@ -25,10 +25,6 @@ import plortz.ui.UserInterface;
  */
 public class Quit extends Command {
 
-    public Quit(String[] args) {
-        super(args);
-    }
-
     @Override
     public void execute(UserInterface ui) {
         ui.stop();

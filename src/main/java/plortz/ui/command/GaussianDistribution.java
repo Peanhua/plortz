@@ -25,10 +25,6 @@ import plortz.ui.UserInterface;
  */
 public class GaussianDistribution extends Command {
 
-    public GaussianDistribution(String[] args) {
-        super(args);
-    }
-
     @Override
     public void execute(UserInterface ui) {
         if (ui.getTerrain() == null) {

@@ -16,6 +16,10 @@
  */
 package plortz.ui.command;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+
 /**
  * Singleton factory to generate command object from given command string.
  * 
@@ -31,7 +35,17 @@ public class CommandFactory {
         return CommandFactory.instance;
     }
     
+    private HashMap<String, Class> commands;
+    
     private CommandFactory() {
+        this.commands = new HashMap<>();
+        this.commands.put("quit",   Quit.class);
+        this.commands.put("dump",   WriteToConsole.class);
+        this.commands.put("save",   WriteToTargaFile.class);
+        this.commands.put("new",    NewTerrain.class);
+        this.commands.put("gauss",  GaussianDistribution.class);
+        this.commands.put("ds",     DiamondSquare.class);
+        this.commands.put("random", RandomNoise.class);
     }
     
     public Command create(String string) {
@@ -44,23 +58,21 @@ public class CommandFactory {
             return null;
         }
 
-        // todo: use a hashmap to map these
-        if (args[0].equals("quit")) {
-            return new Quit(args);
-        } else if (args[0].equals("dump")) {
-            return new WriteToConsole(args);
-        } else if (args[0].equals("save")) {
-            return new WriteToTargaFile(args);
-        } else if (args[0].equals("new")) {
-            return new NewTerrain(args);
-        } else if (args[0].equals("gauss")) {
-            return new GaussianDistribution(args);
-        } else if (args[0].equals("ds")) {
-            return new DiamondSquare(args);
-        } else if (args[0].equals("random")) {
-            return new RandomNoise(args);
+        @SuppressWarnings("unchecked")
+        Class<Command> c = this.commands.get(args[0]); // unchecked conversion
+        if (c == null) {
+            return null;
         }
         
-        return null;
+        try {
+            Constructor<Command> cons = c.getConstructor();
+            Command cmd = cons.newInstance();
+            cmd.setArgs(args);
+            return cmd;
+            
+        } catch (Exception e) {
+            System.out.println("Internal error, failed to instantiate command '" + args[0] + "': " + e.getMessage());
+            return null;
+        }
     }
 }

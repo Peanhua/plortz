@@ -28,10 +28,6 @@ import plortz.ui.UserInterface;
  */
 public class WriteToTargaFile extends Command {
 
-    public WriteToTargaFile(String[] args) {
-        super(args);
-    }
-
     @Override
     public void execute(UserInterface ui) {
         if (this.args.length != 2) {
