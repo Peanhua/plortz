@@ -16,7 +16,6 @@
  */
 package plortz.ui.command;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
@@ -35,7 +34,7 @@ public class CommandFactory {
         return CommandFactory.instance;
     }
     
-    private HashMap<String, Class> commands;
+    private final HashMap<String, Class> commands;
     
     private CommandFactory() {
         this.commands = new HashMap<>();

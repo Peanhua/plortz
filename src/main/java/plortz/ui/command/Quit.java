@@ -16,7 +16,6 @@
  */
 package plortz.ui.command;
 
-import plortz.Terrain;
 import plortz.ui.UserInterface;
 
 /**

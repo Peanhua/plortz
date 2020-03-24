@@ -17,7 +17,6 @@
 package plortz.ui;
 
 import plortz.Terrain;
-import plortz.tool.Tool;
 import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
 
