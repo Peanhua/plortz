@@ -42,9 +42,10 @@ public class MyArrayList<E> implements List<E> {
         this.allocate(16);
     }
     
+    @SuppressWarnings({"unchecked"})
     private void allocate(int amount) {
         E[] old = this.array;
-        this.array = (E[]) Array.newInstance(this.element_class, amount);
+        this.array = (E[]) Array.newInstance(this.element_class, amount); // unchecked cast
         this.allocated_size = amount;
         for (int i = 0; i < this.used_size; i++) {
             this.array[i] = old[i];
