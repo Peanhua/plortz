@@ -50,7 +50,10 @@ public class DiamondSquare extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
-        if (terrain.getWidth() != terrain.getHeight() || !this.checkSize(terrain.getWidth())) {
+        if (terrain.getWidth() != terrain.getHeight()) {
+            throw new InvalidParameterException("Invalid terrain dimensions (the width and height must be equal).");
+        }
+        if (!this.checkSize(terrain.getWidth())) {
             throw new InvalidParameterException("Invalid terrain dimensions (must be 2^n+1)");
         }
         
