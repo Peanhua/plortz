@@ -151,4 +151,20 @@ public class MyArrayListTest {
         assertEquals(large_amount, string_list.size());
         assertEquals(large_amount, int_list.size());
     }
+    
+    @Test
+    public void isEmptyReturnsTrueWhenEmpty() {
+        assertTrue(int_list.isEmpty());
+        assertTrue(string_list.isEmpty());
+    }
+    
+    @Test
+    public void isEmptyReturnsFalseWhenNotEmpty() {
+        string_list.add("sdfsfd");
+        assertFalse(string_list.isEmpty());
+        for (int i = 0; i < 324; i++) {
+            int_list.add(42 + i);
+        }
+        assertFalse(int_list.isEmpty());
+    }
 }

@@ -16,6 +16,7 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
 import plortz.ui.UserInterface;
 
 /**
@@ -27,9 +28,9 @@ import plortz.ui.UserInterface;
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Command {
-    protected String[] args;
+    protected List<String> args;
     
-    public void setArgs(String[] args) {
+    public void setArgs(List<String> args) {
         this.args = args;
     }
     

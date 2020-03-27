@@ -32,9 +32,9 @@ public class GaussianDistribution extends Command {
             return;
         }
         
-        if (this.args.length != 6) {
+        if (this.args.size() != 6) {
             ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + this.args[0] + " <x> <y> <var> <h> <v>");
+            ui.showError("Usage: " + this.args.get(0) + " <x> <y> <var> <h> <v>");
             ui.showError("  <x> <y> the center coordinates");
             ui.showError("  <var>   variance");
             ui.showError("  <h>     horizontal scale");
@@ -45,13 +45,13 @@ public class GaussianDistribution extends Command {
         int x, y;
         double var, h, v;
         try {
-            x   = Integer.parseInt(args[1]);
-            y   = Integer.parseInt(args[2]);
-            var = Double.parseDouble(args[3]);
-            h   = Double.parseDouble(args[4]);
-            v   = Double.parseDouble(args[5]);
+            x   = Integer.parseInt(args.get(1));
+            y   = Integer.parseInt(args.get(2));
+            var = Double.parseDouble(args.get(3));
+            h   = Double.parseDouble(args.get(4));
+            v   = Double.parseDouble(args.get(5));
         } catch (Exception e) {
-            ui.showError(this.args[0] + ": Failed to parse arguments: " + e.getMessage());
+            ui.showError(this.args.get(0) + ": Failed to parse arguments: " + e.getMessage());
             return;
         }
         

@@ -28,15 +28,15 @@ public class DiamondSquare extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if (this.args.length != 2) {
+        if (this.args.size() != 2) {
             ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + this.args[0] + " <scale>");
+            ui.showError("Usage: " + this.args.get(0) + " <scale>");
             return;
         }
         
         double scale;
         try {
-            scale = Double.parseDouble(this.args[1]);
+            scale = Double.parseDouble(this.args.get(1));
         } catch (Exception e) {
             ui.showError("Failed to parse arguments: " + e.getMessage());
             return;

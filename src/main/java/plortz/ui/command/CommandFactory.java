@@ -18,6 +18,8 @@ package plortz.ui.command;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.List;
+import plortz.collections.MyArrayList;
 
 /**
  * Singleton factory to generate command object from given command string.
@@ -48,17 +50,40 @@ public class CommandFactory {
     }
     
     public Command create(String string) {
-        if (string == null) {
+        List<String> args = this.splitToArgs(string);
+        if (args == null || args.isEmpty()) {
             return null;
         }
         
-        String[] args = string.split(" ");
-        if (args.length == 0) {
+        Command cmd = this.getCommand(args.get(0));
+        if (cmd == null) {
             return null;
         }
 
+        cmd.setArgs(args);
+        return cmd;
+    }
+    
+    private List<String> splitToArgs(String string) {
+        if (string == null) {
+            return null;
+        }
+        MyArrayList<String> args = new MyArrayList<>(String.class);
+        int start = 0;
+        for (int i = 1; i < string.length(); i++) {
+            if (string.charAt(i) == ' ') {
+                args.add(string.substring(start, i));
+                start = i + 1;
+            }
+        }
+        args.add(string.substring(start));
+        
+        return args;
+    }
+    
+    private Command getCommand(String command_string) {
         @SuppressWarnings("unchecked")
-        Class<Command> c = this.commands.get(args[0]); // unchecked conversion
+        Class<Command> c = this.commands.get(command_string); // unchecked conversion
         if (c == null) {
             return null;
         }
@@ -66,11 +91,10 @@ public class CommandFactory {
         try {
             Constructor<Command> cons = c.getConstructor();
             Command cmd = cons.newInstance();
-            cmd.setArgs(args);
             return cmd;
             
         } catch (Exception e) {
-            System.out.println("Internal error, failed to instantiate command '" + args[0] + "': " + e.getMessage());
+            System.out.println("Internal error, failed to instantiate command '" + command_string + "': " + e.getMessage());
             return null;
         }
     }

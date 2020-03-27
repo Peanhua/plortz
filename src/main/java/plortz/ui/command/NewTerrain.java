@@ -27,14 +27,14 @@ public class NewTerrain extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if (this.args.length != 3) {
+        if (this.args.size() != 3) {
             ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + args[0] + " <width> <height>");
+            ui.showError("Usage: " + args.get(0) + " <width> <height>");
             return;
         }
         
-        int width = Integer.parseInt(args[1]);
-        int height = Integer.parseInt(args[2]);
+        int width = Integer.parseInt(args.get(1));
+        int height = Integer.parseInt(args.get(2));
         
         if (width <= 0) {
             ui.showError("Minimum width is 1.");

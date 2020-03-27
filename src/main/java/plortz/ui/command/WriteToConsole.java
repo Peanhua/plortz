@@ -40,7 +40,7 @@ public class WriteToConsole extends Command {
         }
         
         Terrain terrain = new Terrain(original);
-        if (this.args.length > 1) {
+        if (this.args.size() > 1) {
             terrain.normalize();
         }
         
@@ -48,7 +48,7 @@ public class WriteToConsole extends Command {
         try {
             writer.write(terrain, System.out);
         } catch (Exception e) {
-            ui.showError(this.args[0] + " failed: " + e.getMessage());
+            ui.showError(this.args.get(0) + " failed: " + e.getMessage());
         }
     }
     
