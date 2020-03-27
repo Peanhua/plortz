@@ -24,6 +24,8 @@ import plortz.Tile;
  * 
  * For each tile within range, calculate the change in altitude based on distance to the center using Gaussian distribution.
  * 
+ * Altitude changes are in the range [0, vertical_scale].
+ * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class GaussianDistribution extends Tool {
@@ -60,7 +62,7 @@ public class GaussianDistribution extends Tool {
         for (int dy = 0; dy <= radius; dy++) {
             for (int dx = dy; dx <= radius; dx++) {
                 double distance = Math.sqrt(dx * dx + dy * dy) / this.horizontal_scale;
-                double change = this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+                double change = this.getAltitudeChangeForDistance(distance);
                 if (change > 0.00001) {
                     double scaled_change = change * vertical_scale;
                     this.adjustAltitude(terrain, radius, +dx, +dy, scaled_change);
@@ -75,6 +77,11 @@ public class GaussianDistribution extends Tool {
             }
         }
     }
+    
+    private double getAltitudeChangeForDistance(double distance) {
+        return this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+    }
+
 
     private void adjustAltitude(Terrain terrain, int radius, int dx, int dy, double change) {
         int pos = (radius + dx) + (radius + dy) * processed_size;
@@ -90,7 +97,7 @@ public class GaussianDistribution extends Tool {
     
     
     /**
-     * Find the radius of the circle containing the affected tiles:
+     * Find the radius of the circle containing the affected tiles.
      * 
      * @param altitude_change_threshold When the change goes below this threshold value, the radius has been found.
      */
@@ -98,7 +105,7 @@ public class GaussianDistribution extends Tool {
         Integer radius = null;
         for (int i = 0; radius == null; i++) {
             double distance = Math.sqrt(i * i) / this.horizontal_scale;
-            double change = this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+            double change = this.getAltitudeChangeForDistance(distance);
             if (change < altitude_change_threshold) {
                 radius = i;
             }

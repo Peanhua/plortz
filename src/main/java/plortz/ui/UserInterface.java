@@ -21,6 +21,9 @@ import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
 
 /**
+ * The abstract base class for the user interface implementations.
+ * 
+ * Each user interface is tied to a terrain object.
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */

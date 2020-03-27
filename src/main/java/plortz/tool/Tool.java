@@ -19,7 +19,10 @@ package plortz.tool;
 import plortz.Terrain;
 
 /**
- *
+ * The abstract base class for all the tools.
+ * 
+ * A tool is an operation performed over the terrain to adjust properties of the terrain tiles.
+ * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Tool {

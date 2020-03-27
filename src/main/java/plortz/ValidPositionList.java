@@ -20,7 +20,7 @@ import java.util.Iterator;
 import plortz.collections.MyArrayList;
 
 /**
- * A list containing only valid positions.
+ * A list containing only valid positions for the given terrain.
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */

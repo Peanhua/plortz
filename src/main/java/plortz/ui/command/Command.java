@@ -19,7 +19,11 @@ package plortz.ui.command;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * The abstract base class for all the commands.
+ * 
+ * Commands are created by the user interfaces to perform some action.
+ * The action is often an operation performed by one or more tools.
+ * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public abstract class Command {

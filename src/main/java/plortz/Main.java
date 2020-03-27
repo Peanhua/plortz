@@ -26,8 +26,6 @@ import plortz.ui.UserInterface;
  */
 public class Main {
     public static void main(String args[]) {
-        Terrain terrain = null;
-        
         UserInterface console = new ConsoleUI();
         while (console.isRunning()) {
             console.tick();

@@ -26,7 +26,7 @@ import java.util.ListIterator;
  * ArrayList replacement.
  * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
- * @param <E>
+ * @param <E> The type of the element.
  */
 public class MyArrayList<E> implements List<E> {
     

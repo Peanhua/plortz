@@ -85,7 +85,7 @@ public class MersenneTwister extends Random {
     
     @Override
     public final void setSeed(long seed) {
-        if (!initialized) {
+        if (!initialized) { // The super class calls this before our constructor.
             return;
         }
         this.index = this.N;
@@ -151,6 +151,7 @@ public class MersenneTwister extends Random {
     }
 
     
+    // The remaining methods are not yet implemented:
     @Override
     public DoubleStream doubles(double randomNumberOrigin, double randomNumberBound) {
         throw new UnsupportedOperationException("Not supported yet.");

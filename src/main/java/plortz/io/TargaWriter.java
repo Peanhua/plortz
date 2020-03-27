@@ -20,7 +20,11 @@ import java.io.ByteArrayOutputStream;
 import plortz.Terrain;
 
 /**
- *
+ * Writes a Truevision TGA image file of the terrain.
+ * 
+ * https://en.wikipedia.org/wiki/Truevision_TGA
+ * http://www.paulbourke.net/dataformats/tga/
+ * 
  * @author Joni Yrjana <joniyrjana@gmail.com>
  */
 public class TargaWriter extends Writer {
