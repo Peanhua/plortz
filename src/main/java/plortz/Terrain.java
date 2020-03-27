@@ -16,6 +16,7 @@
  */
 package plortz;
 
+import java.security.InvalidParameterException;
 import java.util.Iterator;
 
 
@@ -97,7 +98,7 @@ public class Terrain implements Iterable<Tile> {
     
     public void setTile(Position position, Tile tile) {
         if (position == null || tile == null || !this.isValidTilePosition(position)) {
-            return;
+            throw new InvalidParameterException();
         }
         int index = position.getX() + position.getY() * this.width;
         this.tiles[index] = tile;

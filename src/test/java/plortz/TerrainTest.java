@@ -139,4 +139,52 @@ public class TerrainTest {
         t.getTile(0, 0).setAltitude(1.0);
         assertTrue(t.getTile(0, 0).getAltitude(false) - terrain.getTile(0, 0).getAltitude(false) > 0.1);
     }
+    
+    @Test
+    public void setTileChangesTheTile() {
+        Tile t = new Tile(TileType.SAND, 5);
+        Position pos = new Position(0, 1);
+        terrain.setTile(pos, t);
+        assertEquals(t, terrain.getTile(pos));
+    }
+
+    @Test
+    public void setTileWithIncorrectParametersThrowsException() {
+        Tile t = new Tile(TileType.SAND, 5);
+        Position pos = new Position(0, 1);
+        Position invpos = new Position(-1, -1);
+        boolean exception_thrown;
+        
+        exception_thrown = false;
+        try {
+            terrain.setTile(null, null);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+
+        exception_thrown = false;
+        try {
+            terrain.setTile(null, t);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+        
+        exception_thrown = false;
+        try {
+            terrain.setTile(pos, null);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+        
+        exception_thrown = false;
+        try {
+            terrain.setTile(invpos, t);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
 }
