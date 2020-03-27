@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Joni Yrjana <joniyrjana@gmail.com>
+ * Copyright (C) 2020 Joni Yrjana {@literal <joniyrjana@gmail.com>}
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.util.stream.LongStream;
  * Follows the pseudocode from https://en.wikipedia.org/wiki/Mersenne_Twister
  * Variant MT19937
  * 
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class MersenneTwister extends Random {
     private boolean    initialized;

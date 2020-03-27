@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Joni Yrjana <joniyrjana@gmail.com>
+ * Copyright (C) 2020 Joni Yrjana {@literal <joniyrjana@gmail.com>}
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import plortz.Terrain;
  * 
  * A tool is an operation performed over the terrain to adjust properties of the terrain tiles.
  * 
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class Tool {
     public abstract void apply(Terrain terrain);

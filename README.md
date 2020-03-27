@@ -21,6 +21,7 @@ Java 11 is required.
 * Compile the program: ```mvn compile```
 * Run the program: ```mvn exec:java```
 * Compile and run the program: ```mvn compile exec:java```
+* Generate javadoc: ```mvn javadoc:javadoc```
 
 
 ## Commands:

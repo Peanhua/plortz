@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Joni Yrjana <joniyrjana@gmail.com>
+ * Copyright (C) 2020 Joni Yrjana {@literal <joniyrjana@gmail.com>}
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ import plortz.Terrain;
 import plortz.ui.UserInterface;
 
 /**
- *
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * Command to create new terrain, the previous terrain is destroyed.
+ * 
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class NewTerrain extends Command {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Joni Yrjana <joniyrjana@gmail.com>
+ * Copyright (C) 2020 Joni Yrjana {@literal <joniyrjana@gmail.com>}
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import java.util.Random;
 
 /**
  *
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class TestRandom extends Random {
     @Override

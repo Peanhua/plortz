@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Joni Yrjana <joniyrjana@gmail.com>
+ * Copyright (C) 2020 Joni Yrjana {@literal <joniyrjana@gmail.com>}
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- *
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * Command to apply the DiamondSquare tool over the terrain.
+ * 
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class DiamondSquare extends Command {
 
