@@ -31,20 +31,20 @@ import java.util.stream.LongStream;
  */
 public class MersenneTwister extends Random {
     private boolean    initialized;
-    private final long W;
-    private final int  N;
-    private final int  M;
-    private final long R;
-    private final long A;
-    private final long U;
-    private final long D;
-    private final long S;
-    private final long B;
-    private final long T;
-    private final long C;
-    private final long L;
-    private final long F;
-    private long[] MT; // State
+    private final long w;
+    private final int  n;
+    private final int  m;
+    private final long r;
+    private final long a;
+    private final long u;
+    private final long d;
+    private final long s;
+    private final long b;
+    private final long t;
+    private final long c;
+    private final long l;
+    private final long f;
+    private long[] mt; // State
     private int    index;
     private final long lower_mask;
     private final long upper_mask;
@@ -59,25 +59,25 @@ public class MersenneTwister extends Random {
     
     public MersenneTwister(long seed) {
         // Coefficients for MT19937:
-        this.W = 32;
-        this.N = 624;
-        this.M = 397;
-        this.R = 31;
-        this.A = 0x9908B0DFL;
-        this.U = 11;
-        this.D = 0xFFFFFFFFL;
-        this.S = 7;
-        this.B = 0x9D2C5680L;
-        this.T = 15;
-        this.C = 0xEFC60000L;
-        this.L = 18;
+        this.w = 32;
+        this.n = 624;
+        this.m = 397;
+        this.r = 31;
+        this.a = 0x9908B0DFL;
+        this.u = 11;
+        this.d = 0xFFFFFFFFL;
+        this.s = 7;
+        this.b = 0x9D2C5680L;
+        this.t = 15;
+        this.c = 0xEFC60000L;
+        this.l = 18;
         
-        this.F = 1812433253L;
+        this.f = 1812433253L;
         
-        this.MT = new long[this.N];
-        this.index = this.N + 1;
-        this.lower_mask = (1L << this.R) - 1L;
-        this.upper_mask = ((1L << this.W) - 1L) & (~this.lower_mask);
+        this.mt = new long[this.n];
+        this.index = this.n + 1;
+        this.lower_mask = (1L << this.r) - 1L;
+        this.upper_mask = ((1L << this.w) - 1L) & (~this.lower_mask);
 
         this.initialized = true;
         this.setSeed(seed);
@@ -88,38 +88,38 @@ public class MersenneTwister extends Random {
         if (!initialized) { // The super class calls this before our constructor.
             return;
         }
-        this.index = this.N;
-        this.MT[0] = seed;
-        for (int i = 1; i < this.N; i++) {
-            this.MT[i] = ((1L << this.W) - 1L) & (this.F * (this.MT[i - 1] ^ (this.MT[i - 1] >> (this.W - 2))) + i);
+        this.index = this.n;
+        this.mt[0] = seed;
+        for (int i = 1; i < this.n; i++) {
+            this.mt[i] = ((1L << this.w) - 1L) & (this.f * (this.mt[i - 1] ^ (this.mt[i - 1] >> (this.w - 2))) + i);
         }
     }
 
     @Override
     public double nextDouble() {
-        if (this.index >= this.N) {
+        if (this.index >= this.n) {
             this.twist();
         }
-        long y = this.MT[this.index];
-        y = y ^ ((y >> this.U) & this.D);
-        y = y ^ ((y << this.S) & this.B);
-        y = y ^ ((y << this.T) & this.C);
-        y = y ^ (y >> this.L);
+        long y = this.mt[this.index];
+        y = y ^ ((y >> this.u) & this.d);
+        y = y ^ ((y << this.s) & this.b);
+        y = y ^ ((y << this.t) & this.c);
+        y = y ^ (y >> this.l);
         this.index++;
         
-        y = y & ((1L << this.W) - 1L);
-        return (double) y / (double) ((1L << this.W) - 1L);
+        y = y & ((1L << this.w) - 1L);
+        return (double) y / (double) ((1L << this.w) - 1L);
     }
     
     private void twist() {
-        for (int i = 0; i < this.N; i++) {
-            long x = this.MT[i] & this.upper_mask;
-            x += this.MT[(i + 1) % this.N] & this.lower_mask;
+        for (int i = 0; i < this.n; i++) {
+            long x = this.mt[i] & this.upper_mask;
+            x += this.mt[(i + 1) % this.n] & this.lower_mask;
             long xA = x >> 1;
             if ((x % 2L) != 0) {
-                xA = xA ^ this.A;
+                xA = xA ^ this.a;
             }
-            this.MT[i] = this.MT[(i + this.M) % this.N] ^ xA;
+            this.mt[i] = this.mt[(i + this.m) % this.n] ^ xA;
         }
         this.index = 0;
     }
