@@ -47,6 +47,7 @@ public class CommandFactory {
         this.commands.put("gauss",  GaussianDistribution.class);
         this.commands.put("ds",     DiamondSquare.class);
         this.commands.put("random", RandomNoise.class);
+        this.commands.put("perlin", PerlinNoise.class);
     }
     
     public Command create(String string) {
