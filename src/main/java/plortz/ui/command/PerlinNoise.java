@@ -22,7 +22,7 @@ import plortz.ui.UserInterface;
 
 /**
  *
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class PerlinNoise extends Command {
 

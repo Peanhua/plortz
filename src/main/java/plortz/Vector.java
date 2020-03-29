@@ -19,7 +19,7 @@ package plortz;
 /**
  * A generic vector class.
  * 
- * @author Joni Yrjana <joniyrjana@gmail.com>
+ * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Vector {
     private final double[] coords;
@@ -76,10 +76,48 @@ public class Vector {
         return this.coords[3];
     }
     
+    public double get(int dimension) {
+        if (dimension < 0 || dimension >= this.coords.length) {
+            throw new IndexOutOfBoundsException();
+        }
+        return this.coords[dimension];
+    }
+    
+    public int getDimensions() {
+        return this.coords.length;
+    }
+    
+    
+    public void setX(double x) {
+        this.coords[0] = x;
+    }
+    
+    public void setY(double y) {
+        if (this.coords.length < 2) {
+            throw new IndexOutOfBoundsException();
+        }
+        this.coords[1] = y;
+    }
+
+    public void setZ(double z) {
+        if (this.coords.length < 3) {
+            throw new IndexOutOfBoundsException();
+        }
+        this.coords[2] = z;
+    }
+
+    public void setW(double w) {
+        if (this.coords.length < 4) {
+            throw new IndexOutOfBoundsException();
+        }
+        this.coords[3] = w;
+    }
+    
+    
     /**
      * Return a new vector = this - rhs
-     * @param rhs 
-     * @return New vector equal to this - rhs
+     * @param rhs The right hand side vector to subtract from this.
+     * @return    New vector equal to this - rhs
      */
     public Vector subtract(Vector rhs) {
         double[] nvalues = new double[this.coords.length];

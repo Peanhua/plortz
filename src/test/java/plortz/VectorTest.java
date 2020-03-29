@@ -70,4 +70,68 @@ public class VectorTest {
         }
     }
     
+    @Test
+    public void subtractingWorks() {
+        Vector[] vecs = {
+            new Vector(0, 0, 0), new Vector(1, 1, 1), new Vector(-1, -1, -1),
+            new Vector(1, 1, 1), new Vector(0, 0, 0), new Vector(1, 1, 1),
+            new Vector(1, 2, 3), new Vector(2, 2, 2), new Vector(-1, 0, 1)
+        };
+        for (int i = 0; i < vecs.length; i += 3) {
+            Vector result = vecs[i + 0].subtract(vecs[i + 1]);
+            Vector expected = vecs[i + 2];
+            checkVectorEquality(expected, result);
+        }
+    }
+    
+    private void checkVectorEquality(Vector expected, Vector result) {
+        assertEquals(expected.getDimensions(), result.getDimensions());
+        for (int j = 0; j < result.getDimensions(); j++) {
+            assertEquals(expected.get(j), result.get(j), testdelta);
+        }
+    }        
+    
+    @Test
+    public void copyConstructorCreatesIdenticalVector() {
+        Vector src = new Vector(1, 2, 3);
+        Vector copy = new Vector(src);
+        checkVectorEquality(src, copy);
+    }
+    
+    @Test
+    public void copyConstructorDoesDeepCopy() {
+        double x = 1;
+        double y = 2;
+        double z = 3;
+        Vector src = new Vector(x, y, z);
+        Vector copy = new Vector(src);
+        src.setX(0);
+        src.setY(0);
+        src.setZ(0);
+        assertEquals(x, copy.getX(), testdelta);
+        assertEquals(y, copy.getY(), testdelta);
+        assertEquals(z, copy.getZ(), testdelta);
+    }
+    
+    @Test
+    public void getThrowsExceptionOnInvalidDimension() {
+        Vector v = new Vector(1, 2);
+        boolean exception_thrown;
+        
+        exception_thrown = false;
+        try {
+            v.get(-1);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+
+        exception_thrown = false;
+        try {
+            v.get(2);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
 }

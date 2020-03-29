@@ -60,4 +60,28 @@ public class MersenneTwisterTest {
         }
     }
     
+    @Test
+    public void distributionOfBooleansIsApproximately50percent() {
+        int trues = 0;
+        int falses = 0;
+        for (int i = 0; i < 10000000; i++) {
+            if (mt.nextBoolean()) {
+                trues++;
+            } else {
+                falses++;
+            }
+        }
+        double ratio = (double) trues / (double) falses;
+        assertEquals(1.0, ratio, 0.02);
+    }
+    
+    @Test
+    public void nextIntWithBoundReturnsValuesCorrectInRange() {
+        int max = 100;
+        for (int i = 0; i < 100000; i++) {
+            int random = mt.nextInt(max);
+            assertTrue(random >= 0);
+            assertTrue(random <= max);
+        }
+    }
 }
