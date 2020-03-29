@@ -16,19 +16,45 @@
  */
 package plortz.ui;
 
+import plortz.Terrain;
+
 /**
- * User interface with JavaFX, not yet implemented.
+ * User interface with JavaFX.
+ * 
+ * Uses consoles terrain.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class GraphicalUI extends UserInterface {
+    
+    private final UserInterface console;
 
+    public GraphicalUI(UserInterface console) {
+        super();
+        this.console = console;
+    }
+    
+    public void run() {
+        plortz.ui.javafx.Main gui = new plortz.ui.javafx.Main();
+        gui.run(this);
+    }
+    
+    @Override
+    public void setTerrain(Terrain terrain) {
+        this.console.setTerrain(terrain);
+    }
+    
+    @Override
+    public Terrain getTerrain() {
+        return this.console.getTerrain();
+    }
+    
     @Override
     public String getNextCommand() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public void showError(String error_message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

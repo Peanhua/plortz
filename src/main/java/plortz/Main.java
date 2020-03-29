@@ -17,6 +17,7 @@
 package plortz;
 
 import plortz.ui.ConsoleUI;
+import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
 
 /**
@@ -26,9 +27,25 @@ import plortz.ui.UserInterface;
  */
 public class Main {
     public static void main(String args[]) {
+        boolean use_gui = false;
+        for (String arg : args) {
+            if (arg.equals("--gui")) {
+                use_gui = true;
+            } else {
+                System.out.println("Unknown argument '" + arg + "'");
+                return;
+            }
+        }
+        
         UserInterface console = new ConsoleUI();
-        while (console.isRunning()) {
-            console.tick();
+        if (use_gui) {
+            GraphicalUI gui = new GraphicalUI(console);
+            gui.run();
+            
+        } else {
+            while (console.isRunning()) {
+                console.tick();
+            }
         }
     }
 }
