@@ -54,12 +54,6 @@ public class SheetErosion extends Tool {
     }
     
     private void setupTiles(Terrain terrain) {
-        for (int y = -10; y <= 10; y++) {
-            for (int x = -10; x <= 10; x++) {
-                terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setAltitude(10.0);
-            }
-        }
-        
         this.tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
         int i = 0;
         for (Tile tile : terrain) {

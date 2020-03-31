@@ -167,4 +167,49 @@ public class MyArrayListTest {
         }
         assertFalse(int_list.isEmpty());
     }
+    
+    @Test
+    public void setChangesTheElement() {
+        for (int i = 10; i < 100; i++) {
+            int_list.add(i);
+        }
+        int_list.set(20, 777);
+        assertEquals(777, (int) int_list.get(20));
+    }
+    
+    @Test
+    public void invalidIndexToSetThrowsException() {
+        boolean exception_thrown = false;
+        try {
+            int_list.set(-4, 3);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
+
+    @Test
+    public void setReturnsPrevious() {
+        int_list.add(42);
+        int_list.add(44);
+        int_list.add(46);
+        int previous = int_list.set(1, 7);
+        assertEquals(44, previous);
+    }
+    
+    @Test
+    public void iteratorLoopsThroughAllItems() {
+        int count = 10;
+        int total = 0;
+        for (int i = 0; i < count; i++) {
+            int value = 3 * i + 8;
+            int_list.add(value);
+            total += value;
+        }
+        int iterator_total = 0;
+        for (int i : int_list) {
+            iterator_total += i;
+        }
+        assertEquals(total, iterator_total);
+    }
 }
