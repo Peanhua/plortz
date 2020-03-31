@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.ui.command;
+
+import plortz.tool.Tool;
+import plortz.ui.UserInterface;
 
 /**
- * The type of the tile, describes static properties of the type.
- * 
+ *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public enum TileType {
-    DIRT,
-    SAND,
-    CLIFF;
-    
-    public double getAngleOfRepose(boolean kinetic) {
-        double aor = 30.0;
-        if (kinetic) {
-            //aor *= 0.75;
-        }
-        return aor;
+public class SheetErosion extends Command {
+    @Override
+    public void execute(UserInterface ui) {
+        Tool tool = new plortz.tool.SheetErosion();
+        tool.apply(ui.getTerrain());
     }
 }

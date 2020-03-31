@@ -25,22 +25,45 @@ public class Tile {
     private TileType type;
     private double   surface_level; // The altitude of the surface for this tile.
     private double   water_height; // The depth of the water in this tile, the surface of the water is at surface_level + water_height.
+    private Position position;
     
     public Tile(TileType type, double altitude) {
         this.type          = type;
         this.surface_level = altitude;
         this.water_height  = -1;
+        this.position      = new Position(0, 0);
     }
     
     public Tile(Tile source) {
         this.type          = source.type;
         this.surface_level = source.surface_level;
         this.water_height  = source.water_height;
+        this.position      = source.position;
     }
     
     @Override
     public String toString() {
         return "Tile[type=" + this.type + ", surface_level=" + this.surface_level + ", water_height=" + this.water_height + "]";
+    }
+    
+    
+    public TileType getType() {
+        return this.type;
+    }
+    
+    
+    public void setType(TileType type) {
+        this.type = type;
+    }
+    
+    
+    public Position getPosition() {
+        return this.position;
+    }
+    
+    
+    public void setPosition(Position position) {
+        this.position.set(position);
     }
     
     
@@ -68,15 +91,5 @@ public class Tile {
      */
     public void setWater(double water_height) {
         this.water_height = water_height;
-    }
-    
-    /**
-     * Return the slope from this tile to the other.
-     * 
-     * @param other The target tile.
-     * @return The slope, negative values are downhill, positive values uphill.
-     */
-    public double getSlope(Tile other) {
-        return 0.0;
     }
 }

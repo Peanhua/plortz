@@ -34,6 +34,11 @@ public class Position {
         this.x = x;
         this.y = y;
     }
+    
+    public void set(Position source) {
+        this.x = source.x;
+        this.y = source.y;
+    }
 
     public int getX() {
         return this.x;

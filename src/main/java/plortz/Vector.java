@@ -30,6 +30,10 @@ public class Vector {
             this.coords[i] = coords[i];
         }
     }
+    
+    public Vector(Position position) {
+        this(position.getX(), position.getY());
+    }
 
     public Vector(double x, double y) {
         this.coords = new double[2];

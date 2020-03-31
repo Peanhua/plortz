@@ -40,14 +40,15 @@ public class CommandFactory {
     
     private CommandFactory() {
         this.commands = new HashMap<>();
-        this.commands.put("quit",   Quit.class);
-        this.commands.put("dump",   WriteToConsole.class);
-        this.commands.put("save",   WriteToTargaFile.class);
-        this.commands.put("new",    NewTerrain.class);
-        this.commands.put("gauss",  GaussianDistribution.class);
-        this.commands.put("ds",     DiamondSquare.class);
-        this.commands.put("random", RandomNoise.class);
-        this.commands.put("perlin", PerlinNoise.class);
+        this.commands.put("quit",          Quit.class);
+        this.commands.put("dump",          WriteToConsole.class);
+        this.commands.put("save",          WriteToTargaFile.class);
+        this.commands.put("new",           NewTerrain.class);
+        this.commands.put("gauss",         GaussianDistribution.class);
+        this.commands.put("ds",            DiamondSquare.class);
+        this.commands.put("random",        RandomNoise.class);
+        this.commands.put("perlin",        PerlinNoise.class);
+        this.commands.put("sheet_erosion", SheetErosion.class);
     }
     
     public Command create(String string) {

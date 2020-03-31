@@ -18,6 +18,8 @@ package plortz;
 
 import java.security.InvalidParameterException;
 import java.util.Iterator;
+import java.util.List;
+import plortz.collections.MyArrayList;
 
 
 /**
@@ -35,8 +37,11 @@ public class Terrain implements Iterable<Tile> {
         this.width  = width;
         this.height = height;
         this.tiles  = new Tile[width * height];
-        for (int i = 0; i < width * height; i++) {
-            this.tiles[i] = new Tile(TileType.DIRT, 0.0);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                this.tiles[x + y * width] = new Tile(TileType.DIRT, 0.0);
+                this.tiles[x + y * width].setPosition(new Position(x, y));
+            }
         }
     }
     
@@ -102,6 +107,7 @@ public class Terrain implements Iterable<Tile> {
         }
         int index = position.getX() + position.getY() * this.width;
         this.tiles[index] = tile;
+        tile.setPosition(position);
     }
 
     public boolean isValidTilePosition(Position position) {
@@ -123,14 +129,9 @@ public class Terrain implements Iterable<Tile> {
      * Normalize altitudes to range 0..1
      */
     public void normalize() {
-        double min = this.tiles[0].getAltitude(false);
-        double max = this.tiles[0].getAltitude(false);
-        
-        for (int i = 0; i < this.width * this.height; i++) {
-            double alt = this.tiles[i].getAltitude(false);
-            min = Math.min(min, alt);
-            max = Math.max(max, alt);
-        }
+        Vector minmax = this.getAltitudeRange();
+        double min = minmax.getX();
+        double max = minmax.getY();
         
         final double range = max - min;
         
@@ -142,5 +143,49 @@ public class Terrain implements Iterable<Tile> {
                 this.tiles[i].setAltitude(alt);
             }
         }
+    }
+    
+    /**
+     * Returns a vector containing the minimum and maximum altitude of the terrain.
+     * 
+     * @return Vector whose X -component contains the minimum altitude, and Y contains the maximum.
+     */
+    public Vector getAltitudeRange() {
+        double min = this.tiles[0].getAltitude(false);
+        double max = this.tiles[0].getAltitude(false);
+        
+        for (int i = 0; i < this.width * this.height; i++) {
+            double alt = this.tiles[i].getAltitude(false);
+            min = Math.min(min, alt);
+            max = Math.max(max, alt);
+        }
+        
+        return new Vector(min, max);
+    }
+    
+    /**
+     * Return the slope from a to b.
+     * 
+     * @param a The source position.
+     * @param b The target position.
+     * @return The slope, negative values are downhill from a to b, positive values uphill from a to b.
+     */
+    public double getSlope(Position a, Position b) {
+        if (!this.isValidTilePosition(a) || !this.isValidTilePosition(b)) {
+            return 0.0;
+        }
+        Vector va = new Vector(a);
+        Vector vb = new Vector(b);
+        double distance = Math.abs((va.subtract(vb)).getLength());
+        
+        double aalt = this.getTile(a).getAltitude(false);
+        double balt = this.getTile(b).getAltitude(false);
+        double altitude_change = balt - aalt;
+        
+        return altitude_change / distance;
+    }
+
+    public double getSlope(Tile a, Tile b) {
+        return this.getSlope(a.getPosition(), b.getPosition());
     }
 }
