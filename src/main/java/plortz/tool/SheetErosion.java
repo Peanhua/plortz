@@ -34,6 +34,7 @@ public class SheetErosion extends Tool {
     private Tile[]         tiles;  // All the tiles sorted by altitude (highest first).
     private boolean[]      moving; // True for tiles that are rolling (decides whether to use static of kinetic friction).
     private List<Position> neighbor_offsets; // Randomized offsets to the neighbor tiles
+    private Tile[]         tmp_tiles;
 
     public SheetErosion(Random random) {
         this.random = random;
@@ -55,6 +56,7 @@ public class SheetErosion extends Tool {
     
     private void setupTiles(Terrain terrain) {
         this.tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
+        this.tmp_tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
         int i = 0;
         for (Tile tile : terrain) {
             this.tiles[i++] = tile;
@@ -87,36 +89,39 @@ public class SheetErosion extends Tool {
     /**
      * Sort this.tiles by altitude, highest altitude first.
      * 
-     * Uses quicksort algorithm.
-     * The recursion goes too deep (resulting in stack overflow) with empty terrain -> switch to merge sort
+     * Uses merge sort algorithm.
      * 
      * @param start
      * @param end 
      */
     private void sortTilesByAltitude(int start, int end) {
-        if (start >= end) {
+        if (start == end) {
             return;
         }
-        int middle = this.sortTilesByAltitudeSplit(start, end);
-        this.sortTilesByAltitude(start, middle - 1);
+        int middle = (start + end) / 2;
+        this.sortTilesByAltitude(start, middle);
         this.sortTilesByAltitude(middle + 1, end);
+        
+        this.sortTilesByAltitudeMerge(start, middle, middle + 1, end);
     }
     
-    private int sortTilesByAltitudeSplit(int start, int end) {
-        int middle = start;
-        for (int i = start + 1; i <= end; i++) {
-            if (this.tiles[i].getAltitude(false) > this.tiles[start].getAltitude(false)) {
-                middle++;
-                Tile tmp = this.tiles[i];
-                this.tiles[i] = this.tiles[middle];
-                this.tiles[middle] = tmp;
+    private void sortTilesByAltitudeMerge(int start1, int end1, int start2, int end2) {
+        int pos1 = start1;
+        int pos2 = start2;
+        for (int i = start1; i <= end2; i++) {
+            if (start2 > end2 || (start1 <= end1 && this.tiles[start1].getAltitude(false) > this.tiles[start2].getAltitude(false))) {
+                this.tmp_tiles[i] = this.tiles[pos1];
+                pos1++;
+            } else {
+                this.tmp_tiles[i] = this.tiles[pos2];
+                pos2++;
             }
         }
-        Tile tmp = this.tiles[start];
-        this.tiles[start] = this.tiles[middle];
-        this.tiles[middle] = tmp;
-        return middle;
+        for (int i = start1; i <= end2; i++) {
+            this.tiles[i] = this.tmp_tiles[i];
+        }
     }
+    
     
     
     private void erode(Terrain terrain, Tile source, Tile destination) {
