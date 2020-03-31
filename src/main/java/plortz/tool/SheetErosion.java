@@ -126,6 +126,9 @@ public class SheetErosion extends Tool {
     
     private void erode(Terrain terrain, Tile source, Tile destination) {
         double angle_of_repose = source.getTopSoil().getAngleOfRepose(this.moving[source.getPosition().getX() + source.getPosition().getY() * terrain.getWidth()]);
+        if (angle_of_repose > 90.0) {
+            return;
+        }
         double slope = angle_of_repose * Math.PI / 180.0; // to radians
         slope = Math.tan(slope); // to slope
         

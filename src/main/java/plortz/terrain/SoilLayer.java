@@ -59,9 +59,14 @@ public class SoilLayer {
     }
     
     public double getAngleOfRepose(boolean kinetic) {
-        double aor = 30.0;
-        if (kinetic) {
-            //aor *= 0.75;
+        double aor = 0.0;
+        switch (this.type) {
+            case DIRT:  aor = 40; break;
+            case SAND:  aor = 34; break;
+            case CLIFF: aor = 91; break;
+        }
+        if (kinetic && this.type != Type.CLIFF) {
+            aor *= 0.75;
         }
         return aor;
     }
