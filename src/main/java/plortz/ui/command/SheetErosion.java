@@ -16,6 +16,7 @@
  */
 package plortz.ui.command;
 
+import plortz.MersenneTwister;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
@@ -26,7 +27,7 @@ import plortz.ui.UserInterface;
 public class SheetErosion extends Command {
     @Override
     public void execute(UserInterface ui) {
-        Tool tool = new plortz.tool.SheetErosion();
+        Tool tool = new plortz.tool.SheetErosion(new MersenneTwister(0));
         tool.apply(ui.getTerrain());
     }
 }

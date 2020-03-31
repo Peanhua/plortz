@@ -16,6 +16,8 @@
  */
 package plortz.tool;
 
+import java.util.Random;
+import plortz.Position;
 import plortz.Terrain;
 import plortz.Tile;
 import plortz.Vector;
@@ -27,12 +29,30 @@ import plortz.Vector;
  */
 public class SheetErosion extends Tool {
 
+    private Random    random;
     private Tile[]    tiles;  // All the tiles sorted by altitude (highest first).
     private boolean[] moving; // True for tiles that are rolling (decides whether to use static of kinetic friction).
+    private Position[] neighbor_offsets; // Randomized offsets to the neighbor tiles
+
+    public SheetErosion(Random random) {
+        this.random = random;
+    }
     
     @Override
     public void apply(Terrain terrain) {
+        this.setupNeighborOffsets(terrain);
+        this.setupTiles(terrain);
+        this.moving = new boolean[terrain.getWidth() * terrain.getHeight()];
         
+        for (Tile tile : this.tiles) {
+            Tile neighbor = this.getLowestNeighborTile(terrain, tile);
+            if (neighbor != null) {
+                this.erode(terrain, tile, neighbor);
+            }
+        }
+    }
+    
+    private void setupTiles(Terrain terrain) {
         for (int y = -10; y <= 10; y++) {
             for (int x = -10; x <= 10; x++) {
                 terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setAltitude(10.0);
@@ -44,14 +64,28 @@ public class SheetErosion extends Tool {
         for (Tile tile : terrain) {
             this.tiles[i++] = tile;
         }
-        this.sortTilesByAltitude(0, tiles.length - 1);
         
-        this.moving = new boolean[terrain.getWidth() * terrain.getHeight()];
-        
-        for (Tile tile : this.tiles) {
-            Tile neighbor = this.getLowestNeighborTile(terrain, tile);
-            if (neighbor != null) {
-                this.erode(terrain, tile, neighbor);
+        this.sortTilesByAltitude(0, this.tiles.length - 1);
+    }
+    
+    private void setupNeighborOffsets(Terrain terrain) {
+        this.neighbor_offsets = new Position[8];
+        int i = 0;
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                if (y == 0 && x == 0) {
+                    continue;
+                }
+                this.neighbor_offsets[i++] = new Position(x, y);
+            }
+        }
+        // Shuffle them:
+        for (i = 0; i < this.neighbor_offsets.length; i++) {
+            int swap_with = this.random.nextInt(8);
+            if (i != swap_with) {
+                Position tmp = this.neighbor_offsets[i];
+                this.neighbor_offsets[i] = this.neighbor_offsets[swap_with];
+                this.neighbor_offsets[swap_with] = tmp;
             }
         }
     }
@@ -125,20 +159,15 @@ public class SheetErosion extends Tool {
         Tile lowest = null;
         int x = tile.getPosition().getX();
         int y = tile.getPosition().getY();
-        for (int dy = -1; dy <= 1; dy++) {
-            for (int dx = -1; dx <= 1; dx++) {
-                if (dx == 0 && dy == 0) {
-                    continue;
-                }
-                Tile tmp = terrain.getTile(x + dx, y + dy);
-                if(tmp == null) {
-                    continue;
-                }
-                if (tmp.getAltitude(false) < tile.getAltitude(false)) {
-                    if (lowest == null || tmp.getAltitude(false) < lowest.getAltitude(false)) {
-                        // todo: change to get the tile where the slope is the most steep (downhill)?
-                        lowest = tmp;
-                    }
+        for (Position offset : this.neighbor_offsets) {
+            Tile tmp = terrain.getTile(x + offset.getX(), y + offset.getY());
+            if(tmp == null) {
+                continue;
+            }
+            if (tmp.getAltitude(false) < tile.getAltitude(false)) {
+                if (lowest == null || tmp.getAltitude(false) < lowest.getAltitude(false)) {
+                    // todo: change to get the tile where the slope is the most steep (downhill)?
+                    lowest = tmp;
                 }
             }
         }
