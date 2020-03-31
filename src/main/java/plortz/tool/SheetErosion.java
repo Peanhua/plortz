@@ -30,9 +30,6 @@ public class SheetErosion extends Tool {
     private Tile[]    tiles;  // All the tiles sorted by altitude (highest first).
     private boolean[] moving; // True for tiles that are rolling (decides whether to use static of kinetic friction).
     
-    private int count;
-    private int iteration;
-    
     @Override
     public void apply(Terrain terrain) {
         
@@ -41,11 +38,6 @@ public class SheetErosion extends Tool {
                 terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setAltitude(10.0);
             }
         }
-        
-        iteration = 0;
-        while((iteration == 0 || count > 0) && iteration < 2) {
-            count = 0;
-            iteration++;
         
         this.tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
         int i = 0;
@@ -61,8 +53,6 @@ public class SheetErosion extends Tool {
             if (neighbor != null) {
                 this.erode(terrain, tile, neighbor);
             }
-        }
-            System.out.println("iteration=" + iteration + ": " + count);
         }
     }
     
@@ -101,29 +91,7 @@ public class SheetErosion extends Tool {
     }
     
     
-    private boolean shouldErode(Terrain terrain, Tile source, Tile destination) {
-        /*
-        * From https://en.wikipedia.org/wiki/Angle_of_repose
-        * Angle of repose is in degrees.
-        */
-        double angle_of_repose = source.getType().getAngleOfRepose(this.moving[source.getPosition().getX() + source.getPosition().getY() * terrain.getWidth()]);
-        
-        double slope = terrain.getSlope(source, destination);
-        slope = Math.atan(slope); // Convert to radians
-        slope = slope * 180.0 / Math.PI; // Convert to degrees
-        
-        System.out.print("should(aor=" + angle_of_repose + ",slope=" + slope);
-        System.out.print(")");
-
-        return angle_of_repose < -slope; // Negate slope, because downhill slope is below 0 and angle_of_repose is a positive number.
-    }
-    
-    
     private void erode(Terrain terrain, Tile source, Tile destination) {
-        /*if (!this.shouldErode(terrain, source, destination)) {
-        //    return;
-        }*/
-        
         double angle_of_repose = source.getType().getAngleOfRepose(this.moving[source.getPosition().getX() + source.getPosition().getY() * terrain.getWidth()]);
         double slope = angle_of_repose * Math.PI / 180.0; // to radians
         slope = Math.tan(slope); // to slope
@@ -143,12 +111,6 @@ public class SheetErosion extends Tool {
             return;
         }
         
-        System.out.print("iteration=" + iteration + " ");
-        System.out.print(source.getPosition() + ":" + destination.getPosition() + " ");
-        System.out.print("old slope=" + terrain.getSlope(source, destination) + ": ");
-        System.out.print(this.shouldErode(terrain, source, destination) + ": aor=" + angle_of_repose + "->" + slope + ": amount=" + amount);
-        System.out.print("  heights=" + source.getAltitude(false) + "->" + destination.getAltitude(false) + ": target=" + target_height);
-        count++;
         destination.adjustAltitude(amount);
         destination.setType(source.getType());
 
@@ -156,11 +118,6 @@ public class SheetErosion extends Tool {
         // todo: expose (ie. set source.type) what was under the stuff that just rolled to the destination
         
         this.moving[destination.getPosition().getX() + destination.getPosition().getY() * terrain.getWidth()] = true;
-        
-        System.out.print(" new slope=" + terrain.getSlope(source, destination));
-        System.out.print("  new heights=" + source.getAltitude(false) + "->" + destination.getAltitude(false));
-        
-        System.out.println("");
     }
     
     
