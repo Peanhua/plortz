@@ -16,8 +16,9 @@
  */
 package plortz.tool;
 
-import plortz.Tile;
-import plortz.TileType;
+import plortz.terrain.Position;
+import plortz.terrain.Tile;
+import plortz.terrain.SoilLayer;
 
 /**
  *
@@ -27,8 +28,8 @@ class TestTile extends Tile {
 
     public int altitude_adjust_counter;
 
-    public TestTile(TileType type, double altitude) {
-        super(type, altitude);
+    public TestTile(Position pos, SoilLayer.Type type, double altitude) {
+        super(pos, type, altitude);
         this.altitude_adjust_counter = 0;
     }
 
@@ -38,8 +39,8 @@ class TestTile extends Tile {
     }
 
     @Override
-    public void adjustAltitude(double altitude) {
-        super.setAltitude(altitude);
+    public void adjustTopSoilAmount(double altitude) {
+        super.setTopSoilAmount(altitude);
         this.altitude_adjust_counter++;
     }
 }

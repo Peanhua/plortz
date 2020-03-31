@@ -14,17 +14,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.terrain;
 
 /**
  * The type of the tile, describes static properties of the type.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public enum TileType {
-    DIRT,
-    SAND,
-    CLIFF;
+public class SoilLayer {
+    
+    public enum Type {
+        DIRT,
+        SAND,
+        CLIFF;
+    };
+    
+    private final Type type;
+    private double     amount;
+    
+    public SoilLayer(Type type, double amount) {
+        this.type   = type;
+        this.amount = amount;
+    }
+    
+    public SoilLayer(SoilLayer source) {
+        this.type   = source.type;
+        this.amount = source.amount;
+    }
+    
+    public Type getType() {
+        return this.type;
+    }
+    
+    public double getAmount() {
+        return this.amount;
+    }
+    
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    
+    public void adjustAmount(double adjustment) {
+        this.amount += amount;
+    }
     
     public double getAngleOfRepose(boolean kinetic) {
         double aor = 30.0;

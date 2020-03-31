@@ -14,53 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package plortz.terrain;
 
 /**
- *
+ * Simple class to wrap x and y location into an object for code readability.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class PositionTest {
-    
-    private Position position;
-    
-    public PositionTest() {
+public class Position {
+    private int x;
+    private int y;
+
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-        position = new Position(3, 5);
-    }
-    
-    @After
-    public void tearDown() {
+    public Position(Position source) {
+        this.x = source.x;
+        this.y = source.y;
     }
 
-    @Test
-    public void gettersWork() {
-        assertEquals(3, position.getX());
-        assertEquals(5, position.getY());
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
     
-    @Test
-    public void setterWorks() {
-        position.set(9, 12);
-        assertEquals(9, position.getX());
-        assertEquals(12, position.getY());
+    public void set(Position source) {
+        this.x = source.x;
+        this.y = source.y;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(x=" + this.x + ",y=" + this.y + ")";
     }
 }

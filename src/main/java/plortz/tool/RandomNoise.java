@@ -17,8 +17,8 @@
 package plortz.tool;
 
 import java.util.Random;
-import plortz.Terrain;
-import plortz.Tile;
+import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 
 /**
  * Adjust altitudes with random values.
@@ -41,7 +41,7 @@ public class RandomNoise extends Tool {
     public void apply(Terrain terrain) {
         for (Tile t : terrain) {
             double amount = (this.random.nextDouble() * 2.0 - 1.0) * this.scale;
-            t.adjustAltitude(amount);
+            t.adjustTopSoilAmount(amount);
         }
     }
 }

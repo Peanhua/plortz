@@ -16,7 +16,7 @@
  */
 package plortz.tool;
 
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 
 /**
  * The abstract base class for all the tools.

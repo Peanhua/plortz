@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.terrain;
 
+import plortz.terrain.Position;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,14 +28,11 @@ import static org.junit.Assert.*;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class TileTest {
+public class PositionTest {
     
-    private double testdelta;
-    private Tile dirt;
-    private Tile sand;
-    private Tile sand_underwater;
+    private Position position;
     
-    public TileTest() {
+    public PositionTest() {
     }
     
     @BeforeClass
@@ -47,11 +45,7 @@ public class TileTest {
     
     @Before
     public void setUp() {
-        testdelta = 0.00001;
-        dirt = new Tile(TileType.DIRT, 0.0);
-        sand = new Tile(TileType.SAND, 0.5);
-        sand_underwater = new Tile(TileType.SAND, 0.2);
-        sand_underwater.setWater(0.1);
+        position = new Position(3, 5);
     }
     
     @After
@@ -59,17 +53,15 @@ public class TileTest {
     }
 
     @Test
-    public void getAltitudeWorksWithoutWater() {
-        assertEquals(0.0, dirt.getAltitude(false), testdelta);
-        assertEquals(0.0, dirt.getAltitude(true), testdelta);
-        assertEquals(0.5, sand.getAltitude(false), testdelta);
-        assertEquals(0.5, sand.getAltitude(true), testdelta);
+    public void gettersWork() {
+        assertEquals(3, position.getX());
+        assertEquals(5, position.getY());
     }
     
     @Test
-    public void getAltitudeWorksWithWater() {
-        assertEquals(0.2, sand_underwater.getAltitude(false), testdelta);
-        assertEquals(0.3, sand_underwater.getAltitude(true), testdelta);
+    public void setterWorks() {
+        position.set(9, 12);
+        assertEquals(9, position.getX());
+        assertEquals(12, position.getY());
     }
-    
 }

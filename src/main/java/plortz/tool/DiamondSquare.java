@@ -18,10 +18,10 @@ package plortz.tool;
 
 import java.security.InvalidParameterException;
 import java.util.Random;
-import plortz.Position;
-import plortz.Terrain;
-import plortz.Tile;
-import plortz.ValidPositionList;
+import plortz.terrain.Position;
+import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
+import plortz.terrain.ValidPositionList;
 
 /**
  * Adjusts the altitudes using the diamond-square algorithm.
@@ -76,7 +76,7 @@ public class DiamondSquare extends Tool {
                 positions.add(x + distance, y + distance);
                 middle.set(x + distance / 2, y + distance / 2);
                 Tile tile = terrain.getTile(middle);
-                tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
+                tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
             }
         }
     }
@@ -96,7 +96,7 @@ public class DiamondSquare extends Tool {
                     positions.add(x + distance,     y);
                     positions.add(x + distance / 2, y + distance / 2);
                     Tile tile = terrain.getTile(middle);
-                    tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
+                    tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
                 }
                 // The middle is centered to below of x, y:
                 middle.set(x, y + distance / 2);
@@ -106,7 +106,7 @@ public class DiamondSquare extends Tool {
                     positions.add(x + distance / 2, y + distance / 2);
                     positions.add(x,                y + distance);
                     Tile tile = terrain.getTile(middle);
-                    tile.adjustAltitude(this.getAltitudeChange(terrain, positions));
+                    tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
                 }
             }
         }

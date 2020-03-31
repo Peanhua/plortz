@@ -17,7 +17,7 @@
 package plortz.ui.command;
 
 import java.io.RandomAccessFile;
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 import plortz.io.TargaWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;

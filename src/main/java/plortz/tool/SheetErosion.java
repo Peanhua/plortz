@@ -18,9 +18,9 @@ package plortz.tool;
 
 import java.util.List;
 import java.util.Random;
-import plortz.Position;
-import plortz.Terrain;
-import plortz.Tile;
+import plortz.terrain.Position;
+import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 import plortz.collections.MyArrayList;
 
 /**
@@ -109,7 +109,7 @@ public class SheetErosion extends Tool {
         int pos1 = start1;
         int pos2 = start2;
         for (int i = start1; i <= end2; i++) {
-            if (start2 > end2 || (start1 <= end1 && this.tiles[start1].getAltitude(false) > this.tiles[start2].getAltitude(false))) {
+            if (pos2 > end2 || (pos1 <= end1 && this.tiles[pos1].getAltitude(false) > this.tiles[pos2].getAltitude(false))) {
                 this.tmp_tiles[i] = this.tiles[pos1];
                 pos1++;
             } else {
@@ -125,7 +125,7 @@ public class SheetErosion extends Tool {
     
     
     private void erode(Terrain terrain, Tile source, Tile destination) {
-        double angle_of_repose = source.getType().getAngleOfRepose(this.moving[source.getPosition().getX() + source.getPosition().getY() * terrain.getWidth()]);
+        double angle_of_repose = source.getTopSoil().getAngleOfRepose(this.moving[source.getPosition().getX() + source.getPosition().getY() * terrain.getWidth()]);
         double slope = angle_of_repose * Math.PI / 180.0; // to radians
         slope = Math.tan(slope); // to slope
         
@@ -143,11 +143,13 @@ public class SheetErosion extends Tool {
             return;
         }
         
-        destination.adjustAltitude(amount);
-        destination.setType(source.getType());
-
-        source.adjustAltitude(-amount);
-        // todo: expose (ie. set source.type) what was under the stuff that just rolled to the destination
+        double available_amount = source.getTopSoil().getAmount();
+        if (amount > available_amount) {
+            amount = available_amount;
+        }
+        
+        destination.addSoil(source.getTopSoil().getType(), amount);
+        source.adjustTopSoilAmount(-amount);
         
         this.moving[destination.getPosition().getX() + destination.getPosition().getY() * terrain.getWidth()] = true;
     }

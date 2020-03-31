@@ -16,8 +16,8 @@
  */
 package plortz.tool;
 
-import plortz.Terrain;
-import plortz.Tile;
+import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 
 /**
  * Elevates terrain to create a mountain/hill.
@@ -91,7 +91,7 @@ public class GaussianDistribution extends Tool {
         this.processed[pos] = true;
         Tile t = terrain.getTile(this.center_x + dx, this.center_y + dy);
         if (t != null) {
-            t.adjustAltitude(this.vertical_scale * change);
+            t.adjustTopSoilAmount(this.vertical_scale * change);
         }
     }
     

@@ -16,7 +16,7 @@
  */
 package plortz.ui;
 
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 
 /**
  * User interface with JavaFX.

@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 
 /**
  *
@@ -55,9 +55,9 @@ public class TargaWriterTest {
         empty_terrains[3] = new Terrain(3, 5);
         this.constructed_terrain = new Terrain(10, 10);
         for (int y = 2; y < 8; y++) {
-            this.constructed_terrain.getTile(5, y).setAltitude(1.0);
-            this.constructed_terrain.getTile(1 + y, y).setAltitude(1.0);
-            this.constructed_terrain.getTile(9 - y, y).setAltitude(1.0);
+            this.constructed_terrain.getTile(5, y).setTopSoilAmount(1.0);
+            this.constructed_terrain.getTile(1 + y, y).setTopSoilAmount(1.0);
+            this.constructed_terrain.getTile(9 - y, y).setTopSoilAmount(1.0);
         }
         writer = new TargaWriter(false);
         rle_writer = new TargaWriter(true);

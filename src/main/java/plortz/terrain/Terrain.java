@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.terrain;
 
 import java.security.InvalidParameterException;
 import java.util.Iterator;
 import java.util.List;
+import plortz.Vector;
 import plortz.collections.MyArrayList;
 
 
@@ -39,8 +40,7 @@ public class Terrain implements Iterable<Tile> {
         this.tiles  = new Tile[width * height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                this.tiles[x + y * width] = new Tile(TileType.DIRT, 0.0);
-                this.tiles[x + y * width].setPosition(new Position(x, y));
+                this.tiles[x + y * width] = new Tile(new Position(x, y), SoilLayer.Type.DIRT, 0.0);
             }
         }
     }
@@ -127,6 +127,7 @@ public class Terrain implements Iterable<Tile> {
     
     /**
      * Normalize altitudes to range 0..1
+     * todo: remove
      */
     public void normalize() {
         Vector minmax = this.getAltitudeRange();
@@ -140,7 +141,7 @@ public class Terrain implements Iterable<Tile> {
                 double alt = this.tiles[i].getAltitude(false);
                 alt -= min;
                 alt /= range;
-                this.tiles[i].setAltitude(alt);
+                this.tiles[i].setTopSoilAmount(alt);
             }
         }
     }

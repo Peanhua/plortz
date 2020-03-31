@@ -19,7 +19,7 @@ package plortz.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 
 /**
  * Base class for writing terrain to file.

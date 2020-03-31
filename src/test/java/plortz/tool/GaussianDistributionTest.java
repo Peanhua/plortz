@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import plortz.Terrain;
-import plortz.Tile;
+import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 
 /**
  *

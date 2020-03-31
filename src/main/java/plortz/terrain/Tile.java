@@ -14,7 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.terrain;
+
+import java.util.List;
+import plortz.Vector;
+import plortz.collections.MyArrayList;
 
 /**
  * A single tile in the Terrain.
@@ -22,38 +26,34 @@ package plortz;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Tile {
-    private TileType type;
-    private double   surface_level; // The altitude of the surface for this tile.
-    private double   water_height; // The depth of the water in this tile, the surface of the water is at surface_level + water_height.
-    private Position position;
+    private final List<SoilLayer> soil_layers;
+    private double                water_height; // The depth of the water in this tile, the surface of the water is at surface_level + water_height.
+    private final Position        position;
     
-    public Tile(TileType type, double altitude) {
-        this.type          = type;
-        this.surface_level = altitude;
-        this.water_height  = -1;
-        this.position      = new Position(0, 0);
+    public Tile(Position position, SoilLayer.Type type, double amount) {
+        this.soil_layers  = new MyArrayList<>(SoilLayer.class);
+        this.soil_layers.add(new SoilLayer(type, amount));
+        this.water_height = -1;
+        this.position     = new Position(position);
     }
     
     public Tile(Tile source) {
-        this.type          = source.type;
-        this.surface_level = source.surface_level;
-        this.water_height  = source.water_height;
-        this.position      = source.position;
+        this.soil_layers = new MyArrayList<>(SoilLayer.class);
+        for (SoilLayer layer : source.soil_layers) {
+            this.soil_layers.add(new SoilLayer(layer));
+        }
+        this.water_height = source.water_height;
+        this.position     = new Position(source.position);
     }
     
     @Override
     public String toString() {
-        return "Tile[type=" + this.type + ", surface_level=" + this.surface_level + ", water_height=" + this.water_height + "]";
+        return "Tile[position=" + this.position + "]";
     }
     
     
-    public TileType getType() {
-        return this.type;
-    }
-    
-    
-    public void setType(TileType type) {
-        this.type = type;
+    public SoilLayer getTopSoil() {
+        return this.soil_layers.get(this.soil_layers.size() - 1);
     }
     
     
@@ -68,20 +68,46 @@ public class Tile {
     
     
     public double getAltitude(boolean with_water) {
-        double alt = this.surface_level;
+        double alt = 0.0;
+        for (SoilLayer layer : this.soil_layers) {
+            alt += layer.getAmount();
+        }
         if (with_water && this.water_height > 0.0) {
             alt += this.water_height;
         }
         return alt;
     }
     
-    public void setAltitude(double altitude) {
-        this.surface_level = altitude;
+    public void setTopSoilAmount(double amount) {
+        if (amount > 0.0) {
+            this.getTopSoil().setAmount(amount);
+        } else {
+            if (this.soil_layers.size() == 1) {
+                this.soil_layers.get(0).setAmount(0.0);
+            } else {
+                this.soil_layers.remove(this.soil_layers.size() - 1);
+            }
+        }
     }
     
-    public void adjustAltitude(double change) {
-        this.setAltitude(this.surface_level + change);
+    public void adjustTopSoilAmount(double change) {
+        this.setTopSoilAmount(this.getTopSoil().getAmount() + change);
     }
+    
+    
+    public void addSoil(SoilLayer.Type type, double amount) {
+        if (amount <= 0.0) {
+            throw new IllegalArgumentException();
+        }
+        SoilLayer top = this.getTopSoil();
+        if (top.getType() == type) {
+            top.adjustAmount(amount);
+        } else {
+            this.soil_layers.add(new SoilLayer(type, amount));
+        }
+    }
+    
+    
 
     /**
      * Set the water height of this tile.

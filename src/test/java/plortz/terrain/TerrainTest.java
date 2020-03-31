@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.terrain;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -112,10 +112,10 @@ public class TerrainTest {
     
     @Test
     public void normalizingWorksWhenNormalizing() {
-        terrain.getTile(0, 0).setAltitude(0.5);
-        terrain.getTile(0, 1).setAltitude(1.0);
-        terrain.getTile(1, 0).setAltitude(-0.5);
-        terrain.getTile(1, 1).setAltitude(1.5);
+        terrain.getTile(0, 0).setTopSoilAmount(0.5);
+        terrain.getTile(0, 1).setTopSoilAmount(1.0);
+        terrain.getTile(1, 0).setTopSoilAmount(-0.5);
+        terrain.getTile(1, 1).setTopSoilAmount(1.5);
         terrain.normalize();
         for (Tile t : terrain) {
             assertTrue(t.getAltitude(false) >= 0.0);
@@ -136,22 +136,22 @@ public class TerrainTest {
     public void copyConstructorDoesDeepCopy() {
         Terrain t = new Terrain(terrain);
         assertNotEquals(terrain.getTile(0, 0), t.getTile(0, 0));
-        t.getTile(0, 0).setAltitude(1.0);
+        t.getTile(0, 0).setTopSoilAmount(1.0);
         assertTrue(t.getTile(0, 0).getAltitude(false) - terrain.getTile(0, 0).getAltitude(false) > 0.1);
     }
     
     @Test
     public void setTileChangesTheTile() {
-        Tile t = new Tile(TileType.SAND, 5);
         Position pos = new Position(0, 1);
+        Tile t = new Tile(pos, SoilLayer.Type.SAND, 5);
         terrain.setTile(pos, t);
         assertEquals(t, terrain.getTile(pos));
     }
 
     @Test
     public void setTileWithIncorrectParametersThrowsException() {
-        Tile t = new Tile(TileType.SAND, 5);
         Position pos = new Position(0, 1);
+        Tile t = new Tile(pos, SoilLayer.Type.SAND, 5);
         Position invpos = new Position(-1, -1);
         boolean exception_thrown;
         

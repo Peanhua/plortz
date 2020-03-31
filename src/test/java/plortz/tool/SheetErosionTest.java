@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import plortz.Position;
-import plortz.Terrain;
+import plortz.terrain.Position;
+import plortz.terrain.Terrain;
 
 /**
  *
@@ -60,7 +60,7 @@ public class SheetErosionTest {
         this.edges = 10;
         for (int y = -edges; y <= edges; y++) {
             for (int x = -edges; x <= edges; x++) {
-                terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setAltitude(10.0);
+                terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setTopSoilAmount(10.0);
             }
         }
         tool = new SheetErosion(new TestRandom());

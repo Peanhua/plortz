@@ -17,7 +17,7 @@
 package plortz.io;
 
 import java.io.ByteArrayOutputStream;
-import plortz.Terrain;
+import plortz.terrain.Terrain;
 
 /**
  * Writes ascii representation of the terrain.
