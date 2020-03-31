@@ -65,7 +65,6 @@ public class SheetErosion extends Tool {
     
     private void setupNeighborOffsets(Terrain terrain) {
         this.neighbor_offsets = new MyArrayList<>(Position.class);
-        int i = 0;
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 if (y == 0 && x == 0) {
@@ -75,7 +74,7 @@ public class SheetErosion extends Tool {
             }
         }
         // Shuffle them:
-        for (i = 0; i < this.neighbor_offsets.size(); i++) {
+        for (int i = 0; i < this.neighbor_offsets.size(); i++) {
             int swap_with = this.random.nextInt(this.neighbor_offsets.size());
             if (i != swap_with) {
                 Position tmp = this.neighbor_offsets.get(i);
