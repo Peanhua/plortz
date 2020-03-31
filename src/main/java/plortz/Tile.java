@@ -92,4 +92,29 @@ public class Tile {
     public void setWater(double water_height) {
         this.water_height = water_height;
     }
+    
+    
+    /**
+     * Return the slope from this to the target.
+     * 
+     * @param target The target tile.
+     * @return The slope, negative values are downhill from a to b, positive values uphill from a to b.
+     */
+    public double getSlope(Tile target) {
+        double altitude_change = target.getAltitude(false) - this.getAltitude(false);
+        double distance = this.getDistance(target);
+        return altitude_change / distance;
+    }
+
+    /**
+     * Return the distance to the target tile.
+     * 
+     * @param target The target tile.
+     * @return Distance to the target.
+     */
+    public double getDistance(Tile target) {
+        Vector a = new Vector(this.getPosition());
+        Vector b = new Vector(target.getPosition());
+        return a.subtract(b).getLength();
+    }
 }

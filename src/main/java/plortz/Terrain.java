@@ -162,30 +162,4 @@ public class Terrain implements Iterable<Tile> {
         
         return new Vector(min, max);
     }
-    
-    /**
-     * Return the slope from a to b.
-     * 
-     * @param a The source position.
-     * @param b The target position.
-     * @return The slope, negative values are downhill from a to b, positive values uphill from a to b.
-     */
-    public double getSlope(Position a, Position b) {
-        if (!this.isValidTilePosition(a) || !this.isValidTilePosition(b)) {
-            return 0.0;
-        }
-        Vector va = new Vector(a);
-        Vector vb = new Vector(b);
-        double distance = Math.abs((va.subtract(vb)).getLength());
-        
-        double aalt = this.getTile(a).getAltitude(false);
-        double balt = this.getTile(b).getAltitude(false);
-        double altitude_change = balt - aalt;
-        
-        return altitude_change / distance;
-    }
-
-    public double getSlope(Tile a, Tile b) {
-        return this.getSlope(a.getPosition(), b.getPosition());
-    }
 }

@@ -20,7 +20,6 @@ import java.util.Random;
 import plortz.Position;
 import plortz.Terrain;
 import plortz.Tile;
-import plortz.Vector;
 
 /**
  * Rolls loose land mass downhill.
@@ -130,15 +129,14 @@ public class SheetErosion extends Tool {
         double slope = angle_of_repose * Math.PI / 180.0; // to radians
         slope = Math.tan(slope); // to slope
         
-        Vector va = new Vector(source.getPosition());
-        Vector vb = new Vector(destination.getPosition());
-        double distance = Math.abs((va.subtract(vb)).getLength());
+        double distance = source.getDistance(destination);
         
         // slope = altitude_change / distance
         // -> slope * distance = altitude_change
         double max_altitude_change = slope * distance;
 
         double target_height = destination.getAltitude(false) + max_altitude_change;
+
         double amount = source.getAltitude(false) - target_height;
         amount *= 0.5; // half the amount because both source and destination will change in altitude
         if (amount < 0.01) {
