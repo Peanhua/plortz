@@ -66,6 +66,7 @@
                     <excludes>
                         <exclude>plortz/ui/*</exclude>
                         <exclude>plortz/ui/command/*</exclude>
+                        <exclude>plortz/ui/javafx/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
