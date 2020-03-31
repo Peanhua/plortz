@@ -18,7 +18,6 @@ package plortz.collections;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -34,6 +33,34 @@ public class MyArrayList<E> implements List<E> {
     private int            allocated_size;
     private int            used_size;
     private final Class<E> element_class;
+    
+    private class Iterator<E> implements java.util.Iterator<E> {
+        private final MyArrayList<E> list;
+        private int                  pos;
+        
+        public Iterator(MyArrayList<E> list) {
+            this.list = list;
+            this.pos  = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.pos < this.list.used_size;
+        }
+
+        @Override
+        public E next() {
+            E rv = this.list.get(this.pos);
+            this.pos++;
+            return rv;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+    
     
     public MyArrayList(Class<E> c) {
         this.allocated_size = 0;
@@ -87,14 +114,26 @@ public class MyArrayList<E> implements List<E> {
     public boolean isEmpty() {
         return this.used_size == 0;
     }
-
+    
     @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public E set(int i, E e) {
+        if (i < 0 || i >= this.used_size) {
+            throw new IndexOutOfBoundsException();
+        }
+        E previous = this.array[i];
+        this.array[i] = e;
+        return previous;
     }
 
     @Override
     public Iterator<E> iterator() {
+        return new Iterator<>(this);
+    }
+
+
+
+    @Override
+    public boolean contains(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -135,11 +174,6 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean retainAll(Collection<?> clctn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E set(int i, E e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

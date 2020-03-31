@@ -16,10 +16,12 @@
  */
 package plortz.tool;
 
+import java.util.List;
 import java.util.Random;
 import plortz.Position;
 import plortz.Terrain;
 import plortz.Tile;
+import plortz.collections.MyArrayList;
 
 /**
  * Rolls loose land mass downhill.
@@ -28,10 +30,10 @@ import plortz.Tile;
  */
 public class SheetErosion extends Tool {
 
-    private Random    random;
-    private Tile[]    tiles;  // All the tiles sorted by altitude (highest first).
-    private boolean[] moving; // True for tiles that are rolling (decides whether to use static of kinetic friction).
-    private Position[] neighbor_offsets; // Randomized offsets to the neighbor tiles
+    private final Random   random;
+    private Tile[]         tiles;  // All the tiles sorted by altitude (highest first).
+    private boolean[]      moving; // True for tiles that are rolling (decides whether to use static of kinetic friction).
+    private List<Position> neighbor_offsets; // Randomized offsets to the neighbor tiles
 
     public SheetErosion(Random random) {
         this.random = random;
@@ -68,23 +70,23 @@ public class SheetErosion extends Tool {
     }
     
     private void setupNeighborOffsets(Terrain terrain) {
-        this.neighbor_offsets = new Position[8];
+        this.neighbor_offsets = new MyArrayList<>(Position.class);
         int i = 0;
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 if (y == 0 && x == 0) {
                     continue;
                 }
-                this.neighbor_offsets[i++] = new Position(x, y);
+                this.neighbor_offsets.add(new Position(x, y));
             }
         }
         // Shuffle them:
-        for (i = 0; i < this.neighbor_offsets.length; i++) {
-            int swap_with = this.random.nextInt(8);
+        for (i = 0; i < this.neighbor_offsets.size(); i++) {
+            int swap_with = this.random.nextInt(this.neighbor_offsets.size());
             if (i != swap_with) {
-                Position tmp = this.neighbor_offsets[i];
-                this.neighbor_offsets[i] = this.neighbor_offsets[swap_with];
-                this.neighbor_offsets[swap_with] = tmp;
+                Position tmp = this.neighbor_offsets.get(i);
+                this.neighbor_offsets.set(i, this.neighbor_offsets.get(swap_with));
+                this.neighbor_offsets.set(swap_with, tmp);
             }
         }
     }
