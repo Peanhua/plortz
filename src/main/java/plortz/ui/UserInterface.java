@@ -87,6 +87,7 @@ public abstract class UserInterface {
             cmd.execute(this);
         } else if (input != null && input.length() > 0) {
             this.showMessage("Unknown command: " + input);
+            this.showMessage("Try \"help\".");
         }
     }
     

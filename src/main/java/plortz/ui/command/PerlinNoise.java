@@ -43,6 +43,11 @@ public class PerlinNoise extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Adjusts the altitudes using perlin noise.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + args.get(0) + " [scale] [density]");

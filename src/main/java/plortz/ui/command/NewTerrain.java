@@ -52,6 +52,11 @@ public class NewTerrain extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Destroys the current terrain and creates a new terrain.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + args.get(0) + " <width> <height>");

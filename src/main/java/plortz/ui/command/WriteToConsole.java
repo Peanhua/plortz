@@ -53,6 +53,11 @@ public class WriteToConsole extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Dumps the terrain as Ascii text.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " [normalize]");

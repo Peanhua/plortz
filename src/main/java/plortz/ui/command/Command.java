@@ -39,5 +39,6 @@ public abstract class Command {
     }
     
     public abstract void execute(UserInterface ui);
+    public abstract String getShortDescription();
     public abstract List<String> getUsage();
 }

@@ -16,6 +16,8 @@
  */
 package plortz.ui.javafx;
 
+import java.io.InputStream;
+import java.util.Properties;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
@@ -51,6 +53,9 @@ public class Main extends Application {
         
         Widget terrain_view = new TerrainView2d(my_ui);
         root.setCenter(terrain_view.createUserInterface());
+        
+        my_ui.showMessage("Welcome to Plortz.");
+        my_ui.showMessage("Type \"help\" to get started.");
     }
     
     public static void run(UserInterface my_ui) {

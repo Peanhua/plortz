@@ -58,6 +58,11 @@ public class WriteToTargaFile extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Saves the current terrain as 8-bit grayscale image in Targa file format.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <filename>");

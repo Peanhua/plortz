@@ -52,6 +52,11 @@ public class AddSoilLayer extends Command {
     }
     
     @Override
+    public String getShortDescription() {
+        return "Adds a layer of soil on top of the terrain.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <type> circle <x> <y> <radius>");

@@ -34,6 +34,11 @@ public class SheetErosion extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Rolls loose land mass downhill.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0));

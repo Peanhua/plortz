@@ -59,6 +59,11 @@ public class GaussianDistribution extends Command {
     }
     
     @Override
+    public String getShortDescription() {
+        return "Elevates terrain to create a mountain/hill.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <x> <y> <var> <h> <v>");

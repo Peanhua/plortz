@@ -55,6 +55,11 @@ public class DiamondSquare extends Command {
     }
     
     @Override
+    public String getShortDescription() {
+        return "Adjusts the altitudes using the diamond-square algorithm.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <scale>");

@@ -36,6 +36,11 @@ public class Help extends Command {
     }
 
     @Override
+    public String getShortDescription() {
+        return "Help on commands.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " [command]");
@@ -52,6 +57,7 @@ public class Help extends Command {
     private void helpCommand(UserInterface ui, String command) {
         CommandFactory cf = CommandFactory.getInstance();
         Command cmd = cf.create(command);
+        ui.showMessage(cmd.getShortDescription());
         cmd.showUsage(ui);
     }
 }

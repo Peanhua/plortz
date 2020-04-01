@@ -33,6 +33,11 @@ public class Quit extends Command {
     }
     
     @Override
+    public String getShortDescription() {
+        return "Quits the program.";
+    }
+
+    @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + args.get(0));
