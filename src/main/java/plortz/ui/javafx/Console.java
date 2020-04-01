@@ -16,7 +16,6 @@
  */
 package plortz.ui.javafx;
 
-import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -24,7 +23,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import plortz.terrain.Terrain;
 import plortz.ui.UserInterface;
 import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
@@ -54,7 +52,9 @@ public class Console extends Widget {
         console_cmd = new TextField();
         pane.getChildren().add(console_cmd);
 
-        console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, event -> { this.onCmdKeyReleased(event); });
+        console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            this.onCmdKeyReleased(event);
+        });
         
         return pane;
     }

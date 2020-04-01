@@ -167,7 +167,7 @@ public class SheetErosion extends Tool {
         int y = tile.getPosition().getY();
         for (Position offset : this.neighbor_offsets) {
             Tile tmp = terrain.getTile(x + offset.getX(), y + offset.getY());
-            if(tmp == null) {
+            if (tmp == null) {
                 continue;
             }
             if (tmp.getAltitude(false) < tile.getAltitude(false)) {
