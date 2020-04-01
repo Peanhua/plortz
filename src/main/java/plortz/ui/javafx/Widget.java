@@ -14,36 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.ui;
+package plortz.ui.javafx;
 
-import javafx.application.Platform;
+import javafx.scene.Node;
 
 /**
- * User interface with JavaFX.
- * 
- * Uses consoles terrain.
+ * Abstract base class for all the custom widgets.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class GraphicalUI extends UserInterface {
+public abstract class Widget {
+    /**
+     * Create the user interface nodes to represent this widget.
+     * 
+     * @return A node containing all the nodes of this widget
+     */
+    public abstract Node createUserInterface();
     
-    public void run() {
-        plortz.ui.javafx.Main.run(this);
-    }
-    
-    @Override
-    public String getNextCommand() {
-        return null;
-    }
-
-    @Override
-    public void showError(String error_message) {
-        System.out.println(error_message);
-    }
-    
-    @Override
-    public void stop() {
-        super.stop();
-        Platform.exit();
-    }
+    /**
+     * Refresh any dynamic content of this widget.
+     */
+    public abstract void refresh();
 }

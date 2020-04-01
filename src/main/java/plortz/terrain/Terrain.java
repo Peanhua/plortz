@@ -18,9 +18,9 @@ package plortz.terrain;
 
 import java.security.InvalidParameterException;
 import java.util.Iterator;
-import java.util.List;
 import plortz.Vector;
-import plortz.collections.MyArrayList;
+import plortz.observer.Observer;
+import plortz.observer.Subject;
 
 
 /**
@@ -30,9 +30,10 @@ import plortz.collections.MyArrayList;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Terrain implements Iterable<Tile> {
-    private final int    width;
-    private final int    height;
-    private final Tile[] tiles;
+    private final int     width;
+    private final int     height;
+    private final Tile[]  tiles;
+    private final Subject onChange;
     
     public Terrain(int width, int height) {
         this.width  = width;
@@ -43,6 +44,7 @@ public class Terrain implements Iterable<Tile> {
                 this.tiles[x + y * width] = new Tile(new Position(x, y), SoilLayer.Type.DIRT, 0.0);
             }
         }
+        this.onChange = new Subject();
     }
     
     public Terrain(Terrain source) {
@@ -52,6 +54,7 @@ public class Terrain implements Iterable<Tile> {
         for (int i = 0; i < width * height; i++) {
             this.tiles[i] = new Tile(source.tiles[i]);
         }
+        this.onChange = new Subject();
     }
 
     @Override
@@ -78,6 +81,22 @@ public class Terrain implements Iterable<Tile> {
         };
     }
 
+    /**
+     * Register an observer to be called whenever this terrain object is changed.
+     * 
+     * @param observer The observer object to be called upon change.
+     */
+    public void listenOnChange(Observer observer) {
+        this.onChange.addObserver(observer);
+    }
+    
+    /**
+     * Cause all the onChange listeners to be called.
+     */
+    public void changed() {
+        this.onChange.notifyObservers();
+    }
+    
     public int getWidth() {
         return this.width;
     }
@@ -108,6 +127,7 @@ public class Terrain implements Iterable<Tile> {
         int index = position.getX() + position.getY() * this.width;
         this.tiles[index] = tile;
         tile.setPosition(position);
+        this.changed();
     }
 
     public boolean isValidTilePosition(Position position) {

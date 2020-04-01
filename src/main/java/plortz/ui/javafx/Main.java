@@ -17,10 +17,9 @@
 package plortz.ui.javafx;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import plortz.ui.UserInterface;
 
@@ -34,20 +33,22 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
-        if (Main.my_ui == null) {
-            System.out.println("Running the application with this method is not yet supported.");
-            // todo: create the console ui
-            Platform.exit();
-        }
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
+        BorderPane root = new BorderPane();
+        Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);
         stage.show();
+        
+        ToolBar toolbar = new ToolBar();
+        root.setTop(toolbar);
+        
+        Widget console = new Console(my_ui);
+        root.setBottom(console.createUserInterface());
+        
+        Widget terrain_view = new TerrainView2d(my_ui);
+        root.setCenter(terrain_view.createUserInterface());
     }
     
-    public void run(UserInterface my_ui) {
+    public static void run(UserInterface my_ui) {
         Main.my_ui = my_ui;
         launch();
     }

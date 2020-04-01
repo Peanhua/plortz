@@ -52,6 +52,7 @@ public class SheetErosion extends Tool {
                 this.erode(terrain, tile, neighbor);
             }
         }
+        terrain.changed();
     }
     
     private void setupTiles(Terrain terrain) {

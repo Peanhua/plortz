@@ -14,36 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.ui;
-
-import javafx.application.Platform;
+package plortz.observer;
 
 /**
- * User interface with JavaFX.
- * 
- * Uses consoles terrain.
+ * Observer pattern, the listening object.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class GraphicalUI extends UserInterface {
-    
-    public void run() {
-        plortz.ui.javafx.Main.run(this);
-    }
-    
-    @Override
-    public String getNextCommand() {
-        return null;
-    }
-
-    @Override
-    public void showError(String error_message) {
-        System.out.println(error_message);
-    }
-    
-    @Override
-    public void stop() {
-        super.stop();
-        Platform.exit();
-    }
+public interface Observer {
+    /**
+     * Called whenever the subject state is changed.
+     */
+    void update();
 }

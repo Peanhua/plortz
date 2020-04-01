@@ -61,6 +61,8 @@ public class DiamondSquare extends Tool {
             diamondStep(terrain, distance);
             squareStep(terrain, distance);
         }
+        
+        terrain.changed();
     }
     
     

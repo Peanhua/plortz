@@ -16,6 +16,8 @@
  */
 package plortz.ui;
 
+import plortz.observer.Observer;
+import plortz.observer.Subject;
 import plortz.terrain.Terrain;
 import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
@@ -31,11 +33,13 @@ public abstract class UserInterface {
     private boolean              running;
     private final CommandFactory command_factory;
     private Terrain              terrain;
+    private Subject              onTerrainChange;
     
     public UserInterface() {
         this.running         = true;
         this.command_factory = CommandFactory.getInstance();
         this.terrain         = null;
+        this.onTerrainChange = new Subject();
     }
     
     public boolean isRunning() {
@@ -52,7 +56,18 @@ public abstract class UserInterface {
     
     public void setTerrain(Terrain terrain) {
         this.terrain = terrain;
+        this.onTerrainChange.notifyObservers();
     }
+    
+    /**
+     * Register an observer to be called whenever the terrain reference is changed.
+     * 
+     * @param observer The observer object to be called upon change.
+     */
+    public void listenOnTerrainChange(Observer observer) {
+        this.onTerrainChange.addObserver(observer);
+    }
+
     
     public void tick() {
         if (!this.running) {

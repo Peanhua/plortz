@@ -76,6 +76,8 @@ public class GaussianDistribution extends Tool {
                 }
             }
         }
+        
+        terrain.changed();
     }
     
     private double getAltitudeChangeForDistance(double distance) {

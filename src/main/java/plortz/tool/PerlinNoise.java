@@ -76,6 +76,8 @@ public class PerlinNoise extends Tool {
                 terrain.getTile(x, y).adjustTopSoilAmount((result * 2.0 - 1.0) * this.scale);
             }
         }
+        
+        terrain.changed();
     }
     
     

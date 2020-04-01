@@ -16,6 +16,8 @@
  */
 package plortz.terrain;
 
+import plortz.Vector;
+
 /**
  * The type of the tile, describes static properties of the type.
  * 
@@ -69,5 +71,14 @@ public class SoilLayer {
             aor *= 0.75;
         }
         return aor;
+    }
+    
+    public Vector getRGB() {
+        switch (this.type) {
+            case DIRT:  return new Vector(0.495, 0.325, 0.080);
+            case SAND:  return new Vector(1.000, 0.795, 0.291);
+            case CLIFF: return new Vector(0.600, 0.600, 0.600);
+            default:    return new Vector(1.000, 1.000, 1.000);
+        }
     }
 }
