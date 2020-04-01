@@ -40,6 +40,7 @@ public class WriteToTargaFile extends Command {
         RandomAccessFile fp;
         try {
             fp = new RandomAccessFile(this.args.get(1), "rw");
+            fp.setLength(0);
         } catch (Exception e) {
             ui.showError("Failed to create file '" + this.args.get(1) + "': " + e.getMessage());
             return;
@@ -51,6 +52,7 @@ public class WriteToTargaFile extends Command {
         Writer writer = new TargaWriter(true);
         try {
             writer.write(terrain, fp);
+            fp.close();
         } catch (Exception e) {
             ui.showError("Failed to save to file '" + this.args.get(1) + "': " + e.getMessage());
         }
