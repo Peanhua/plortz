@@ -35,16 +35,20 @@ public class Terrain implements Iterable<Tile> {
     private final Tile[]  tiles;
     private final Subject onChange;
     
-    public Terrain(int width, int height) {
+    public Terrain(int width, int height, SoilLayer.Type bottom_layer) {
         this.width  = width;
         this.height = height;
         this.tiles  = new Tile[width * height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                this.tiles[x + y * width] = new Tile(new Position(x, y), SoilLayer.Type.CLIFF, 0.0);
+                this.tiles[x + y * width] = new Tile(new Position(x, y), bottom_layer, 0.0);
             }
         }
         this.onChange = new Subject();
+    }
+    
+    public Terrain(int width, int height) {
+        this(width, height, SoilLayer.Type.CLIFF);
     }
     
     public Terrain(Terrain source) {

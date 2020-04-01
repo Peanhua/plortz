@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import plortz.terrain.Position;
+import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 
 /**
@@ -50,7 +51,7 @@ public class SheetErosionTest {
     @Before
     public void setUp() {
         testdelta = 0.00001;
-        this.terrain = new Terrain(100, 100);
+        this.terrain = new Terrain(100, 100, SoilLayer.Type.SAND);
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
