@@ -43,6 +43,11 @@ public class DiamondSquare extends Command {
             return;
         }
         
+        if (ui.getTerrain().getWidth() != ui.getTerrain().getHeight() || !plortz.tool.DiamondSquare.checkSize(ui.getTerrain().getWidth())) {
+            ui.showError("The terrain size is not suitable for diamond-square algorithm. Width must equal height, and both be (2^n)+1.");
+            return;
+        }
+        
         Tool ds = new plortz.tool.DiamondSquare(scale, new MersenneTwister());
         ds.apply(ui.getTerrain());
     }
