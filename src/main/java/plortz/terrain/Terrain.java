@@ -156,8 +156,12 @@ public class Terrain implements Iterable<Tile> {
         
         for (int i = 0; i < this.width * this.height; i++) {
             double alt = this.tiles[i].getAltitude(false);
-            min = Math.min(min, alt);
-            max = Math.max(max, alt);
+            if (alt < min) {
+                min = alt;
+            }
+            if (alt > max) {
+                max = alt;
+            }
         }
         
         return new Vector(min, max);
