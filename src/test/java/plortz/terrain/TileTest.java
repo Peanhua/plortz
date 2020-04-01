@@ -73,4 +73,26 @@ public class TileTest {
         assertEquals(0.3, sand_underwater.getAltitude(true), testdelta);
     }
     
+    @Test
+    public void addingDifferentTypeOfSoilCreatesNewLayer() {
+        dirt.addSoil(SoilLayer.Type.SAND, 1.0);
+        assertEquals(SoilLayer.Type.DIRT, dirt.getBottomSoil().getType());
+        assertEquals(SoilLayer.Type.SAND, dirt.getTopSoil().getType());
+    }
+
+    @Test
+    public void addingSameTypeOfSoilAddsToExisting() {
+        double original = dirt.getTopSoil().getAmount();
+        dirt.addSoil(SoilLayer.Type.DIRT, 1.0);
+        assertEquals(SoilLayer.Type.DIRT, dirt.getBottomSoil().getType());
+        assertEquals(SoilLayer.Type.DIRT, dirt.getTopSoil().getType());
+        assertTrue(original < dirt.getTopSoil().getAmount());
+    }
+    
+    @Test
+    public void removingAllTopSoilExposesLayerBelow() {
+        dirt.addSoil(SoilLayer.Type.SAND, 1.0);
+        dirt.adjustTopSoilAmount(-2.0);
+        assertEquals(SoilLayer.Type.DIRT, dirt.getTopSoil().getType());
+    }
 }

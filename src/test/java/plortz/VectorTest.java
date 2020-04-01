@@ -134,4 +134,13 @@ public class VectorTest {
         }
         assertTrue(exception_thrown);
     }
+    
+    @Test
+    public void multiplyWorks() {
+        Vector v = new Vector(2.0, 3.0, 4.0);
+        Vector m = v.multiply(10.0);
+        assertEquals(20.0, m.getX(), testdelta);
+        assertEquals(30.0, m.getY(), testdelta);
+        assertEquals(40.0, m.getZ(), testdelta);
+    }
 }

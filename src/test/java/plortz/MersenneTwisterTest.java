@@ -84,4 +84,22 @@ public class MersenneTwisterTest {
             assertTrue(random <= max);
         }
     }
+    
+    @Test
+    public void nextLongReturnsValues() {
+        long sum = 0;
+        for (int i = 0; i < 10; i++) {
+            sum += mt.nextLong();
+        }
+        assertTrue(sum > 0);
+    }
+
+    @Test
+    public void nextIntReturnsValues() {
+        int sum = 0;
+        for (int i = 0; i < 10; i++) {
+            sum += mt.nextInt();
+        }
+        assertTrue(sum > 0);
+    }
 }

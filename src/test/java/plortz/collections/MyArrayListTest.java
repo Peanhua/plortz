@@ -224,4 +224,81 @@ public class MyArrayListTest {
         assertEquals(42, (int) int_list.get(0));
         assertEquals(44, (int) int_list.get(1));
     }
+    
+    @Test
+    public void removingIllegalIndexThrowsException() {
+        boolean exception_thrown;
+        
+        exception_thrown = false;
+        try {
+            int_list.remove(-1);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+
+        exception_thrown = false;
+        try {
+            int_list.remove(1);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
+    
+    @Test
+    public void removingObjectWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        string_list.remove(b);
+        assertEquals(2, string_list.size());
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(c));
+    }
+
+    @Test
+    public void removingNullObjectWorks() {
+        String a = "eka";
+        String b = null;
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        string_list.remove(null);
+        assertEquals(2, string_list.size());
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(c));
+    }
+    
+    @Test
+    public void removingNonExistingObjectDoesNotChangeTheList() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(c);
+        string_list.remove(b);
+        assertEquals(2, string_list.size());
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(c));
+    }
+
+    @Test
+    public void removingNullObjectDoesNotChangeTheListWhenItDoesNotContainNull() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        string_list.remove(null);
+        assertEquals(3, string_list.size());
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(b));
+        assertTrue(string_list.get(2).equals(c));
+    }
 }

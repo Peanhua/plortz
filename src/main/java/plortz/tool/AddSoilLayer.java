@@ -125,9 +125,9 @@ public class AddSoilLayer extends Tool {
     
     private void addRectangleLayer(Terrain terrain) {
         for (int dy = 0; dy < this.height; dy++) {
-            int y = this.center.getY() + dy;
+            int y = this.center.getY() + dy - this.height / 2;
             for (int dx = 0; dx < this.width; dx++) {
-                int x = this.center.getX() + dx;
+                int x = this.center.getX() + dx - this.width / 2;
                 Tile t = terrain.getTile(x, y);
                 if (t != null) {
                     t.addSoil(this.soil_type, this.amount);
