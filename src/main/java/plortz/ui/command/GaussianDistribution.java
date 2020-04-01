@@ -30,8 +30,7 @@ public class GaussianDistribution extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if (ui.getTerrain() == null) {
-            ui.showMessage("No terrain.");
+        if (!this.requireTerrain(ui)) {
             return;
         }
         

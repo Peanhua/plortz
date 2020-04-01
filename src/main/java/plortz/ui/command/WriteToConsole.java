@@ -35,18 +35,15 @@ public class WriteToConsole extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        Terrain original = ui.getTerrain();
-        if (original == null) {
-            ui.showMessage("No terrain.");
+        if (!this.requireTerrain(ui)) {
             return;
         }
         
-        Terrain terrain = new Terrain(original);
         boolean normalize = this.args.size() > 1;
         
         Writer writer = new AsciiWriter(normalize);
         try {
-            writer.write(terrain, System.out);
+            writer.write(ui.getTerrain(), System.out);
         } catch (Exception e) {
             ui.showMessage(this.args.get(0) + " failed: " + e.getMessage());
         }
@@ -54,7 +51,7 @@ public class WriteToConsole extends Command {
 
     @Override
     public String getShortDescription() {
-        return "Dumps the terrain as Ascii text.";
+        return "Dumps the terrain as ascii text to stdout.";
     }
 
     @Override

@@ -31,6 +31,10 @@ public class AddSoilLayer extends Command {
 
     @Override
     public void execute(UserInterface ui) {
+        if (!this.requireTerrain(ui)) {
+            return;
+        }
+        
         if (this.args.size() != 6 && this.args.size() != 7) {
             ui.showMessage("Incorrect number of arguments.");
             this.showUsage(ui);

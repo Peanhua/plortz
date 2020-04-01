@@ -30,6 +30,10 @@ public class PerlinNoise extends Command {
 
     @Override
     public void execute(UserInterface ui) {
+        if (!this.requireTerrain(ui)) {
+            return;
+        }
+        
         double scale   = 1.0;
         double density = 0.5;
         if (this.args.size() >= 2) {

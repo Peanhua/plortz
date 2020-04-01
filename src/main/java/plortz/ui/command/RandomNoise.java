@@ -31,6 +31,10 @@ public class RandomNoise extends Command {
 
     @Override
     public void execute(UserInterface ui) {
+        if (!this.requireTerrain(ui)) {
+            return;
+        }
+        
         if (this.args.size() != 2) {
             ui.showMessage("Incorrect number of arguments.");
             this.showUsage(ui);

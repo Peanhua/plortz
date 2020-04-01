@@ -38,6 +38,15 @@ public abstract class Command {
         this.getUsage().forEach(s -> ui.showMessage(s));
     }
     
+    protected boolean requireTerrain(UserInterface ui) {
+        if (ui.getTerrain() == null) {
+            ui.showMessage("Error: No terrain.");
+            ui.showMessage("The command " + this.args.get(0) + " requires a terrain, use the command \"new\" to create it.");
+            return false;
+        }
+        return true;
+    }
+    
     public abstract void execute(UserInterface ui);
     public abstract String getShortDescription();
     public abstract List<String> getUsage();
