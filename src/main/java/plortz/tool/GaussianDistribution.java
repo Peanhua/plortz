@@ -77,6 +77,9 @@ public class GaussianDistribution extends Tool {
             }
         }
         
+        if (this.vertical_scale < 0.0) {
+            terrain.zeroBottomSoilLayer();
+        }
         terrain.changed();
     }
     

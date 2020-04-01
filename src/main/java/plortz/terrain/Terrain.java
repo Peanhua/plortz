@@ -162,4 +162,32 @@ public class Terrain implements Iterable<Tile> {
         
         return new Vector(min, max);
     }
+    
+
+    /**
+     * Raise the bottom soil layer so that it doesn't contain negative amounts.
+     * <p>
+     * Certain tools require/assume that every soil layer has a positive amount,
+     * but the changes made to the terrain will occasionally invalidate this.
+     * 
+     * This method fixes the situation by adding to the bottom layer.
+     * 
+     * All tools that have the potential to adjust the soil amounts with a negative amount must call this afterwards.
+     */
+    public void zeroBottomSoilLayer() {
+        double minamount = 0.0;
+        for (int i = 0; i < this.width * this.height; i++) {
+            double amt = this.tiles[i].getBottomSoil().getAmount();
+            if (amt < minamount) {
+                minamount = amt;
+            }
+        }
+        
+        if (minamount < 0.0) {
+            minamount = -minamount;
+            for (int i = 0; i < this.width * this.height; i++) {
+                this.tiles[i].getBottomSoil().adjustAmount(minamount);
+            }
+        }
+    }
 }

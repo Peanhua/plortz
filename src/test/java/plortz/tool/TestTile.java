@@ -40,7 +40,7 @@ class TestTile extends Tile {
 
     @Override
     public void adjustTopSoilAmount(double altitude) {
-        super.setTopSoilAmount(altitude);
+        super.adjustTopSoilAmount(altitude);
         this.altitude_adjust_counter++;
     }
 }

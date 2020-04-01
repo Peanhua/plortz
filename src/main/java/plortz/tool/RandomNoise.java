@@ -43,6 +43,7 @@ public class RandomNoise extends Tool {
             double amount = (this.random.nextDouble() * 2.0 - 1.0) * this.scale;
             t.adjustTopSoilAmount(amount);
         }
+        terrain.zeroBottomSoilLayer();
         terrain.changed();
     }
 }

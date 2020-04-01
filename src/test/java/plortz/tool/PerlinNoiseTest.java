@@ -94,8 +94,9 @@ public class PerlinNoiseTest {
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 double altitude = terrain.getTile(x, y).getAltitude(false);
-                assertTrue(altitude >= -1.0);
-                assertTrue(altitude <= 1.0);
+                // The range needs to actually be [0,2] because of the zeroing:
+                assertTrue(altitude >= 0.0);
+                assertTrue(altitude <= 2.0);
             }
         }
     }

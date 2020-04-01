@@ -56,6 +56,10 @@ public class Tile {
         return this.soil_layers.get(this.soil_layers.size() - 1);
     }
     
+    public SoilLayer getBottomSoil() {
+        return this.soil_layers.get(0);
+    }
+    
     
     public Position getPosition() {
         return this.position;

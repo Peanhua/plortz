@@ -165,4 +165,18 @@ public class TerrainTest {
         }
         assertTrue(exception_thrown);
     }
+    
+    @Test
+    public void zeroBottomLayerDoesNotLeaveNegativeAmounts() {
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                terrain.getTile(x, y).getBottomSoil().setAmount(-(x + 1)/(y + 1));
+            }
+        }
+        terrain.zeroBottomSoilLayer();
+        for (Tile t : terrain) {
+            // paranoidly false test here so there is no need to test for equality with 0.0
+            assertFalse(t.getBottomSoil().getAmount() < 0.0);
+        }
+    }
 }
