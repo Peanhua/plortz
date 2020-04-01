@@ -16,12 +16,15 @@
  */
 package plortz.terrain;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import plortz.Vector;
+import plortz.collections.MyArrayList;
 
 /**
  *
@@ -61,4 +64,25 @@ public class SoilLayerTest {
         assertEquals(oldval + amount, layer.getAmount(), testdelta);
     }
     
+    @Test
+    public void allTypesHaveDifferentRGBValues() {
+        List<Vector> colors = new MyArrayList<>(Vector.class);
+        
+        for (SoilLayer.Type type : SoilLayer.Type.values()) {
+            layer = new SoilLayer(type, 0.0);
+            colors.add(layer.getRGB());
+        }
+        
+        for (int i = 0; i < colors.size(); i++) {
+            for (int j = i + 1; j < colors.size(); j++) {
+                int matchingvalues = 0;
+                for (int k = 0; k < 3; k++) {
+                    if (Math.abs(colors.get(i).get(k) - colors.get(j).get(k)) < testdelta) {
+                        matchingvalues++;
+                    }
+                }
+                assertTrue(matchingvalues < 3);
+            }
+        }
+    }
 }

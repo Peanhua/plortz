@@ -212,4 +212,16 @@ public class MyArrayListTest {
         }
         assertEquals(total, iterator_total);
     }
+    
+    @Test
+    public void removeWorks() {
+        int count = 7;
+        for (int i = 0; i < count; i++) {
+            int_list.add(42 + i);
+        }
+        
+        int_list.remove(1);
+        assertEquals(42, (int) int_list.get(0));
+        assertEquals(44, (int) int_list.get(1));
+    }
 }

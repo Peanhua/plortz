@@ -129,7 +129,33 @@ public class MyArrayList<E> implements List<E> {
     public Iterator<E> iterator() {
         return new Iterator<>(this);
     }
+    
+    @Override
+    public E remove(int i) {
+        if (i < 0 || i >= this.used_size) {
+            throw new IndexOutOfBoundsException();
+        }
+        E removed = this.array[i];
+        for (int j = i; j < this.used_size - 1; j++) {
+            this.array[j] = this.array[j + 1];
+        }
+        this.used_size--;
+        return removed;
+    }
 
+    @Override
+    public boolean remove(Object o) {
+        boolean removed = false;
+        for (int i = 0; removed == false && i < this.used_size; i++) {
+            if (o == null ? this.array[i] == null : o.equals(this.array[i])) {
+                removed = true;
+                this.remove(i);
+            }
+        }
+        return removed;
+    }
+
+    
 
 
     @Override
@@ -144,11 +170,6 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public <T> T[] toArray(T[] ts) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean remove(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -179,11 +200,6 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public void add(int i, E e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E remove(int i) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
