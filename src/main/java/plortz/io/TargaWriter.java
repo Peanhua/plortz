@@ -17,6 +17,7 @@
 package plortz.io;
 
 import java.io.ByteArrayOutputStream;
+import plortz.Vector;
 import plortz.terrain.Terrain;
 
 /**
@@ -29,9 +30,11 @@ import plortz.terrain.Terrain;
  */
 public class TargaWriter extends Writer {
     private final boolean compressed;
+    private Vector        minmax;
     
     public TargaWriter(boolean compress) {
         this.compressed = compress;
+        this.minmax     = new Vector(0, 1);
     }
     
     @Override
@@ -39,6 +42,8 @@ public class TargaWriter extends Writer {
         if (terrain.getWidth() > 0xffff || terrain.getHeight() > 0xffff) {
             throw new IllegalArgumentException("Targa file can not exceed the size of 65535 pixels.");
         }
+
+        this.minmax = terrain.getAltitudeRange();
 
         byte[] header = this.getHeader(terrain);
         byte[] body;
@@ -77,7 +82,11 @@ public class TargaWriter extends Writer {
 
     
     private byte getImageByte(Terrain terrain, int x, int y) {
-        return (byte) (terrain.getTile(x, y).getAltitude(false) * 255.0);
+        double altitude = terrain.getTile(x, y).getAltitude(false);
+        altitude -= this.minmax.getX();
+        altitude /= this.minmax.getY();
+        altitude *= 255.0;
+        return (byte) altitude;
     }
     
     

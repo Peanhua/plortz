@@ -111,28 +111,6 @@ public class TerrainTest {
     }
     
     @Test
-    public void normalizingWorksWhenNormalizing() {
-        terrain.getTile(0, 0).setTopSoilAmount(0.5);
-        terrain.getTile(0, 1).setTopSoilAmount(1.0);
-        terrain.getTile(1, 0).setTopSoilAmount(-0.5);
-        terrain.getTile(1, 1).setTopSoilAmount(1.5);
-        terrain.normalize();
-        for (Tile t : terrain) {
-            assertTrue(t.getAltitude(false) >= 0.0);
-            assertTrue(t.getAltitude(false) <= 1.0);
-        }
-    }
-    
-    @Test
-    public void normalizingWorksWhenNothingToNormalize() {
-        terrain.normalize();
-        for (Tile t : terrain) {
-            assertTrue(t.getAltitude(false) >= 0.0);
-            assertTrue(t.getAltitude(false) <= 1.0);
-        }
-    }        
-    
-    @Test
     public void copyConstructorDoesDeepCopy() {
         Terrain t = new Terrain(terrain);
         assertNotEquals(terrain.getTile(0, 0), t.getTile(0, 0));

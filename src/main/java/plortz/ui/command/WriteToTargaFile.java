@@ -46,12 +46,9 @@ public class WriteToTargaFile extends Command {
             return;
         }
     
-        Terrain terrain = new Terrain(ui.getTerrain());
-        terrain.normalize();
-    
         Writer writer = new TargaWriter(true);
         try {
-            writer.write(terrain, fp);
+            writer.write(ui.getTerrain(), fp);
             fp.close();
         } catch (Exception e) {
             ui.showError("Failed to save to file '" + this.args.get(1) + "': " + e.getMessage());

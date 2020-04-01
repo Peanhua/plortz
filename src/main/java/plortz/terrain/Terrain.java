@@ -146,27 +146,6 @@ public class Terrain implements Iterable<Tile> {
 
     
     /**
-     * Normalize altitudes to range 0..1
-     * todo: remove
-     */
-    public void normalize() {
-        Vector minmax = this.getAltitudeRange();
-        double min = minmax.getX();
-        double max = minmax.getY();
-        
-        final double range = max - min;
-        
-        if (range > 0.0) {
-            for (int i = 0; i < this.width * this.height; i++) {
-                double alt = this.tiles[i].getAltitude(false);
-                alt -= min;
-                alt /= range;
-                this.tiles[i].setTopSoilAmount(alt);
-            }
-        }
-    }
-    
-    /**
      * Returns a vector containing the minimum and maximum altitude of the terrain.
      * 
      * @return Vector whose X -component contains the minimum altitude, and Y contains the maximum.

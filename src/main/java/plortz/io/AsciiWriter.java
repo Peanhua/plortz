@@ -17,6 +17,7 @@
 package plortz.io;
 
 import java.io.ByteArrayOutputStream;
+import plortz.Vector;
 import plortz.terrain.Terrain;
 
 /**
@@ -26,15 +27,28 @@ import plortz.terrain.Terrain;
  */
 public class AsciiWriter extends Writer {
 
+    private boolean normalize;
+    
+    public AsciiWriter(boolean normalize) {
+        this.normalize = normalize;
+    }
+    
     @Override
     protected byte[] getBytes(Terrain terrain) {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
         byte[] newline = { '\n' };
         byte[] buf = new byte[128];
         
+        Vector minmax = terrain.getAltitudeRange();
+        
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                String s = String.format("%4.2f ", terrain.getTile(x, y).getAltitude(false));
+                double altitude = terrain.getTile(x, y).getAltitude(false);
+                if (normalize) {
+                    altitude -= minmax.getX();
+                    altitude /= minmax.getY();
+                }
+                String s = String.format("%4.2f ", altitude);
                 char[] chars = s.toCharArray();
                 for (int i = 0; i < chars.length; i++) {
                     buf[i] = (byte) chars[i];

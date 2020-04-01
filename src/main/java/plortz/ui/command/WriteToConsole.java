@@ -40,11 +40,9 @@ public class WriteToConsole extends Command {
         }
         
         Terrain terrain = new Terrain(original);
-        if (this.args.size() > 1) {
-            terrain.normalize();
-        }
+        boolean normalize = this.args.size() > 1;
         
-        Writer writer = new AsciiWriter();
+        Writer writer = new AsciiWriter(normalize);
         try {
             writer.write(terrain, System.out);
         } catch (Exception e) {
