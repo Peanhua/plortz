@@ -68,7 +68,7 @@ public class Console extends Widget {
         if (cmd != null) {
             cmd.execute(this.user_interface);
         } else if (input != null && input.length() > 0) {
-            this.user_interface.showError("Unknown command: " + input);
+            this.user_interface.showMessage("Unknown command: " + input);
         }
         this.console_cmd.clear();
     }

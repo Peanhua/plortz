@@ -16,6 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.io.AsciiWriter;
 import plortz.io.Writer;
@@ -35,7 +37,7 @@ public class WriteToConsole extends Command {
     public void execute(UserInterface ui) {
         Terrain original = ui.getTerrain();
         if (original == null) {
-            ui.showError("No terrain.");
+            ui.showMessage("No terrain.");
             return;
         }
         
@@ -46,8 +48,14 @@ public class WriteToConsole extends Command {
         try {
             writer.write(terrain, System.out);
         } catch (Exception e) {
-            ui.showError(this.args.get(0) + " failed: " + e.getMessage());
+            ui.showMessage(this.args.get(0) + " failed: " + e.getMessage());
         }
     }
-    
+
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + this.args.get(0) + " [normalize]");
+        return rv;
+    }
 }

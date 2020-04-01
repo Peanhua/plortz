@@ -34,5 +34,10 @@ public abstract class Command {
         this.args = args;
     }
     
+    public void showUsage(UserInterface ui) {
+        this.getUsage().forEach(s -> ui.showMessage(s));
+    }
+    
     public abstract void execute(UserInterface ui);
+    public abstract List<String> getUsage();
 }

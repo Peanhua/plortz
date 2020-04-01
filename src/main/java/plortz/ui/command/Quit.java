@@ -16,6 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.ui.UserInterface;
 
 /**
@@ -30,4 +32,10 @@ public class Quit extends Command {
         ui.stop();
     }
     
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + args.get(0));
+        return rv;
+    }
 }

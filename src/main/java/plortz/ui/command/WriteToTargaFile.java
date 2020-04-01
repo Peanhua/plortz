@@ -17,6 +17,8 @@
 package plortz.ui.command;
 
 import java.io.RandomAccessFile;
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.io.TargaWriter;
 import plortz.io.Writer;
@@ -32,8 +34,8 @@ public class WriteToTargaFile extends Command {
     @Override
     public void execute(UserInterface ui) {
         if (this.args.size() != 2) {
-            ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + this.args.get(0) + " <filename>");
+            ui.showMessage("Incorrect number of arguments.");
+            this.showUsage(ui);
             return;
         }
         
@@ -42,7 +44,7 @@ public class WriteToTargaFile extends Command {
             fp = new RandomAccessFile(this.args.get(1), "rw");
             fp.setLength(0);
         } catch (Exception e) {
-            ui.showError("Failed to create file '" + this.args.get(1) + "': " + e.getMessage());
+            ui.showMessage("Failed to create file '" + this.args.get(1) + "': " + e.getMessage());
             return;
         }
     
@@ -51,7 +53,14 @@ public class WriteToTargaFile extends Command {
             writer.write(ui.getTerrain(), fp);
             fp.close();
         } catch (Exception e) {
-            ui.showError("Failed to save to file '" + this.args.get(1) + "': " + e.getMessage());
+            ui.showMessage("Failed to save to file '" + this.args.get(1) + "': " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + this.args.get(0) + " <filename>");
+        return rv;
     }
 }

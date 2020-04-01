@@ -16,6 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
@@ -29,17 +31,13 @@ public class GaussianDistribution extends Command {
     @Override
     public void execute(UserInterface ui) {
         if (ui.getTerrain() == null) {
-            ui.showError("No terrain.");
+            ui.showMessage("No terrain.");
             return;
         }
         
         if (this.args.size() != 6) {
-            ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + this.args.get(0) + " <x> <y> <var> <h> <v>");
-            ui.showError("  <x> <y> the center coordinates");
-            ui.showError("  <var>   variance");
-            ui.showError("  <h>     horizontal scale");
-            ui.showError("  <v>     vertical scale");
+            ui.showMessage("Incorrect number of arguments.");
+            this.showUsage(ui);
             return;
         }
         
@@ -52,7 +50,7 @@ public class GaussianDistribution extends Command {
             h   = Double.parseDouble(args.get(4));
             v   = Double.parseDouble(args.get(5));
         } catch (Exception e) {
-            ui.showError(this.args.get(0) + ": Failed to parse arguments: " + e.getMessage());
+            ui.showMessage(this.args.get(0) + ": Failed to parse arguments: " + e.getMessage());
             return;
         }
         
@@ -60,4 +58,14 @@ public class GaussianDistribution extends Command {
         tool.apply(ui.getTerrain());
     }
     
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + this.args.get(0) + " <x> <y> <var> <h> <v>");
+        rv.add("  <x> <y> the center coordinates");
+        rv.add("  <var>   variance");
+        rv.add("  <h>     horizontal scale");
+        rv.add("  <v>     vertical scale");
+        return rv;
+    }
 }

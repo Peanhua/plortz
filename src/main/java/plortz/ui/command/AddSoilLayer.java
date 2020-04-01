@@ -16,6 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.terrain.Position;
 import plortz.terrain.SoilLayer;
 import plortz.tool.Tool;
@@ -30,8 +32,8 @@ public class AddSoilLayer extends Command {
     @Override
     public void execute(UserInterface ui) {
         if (this.args.size() != 6 && this.args.size() != 7) {
-            ui.showError("Incorrect number of arguments.");
-            this.usage(ui);
+            ui.showMessage("Incorrect number of arguments.");
+            this.showUsage(ui);
             return;
         }
         
@@ -44,14 +46,17 @@ public class AddSoilLayer extends Command {
         
         if (this.args.size() == 6) {
             this.circle(ui, soil_type, center);
-        } else if(this.args.size() == 7) {
+        } else if (this.args.size() == 7) {
             this.rectangle(ui, soil_type, center);
         }
     }
     
-    private void usage(UserInterface ui) {
-        ui.showError("Usage: " + this.args.get(0) + " <type> circle <x> <y> <radius>");
-        ui.showError("       " + this.args.get(0) + " <type> rect <x> <y> <width> <height>");
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + this.args.get(0) + " <type> circle <x> <y> <radius>");
+        rv.add("       " + this.args.get(0) + " <type> rect <x> <y> <width> <height>");
+        return rv;
     }
     
     private SoilLayer.Type parseSoilTypeArg(UserInterface ui) {
@@ -70,15 +75,15 @@ public class AddSoilLayer extends Command {
                 }
                 validtypes += t.name();
             }
-            ui.showError("Invalid soil type '" + this.args.get(1) + "'. Valid values are: " + validtypes);
+            ui.showMessage("Invalid soil type '" + this.args.get(1) + "'. Valid values are: " + validtypes);
         }
         return soil_type;
     }        
     
     private void circle(UserInterface ui, SoilLayer.Type soil_type, Position center) {
         if (!this.args.get(2).equals("circle")) {
-            ui.showError("Error while parsing arguments, expected \"circle\", but got \"" + this.args.get(2) + "\".");
-            this.usage(ui);
+            ui.showMessage("Error while parsing arguments, expected \"circle\", but got \"" + this.args.get(2) + "\".");
+            this.showUsage(ui);
             return;
         }
         int radius = Integer.parseInt(this.args.get(5));
@@ -89,8 +94,8 @@ public class AddSoilLayer extends Command {
 
     private void rectangle(UserInterface ui, SoilLayer.Type soil_type, Position center) {
         if (!this.args.get(2).equals("rect")) {
-            ui.showError("Error while parsing arguments, expected \"rect\", but got \"" + this.args.get(2) + "\".");
-            this.usage(ui);
+            ui.showMessage("Error while parsing arguments, expected \"rect\", but got \"" + this.args.get(2) + "\".");
+            this.showUsage(ui);
             return;
         }
 

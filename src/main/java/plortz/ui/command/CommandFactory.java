@@ -19,6 +19,7 @@ package plortz.ui.command;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import plortz.collections.MyArrayList;
 
 /**
@@ -50,6 +51,7 @@ public class CommandFactory {
         this.commands.put("perlin",        PerlinNoise.class);
         this.commands.put("sheet_erosion", SheetErosion.class);
         this.commands.put("add_soil",      AddSoilLayer.class);
+        this.commands.put("help",          Help.class);
     }
     
     public Command create(String string) {
@@ -100,5 +102,9 @@ public class CommandFactory {
             System.out.println("Internal error, failed to instantiate command '" + command_string + "': " + e.getMessage());
             return null;
         }
+    }
+    
+    public Set<String> getCommands() {
+        return this.commands.keySet();
     }
 }

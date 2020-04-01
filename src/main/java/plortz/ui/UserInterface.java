@@ -79,10 +79,10 @@ public abstract class UserInterface {
         if (cmd != null) {
             cmd.execute(this);
         } else if (input != null && input.length() > 0) {
-            this.showError("Unknown command: " + input);
+            this.showMessage("Unknown command: " + input);
         }
     }
     
     public abstract String getNextCommand();
-    public abstract void   showError(String error_message);
+    public abstract void   showMessage(String error_message);
 }

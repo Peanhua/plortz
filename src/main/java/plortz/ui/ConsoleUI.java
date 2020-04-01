@@ -49,7 +49,7 @@ public class ConsoleUI extends UserInterface {
     }
 
     @Override
-    public void showError(String error_message) {
+    public void showMessage(String error_message) {
         this.output.println("Error: " + error_message);
     }
 }

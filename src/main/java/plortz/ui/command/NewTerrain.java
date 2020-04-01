@@ -16,6 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.List;
+import plortz.collections.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.ui.UserInterface;
 
@@ -29,8 +31,8 @@ public class NewTerrain extends Command {
     @Override
     public void execute(UserInterface ui) {
         if (this.args.size() != 3) {
-            ui.showError("Incorrect number of arguments.");
-            ui.showError("Usage: " + args.get(0) + " <width> <height>");
+            ui.showMessage("Incorrect number of arguments.");
+            this.showUsage(ui);
             return;
         }
         
@@ -38,15 +40,21 @@ public class NewTerrain extends Command {
         int height = Integer.parseInt(args.get(2));
         
         if (width <= 0) {
-            ui.showError("Minimum width is 1.");
+            ui.showMessage("Minimum width is 1.");
             return;
         }
         if (height <= 0) {
-            ui.showError("Minimum height is 1.");
+            ui.showMessage("Minimum height is 1.");
             return;
         }
         
         ui.setTerrain(new Terrain(width, height));
     }
-    
+
+    @Override
+    public List<String> getUsage() {
+        List<String> rv = new MyArrayList<>(String.class);
+        rv.add("Usage: " + args.get(0) + " <width> <height>");
+        return rv;
+    }
 }

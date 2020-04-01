@@ -17,26 +17,41 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.MersenneTwister;
 import plortz.collections.MyArrayList;
-import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class SheetErosion extends Command {
+public class Help extends Command {
+
     @Override
     public void execute(UserInterface ui) {
-        Tool tool = new plortz.tool.SheetErosion(new MersenneTwister(0));
-        tool.apply(ui.getTerrain());
+        if (this.args.size() == 1) {
+            this.helpCommandList(ui);
+        } else {
+            this.helpCommand(ui, this.args.get(1));
+        }
     }
 
     @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
-        rv.add("Usage: " + this.args.get(0));
+        rv.add("Usage: " + this.args.get(0) + " [command]");
         return rv;
+    }
+    
+    private void helpCommandList(UserInterface ui) {
+        CommandFactory cf = CommandFactory.getInstance();
+        ui.showMessage("Commands:");
+        cf.getCommands().forEach(s -> ui.showMessage("  " + s));
+        ui.showMessage("Try: help <command>");
+    }
+    
+    private void helpCommand(UserInterface ui, String command) {
+        CommandFactory cf = CommandFactory.getInstance();
+        Command cmd = cf.create(command);
+        cmd.showUsage(ui);
     }
 }
