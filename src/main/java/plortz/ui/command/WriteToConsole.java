@@ -18,7 +18,6 @@ package plortz.ui.command;
 
 import java.util.List;
 import plortz.collections.MyArrayList;
-import plortz.terrain.Terrain;
 import plortz.io.AsciiWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;
