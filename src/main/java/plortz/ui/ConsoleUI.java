@@ -33,6 +33,7 @@ public class ConsoleUI extends UserInterface {
         super();
         this.input   = new Scanner(input);
         this.output  = output;
+        this.listenOnMessage(() -> this.output.println(this.getMessage()));
     }
     
     public ConsoleUI() {
@@ -46,10 +47,5 @@ public class ConsoleUI extends UserInterface {
             return null;
         }
         return this.input.nextLine();
-    }
-
-    @Override
-    public void showMessage(String error_message) {
-        this.output.println("Error: " + error_message);
     }
 }

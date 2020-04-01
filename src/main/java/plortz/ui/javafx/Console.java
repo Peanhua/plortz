@@ -17,6 +17,7 @@
 package plortz.ui.javafx;
 
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -36,22 +37,27 @@ public class Console extends Widget {
     private final UserInterface  user_interface;
     private final CommandFactory command_factory;
     TextField                    console_cmd;
+    VBox                         console_messages;
 
     public Console(UserInterface user_interface) {
         this.user_interface  = user_interface;
         this.command_factory = CommandFactory.getInstance();
+        this.user_interface.listenOnMessage(() -> this.onMessage());
     }
     
     @Override
     public Node createUserInterface() {
         Pane pane = new VBox();
         
-        Text console_history = new Text();
-        pane.getChildren().add(console_history);
+        ScrollPane console_message_pane = new ScrollPane();
+        pane.getChildren().add(console_message_pane);
+        console_message_pane.setPrefHeight(200);
+        this.console_messages = new VBox();
+        console_message_pane.setContent(this.console_messages);
+        console_message_pane.vvalueProperty().bind(this.console_messages.heightProperty());
         
         console_cmd = new TextField();
         pane.getChildren().add(console_cmd);
-
         console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             this.onCmdKeyReleased(event);
         });
@@ -64,6 +70,7 @@ public class Console extends Widget {
             return;
         }
         String input = this.console_cmd.getText();
+        this.user_interface.showMessage("> " + input);
         Command cmd = this.command_factory.create(input);
         if (cmd != null) {
             cmd.execute(this.user_interface);
@@ -78,4 +85,7 @@ public class Console extends Widget {
         
     }
     
+    private void onMessage() {
+        this.console_messages.getChildren().add(new Text(this.user_interface.getMessage()));
+    }
 }

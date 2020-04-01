@@ -33,13 +33,16 @@ public abstract class UserInterface {
     private boolean              running;
     private final CommandFactory command_factory;
     private Terrain              terrain;
-    private Subject              onTerrainChange;
+    private final Subject        onTerrainChange;
+    private final Subject        onMessage;
+    private String               message; // Current message
     
     public UserInterface() {
         this.running         = true;
         this.command_factory = CommandFactory.getInstance();
         this.terrain         = null;
         this.onTerrainChange = new Subject();
+        this.onMessage       = new Subject();
     }
     
     public boolean isRunning() {
@@ -67,6 +70,10 @@ public abstract class UserInterface {
     public void listenOnTerrainChange(Observer observer) {
         this.onTerrainChange.addObserver(observer);
     }
+    
+    public void listenOnMessage(Observer observer) {
+        this.onMessage.addObserver(observer);
+    }
 
     
     public void tick() {
@@ -84,5 +91,13 @@ public abstract class UserInterface {
     }
     
     public abstract String getNextCommand();
-    public abstract void   showMessage(String error_message);
+    
+    public void showMessage(String message) {
+        this.message = message;
+        this.onMessage.notifyObservers();
+    }
+    
+    public String getMessage() {
+        return this.message;
+    }
 }

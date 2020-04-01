@@ -37,11 +37,6 @@ public class GraphicalUI extends UserInterface {
     }
 
     @Override
-    public void showMessage(String error_message) {
-        System.out.println(error_message);
-    }
-    
-    @Override
     public void stop() {
         super.stop();
         Platform.exit();
