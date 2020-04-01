@@ -57,7 +57,7 @@ public class SoilLayer {
     }
     
     public void adjustAmount(double adjustment) {
-        this.amount += amount;
+        this.amount += adjustment;
     }
     
     public double getAngleOfRepose(boolean kinetic) {
