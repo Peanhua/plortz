@@ -143,15 +143,16 @@ public class SheetErosion extends Tool {
 
         double amount = source.getAltitude(false) - target_height;
         amount *= 0.5; // half the amount because both source and destination will change in altitude
-        if (amount < 0.01) {
-            return;
-        }
         
         double available_amount = source.getTopSoil().getAmount();
         if (amount > available_amount) {
             amount = available_amount;
         }
-        
+
+        if (amount < 0.01) {
+            return;
+        }
+
         destination.addSoil(source.getTopSoil().getType(), amount);
         source.adjustTopSoilAmount(-amount);
         

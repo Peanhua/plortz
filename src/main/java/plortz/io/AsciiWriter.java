@@ -46,7 +46,7 @@ public class AsciiWriter extends Writer {
                 double altitude = terrain.getTile(x, y).getAltitude(false);
                 if (normalize) {
                     altitude -= minmax.getX();
-                    altitude /= minmax.getY();
+                    altitude /= (minmax.getY() - minmax.getX());
                 }
                 String s = String.format("%4.2f ", altitude);
                 char[] chars = s.toCharArray();

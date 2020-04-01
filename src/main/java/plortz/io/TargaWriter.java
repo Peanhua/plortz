@@ -84,9 +84,8 @@ public class TargaWriter extends Writer {
     private byte getImageByte(Terrain terrain, int x, int y) {
         double altitude = terrain.getTile(x, y).getAltitude(false);
         altitude -= this.minmax.getX();
-        altitude /= this.minmax.getY();
-        altitude *= 255.0;
-        return (byte) altitude;
+        altitude /= (this.minmax.getY() - this.minmax.getX());
+        return (byte) (altitude * 255.0);
     }
     
     

@@ -83,7 +83,7 @@ public class Tile {
             this.getTopSoil().setAmount(amount);
         } else {
             if (this.soil_layers.size() == 1) {
-                this.soil_layers.get(0).setAmount(0.0);
+                this.getTopSoil().setAmount(amount);
             } else {
                 this.soil_layers.remove(this.soil_layers.size() - 1);
             }

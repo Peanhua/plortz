@@ -51,6 +51,7 @@ public class TerrainView2d extends Widget {
         this.height           = 0;
         
         ui.listenOnTerrainChange(() -> {
+            this.refresh();
             this.ui.getTerrain().listenOnChange(() -> {
                 this.refresh();
             });
@@ -119,7 +120,7 @@ public class TerrainView2d extends Widget {
                 
                 double altitude = tile.getAltitude(true);
                 altitude -= minmax.getX();
-                altitude /= minmax.getY();
+                altitude /= (minmax.getY() - minmax.getX());
                 
                 Vector rgb = tile.getTopSoil().getRGB();
                 int r = (int) (rgb.getX() * 255.0 * altitude);
