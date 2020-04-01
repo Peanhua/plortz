@@ -49,6 +49,7 @@ public class CommandFactory {
         this.commands.put("random",        RandomNoise.class);
         this.commands.put("perlin",        PerlinNoise.class);
         this.commands.put("sheet_erosion", SheetErosion.class);
+        this.commands.put("add_soil",      AddSoilLayer.class);
     }
     
     public Command create(String string) {

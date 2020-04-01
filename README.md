@@ -36,6 +36,7 @@ Commands are read from stdin and produce no output on success.
 * Apply random noise to adjust altitudes: ```random```
 * Apply perlin noise to adjust altitudes: ```perlin```
 * Apply sheet erosion: ```sheet_erosion```
+* Add soil layer: ```add_soil```
 * Simple ascii dump: ```dump``` (any extra argument dumps normalized values)
 * Save to .TGA file: ```save```
 * Quit: ```quit``` (or EOF)
