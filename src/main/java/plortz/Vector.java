@@ -134,6 +134,20 @@ public class Vector {
     }
     
     /**
+     * Return a new vector = this * factor
+     * @param factor The scalar factor.
+     * @return       New vector equal to this * factor.
+     */
+    public Vector multiply(double factor) {
+        double[] nvalues = new double[this.coords.length];
+        for (int i = 0; i < nvalues.length; i++) {
+            nvalues[i] = this.coords[i] * factor;
+        }
+        return new Vector(nvalues);
+    }
+        
+    
+    /**
      * Normalize to unit vector.
      */
     public void normalize() {

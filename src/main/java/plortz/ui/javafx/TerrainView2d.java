@@ -69,9 +69,8 @@ public class TerrainView2d extends Widget {
         this.canvas           = null;
         this.graphics_context = null;
         
-        this.container.heightProperty().addListener((o) -> {
-            this.onResized();
-        });
+        this.container.widthProperty().addListener((o) -> this.onResized());
+        this.container.heightProperty().addListener((o) -> this.onResized());
 
         return this.container;
     }
@@ -105,7 +104,34 @@ public class TerrainView2d extends Widget {
         if (terrain == null) {
             return;
         }
-        this.graphics_context.drawImage(this.getImage(terrain), 0, 0, this.width, this.height);
+        
+        Vector size = this.zoomToFit(new Vector(terrain.getWidth(), terrain.getHeight()), new Vector(this.width, this.height));
+        double x = this.width  / 2.0 - size.getX() / 2.0;
+        double y = this.height / 2.0 - size.getY() / 2.0;
+        this.graphics_context.drawImage(this.getImage(terrain), x, y, size.getX(), size.getY());
+    }
+    
+    /**
+     * Grow or shrink the given values keeping the aspect ratio.
+     * 
+     * @param values Values to grow/shrink, same object will be returned.
+     * @param max    The maximum values.
+     * @return       The new values, same object as the given parameter 'values'.
+     */
+    private Vector zoomToFit(Vector values, Vector max) {
+        if (values.getX() < max.getX()) {
+            values = values.multiply(max.getX() / values.getX());
+        }
+        if (values.getY() < max.getY()) {
+            values = values.multiply(max.getY() / values.getY());
+        }
+        if (values.getX() > max.getX()) {
+            values = values.multiply(max.getX() / values.getX());
+        }
+        if (values.getY() > max.getY()) {
+            values = values.multiply(max.getY() / values.getY());
+        }
+        return values;
     }
     
     private Image getImage(Terrain terrain) {
