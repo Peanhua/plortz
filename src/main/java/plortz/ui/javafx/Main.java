@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
 
 /**
@@ -33,6 +34,10 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
+        if (my_ui == null) {
+            my_ui = new GraphicalUI();
+        }
+        
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 1024, 768);
         stage.setScene(scene);

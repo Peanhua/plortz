@@ -24,6 +24,12 @@ Java 11 is required.
 * Compile and run the program: ```mvn compile exec:java```
 * Generate javadoc: ```mvn javadoc:javadoc```
 
+### Running
+The program can also be run with ```mvn javafx:run``` in addition to the normal ```mvn exec:java```.
+
+By default, the program starts in graphical user interface, but it also has a command-line user interface which can be activated by specifying --no-gui when starting:
+```mvn exec:java -Dexec.args="--no-gui"```
+
 
 ## Commands:
 Most commands require arguments, giving incorrect number of arguments prints the usage.

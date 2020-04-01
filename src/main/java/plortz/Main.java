@@ -27,10 +27,10 @@ import plortz.ui.UserInterface;
  */
 public class Main {
     public static void main(String args[]) {
-        boolean use_gui = false;
+        boolean use_gui = true;
         for (String arg : args) {
-            if (arg.equals("--gui")) {
-                use_gui = true;
+            if (arg.equals("--no-gui")) {
+                use_gui = false;
             } else {
                 System.out.println("Unknown argument '" + arg + "'");
                 return;
