@@ -73,7 +73,7 @@ public class PerlinNoise extends Tool {
                 double bottom = this.lerp(bottomleft, bottomright, lerpweight_x);
                 double result = this.lerp(top, bottom, lerpweight_y);
                 
-                terrain.getTile(x, y).adjustTopSoilAmount((result * 2.0 - 1.0) * this.scale);
+                terrain.getTile(x, y).adjustTopSoilAmount(result * this.scale);
             }
         }
         

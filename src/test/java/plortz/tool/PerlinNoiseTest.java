@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import plortz.MersenneTwister;
 import plortz.terrain.Position;
 import plortz.terrain.Terrain;
 
@@ -86,4 +87,16 @@ public class PerlinNoiseTest {
         }
     }
     
+    @Test
+    public void alterationsAreInCorrectRange01() {
+        tool = new PerlinNoise(1.0, 0.2, new MersenneTwister(0));
+        tool.apply(terrain);
+        for (int y = 0; y < terrain.getHeight(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                double altitude = terrain.getTile(x, y).getAltitude(false);
+                assertTrue(altitude >= -1.0);
+                assertTrue(altitude <= 1.0);
+            }
+        }
+    }
 }
