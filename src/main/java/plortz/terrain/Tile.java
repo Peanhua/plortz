@@ -98,7 +98,15 @@ public class Tile {
         this.setTopSoilAmount(this.getTopSoil().getAmount() + change);
     }
     
-    
+
+    /**
+     * Add soil to the top.
+     * <p>
+     * New layer is created if the current top soil has different type.
+     * 
+     * @param type   The soil type to add.
+     * @param amount The amount of soil to add.
+     */
     public void addSoil(SoilLayer.Type type, double amount) {
         if (amount <= 0.0) {
             throw new IllegalArgumentException();
@@ -111,7 +119,30 @@ public class Tile {
         }
     }
     
-    
+    /**
+     * Insert soil.
+     * <p>
+     * New layer is created if the specified layer has different type.
+     * 
+     * @param layer  The layer index where to insert.
+     * @param type   The soil type to add.
+     * @param amount The amount of soil to add.
+     */
+    public void insertSoil(int layer, SoilLayer.Type type, double amount) {
+        if (amount <= 0.0) {
+            throw new IllegalArgumentException();
+        }
+        if (layer < 0 || layer >= this.soil_layers.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        SoilLayer soil = this.soil_layers.get(layer);
+        if (soil.getType() == type) {
+            soil.adjustAmount(amount);
+        } else {
+            soil = new SoilLayer(type, amount);
+            this.soil_layers.add(layer, soil);
+        }
+    }
 
     /**
      * Set the water height of this tile.

@@ -33,14 +33,14 @@ public class AddSoilLayer extends Tool {
         Rectangle
     };
     
-    private final AreaType       area_type;
-    private final Position       center;
-    private final int            width;
-    private final int            height;
-    private final SoilLayer.Type soil_type;
-    private final double         amount;
-    private boolean[] processed;      // Holds true for each tile already processed, used to avoid processing same tile multiple times.
-    private int       processed_size; // The number of elements in processed array is processed_size * processed_size.
+    private final AreaType area_type;
+    private final Position center;
+    private final int      width;
+    private final int      height;
+    private boolean[]      processed;      // Holds true for each tile already processed, used to avoid processing same tile multiple times.
+    private int            processed_size; // The number of elements in processed array is processed_size * processed_size.
+    protected final SoilLayer.Type soil_type;
+    protected final double         amount;
     
     /**
      * Constructor for rectangle area.
@@ -117,22 +117,22 @@ public class AddSoilLayer extends Tool {
             return;
         }
         this.processed[pos] = true;
-        Tile t = terrain.getTile(this.center.getX() + dx, this.center.getY() + dy);
-        if (t != null) {
-            t.addSoil(this.soil_type, this.amount);
-        }
+        this.processTile(terrain, this.center.getX() + dx, this.center.getY() + dy);
     }
     
     private void addRectangleLayer(Terrain terrain) {
         for (int dy = 0; dy < this.height; dy++) {
             int y = this.center.getY() + dy - this.height / 2;
             for (int dx = 0; dx < this.width; dx++) {
-                int x = this.center.getX() + dx - this.width / 2;
-                Tile t = terrain.getTile(x, y);
-                if (t != null) {
-                    t.addSoil(this.soil_type, this.amount);
-                }
+                this.processTile(terrain, this.center.getX() + dx - this.width / 2, y);
             }
+        }
+    }
+    
+    protected void processTile(Terrain terrain, int x, int y) {
+        Tile t = terrain.getTile(x, y);
+        if (t != null) {
+            t.addSoil(this.soil_type, this.amount);
         }
     }
 }

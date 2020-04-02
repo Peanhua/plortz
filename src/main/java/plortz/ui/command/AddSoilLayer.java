@@ -100,8 +100,12 @@ public class AddSoilLayer extends Command {
         }
         int radius = Integer.parseInt(this.args.get(6));
         
-        Tool tool = new plortz.tool.AddSoilLayer(soil_type, amount, center, radius);
+        Tool tool = this.getCircleTool(soil_type, amount, center, radius);
         tool.apply(ui.getTerrain());
+    }
+    
+    protected Tool getCircleTool(SoilLayer.Type soil_type, double amount, Position center, int radius) {
+        return new plortz.tool.AddSoilLayer(soil_type, amount, center, radius);
     }
 
     private void rectangle(UserInterface ui, SoilLayer.Type soil_type, double amount, Position center) {
@@ -114,8 +118,11 @@ public class AddSoilLayer extends Command {
         int width = Integer.parseInt(this.args.get(6));
         int height = Integer.parseInt(this.args.get(7));
         
-        Tool tool = new plortz.tool.AddSoilLayer(soil_type, amount, center, width, height);
+        Tool tool = getRectangleTool(soil_type, amount, center, width, height);
         tool.apply(ui.getTerrain());
     }
     
+    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
+        return new plortz.tool.AddSoilLayer(soil_type, amount, center, width, height);
+    }
 }

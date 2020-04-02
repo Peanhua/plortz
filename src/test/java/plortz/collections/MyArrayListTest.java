@@ -301,4 +301,43 @@ public class MyArrayListTest {
         assertTrue(string_list.get(1).equals(b));
         assertTrue(string_list.get(2).equals(c));
     }
+    
+    @Test
+    public void insertingAtStartWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(0, c);
+        assertTrue(string_list.get(0).equals(c));
+        assertTrue(string_list.get(1).equals(a));
+        assertTrue(string_list.get(2).equals(b));
+    }
+
+    @Test
+    public void insertingAtMiddleWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(c);
+        string_list.add(1, b);
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(b));
+        assertTrue(string_list.get(2).equals(c));
+    }
+
+    @Test
+    public void insertingAtEndWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(2, c);
+        assertTrue(string_list.get(0).equals(a));
+        assertTrue(string_list.get(1).equals(b));
+        assertTrue(string_list.get(2).equals(c));
+    }
 }

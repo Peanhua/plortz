@@ -155,6 +155,25 @@ public class MyArrayList<E> implements List<E> {
         return removed;
     }
 
+    @Override
+    public void add(int i, E e) {
+        if (i < 0 || i > this.used_size) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (this.used_size >= this.allocated_size) {
+            this.allocate(this.allocated_size * 2);
+            if (this.used_size >= this.allocated_size) {
+                throw new OutOfMemoryError();
+            }
+        }
+        for (int j = this.used_size; j > i; j--) {
+            this.array[j] = this.array[j - 1];
+        }
+        this.array[i] = e;
+        this.used_size++;
+    }
+
+    
     
 
 
@@ -195,11 +214,6 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean retainAll(Collection<?> clctn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void add(int i, E e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

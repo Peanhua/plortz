@@ -51,6 +51,7 @@ public class CommandFactory {
         this.commands.put("perlin",        PerlinNoise.class);
         this.commands.put("sheet_erosion", SheetErosion.class);
         this.commands.put("add_soil",      AddSoilLayer.class);
+        this.commands.put("insert_soil",   InsertSoilAtBottom.class);
         this.commands.put("help",          Help.class);
         this.commands.put("history",       History.class);
         this.commands.put("!",             ExecuteCommandsFromHistory.class);
