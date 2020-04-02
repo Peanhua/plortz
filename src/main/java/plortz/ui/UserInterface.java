@@ -16,6 +16,7 @@
  */
 package plortz.ui;
 
+import plortz.CommandHistory;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
 import plortz.terrain.Terrain;
@@ -32,6 +33,7 @@ import plortz.ui.command.CommandFactory;
 public abstract class UserInterface {
     private boolean              running;
     private final CommandFactory command_factory;
+    private final CommandHistory command_history;
     private Terrain              terrain;
     private final Subject        onTerrainChange;
     private final Subject        onMessage;
@@ -40,6 +42,7 @@ public abstract class UserInterface {
     public UserInterface() {
         this.running         = true;
         this.command_factory = CommandFactory.getInstance();
+        this.command_history = new CommandHistory();
         this.terrain         = null;
         this.onTerrainChange = new Subject();
         this.onMessage       = new Subject();
@@ -100,5 +103,9 @@ public abstract class UserInterface {
     
     public String getMessage() {
         return this.message;
+    }
+    
+    public CommandHistory getCommandHistory() {
+        return this.command_history;
     }
 }

@@ -49,6 +49,7 @@ Commands are read from stdin and produce no output on success.
 * Save to .TGA file: ```save```
 * Quit: ```quit``` (or EOF)
 * Help: ```help```
+* Command history: ```history```
 
 Example terrain generation:
 ```

@@ -52,6 +52,7 @@ public class CommandFactory {
         this.commands.put("sheet_erosion", SheetErosion.class);
         this.commands.put("add_soil",      AddSoilLayer.class);
         this.commands.put("help",          Help.class);
+        this.commands.put("history",       History.class);
     }
     
     public Command create(String string) {

@@ -40,12 +40,10 @@ public class Console extends Widget {
     private final CommandFactory command_factory;
     TextField                    console_cmd;
     VBox                         console_messages;
-    private final CommandHistory history;
 
     public Console(UserInterface user_interface) {
         this.user_interface  = user_interface;
         this.command_factory = CommandFactory.getInstance();
-        this.history         = new CommandHistory();
         this.user_interface.listenOnMessage(() -> this.onMessage());
     }
     
@@ -89,7 +87,6 @@ public class Console extends Widget {
     
     private void processInput() {
         String input = this.console_cmd.getText();
-        this.history.add(input);
         this.user_interface.showMessage("> " + input);
         Command cmd = this.command_factory.create(input);
         if (cmd != null) {
@@ -98,18 +95,19 @@ public class Console extends Widget {
             this.user_interface.showMessage("Unknown command: " + input);
             this.user_interface.showMessage("Try \"help\".");
         }
+        this.user_interface.getCommandHistory().add(input);
         this.console_cmd.clear();
     }
     
     private void goHistoryUp() {
-        String previous = this.history.previous();
+        String previous = this.user_interface.getCommandHistory().previous();
         if (previous != null) {
             this.console_cmd.setText(previous);
         }
     }
     
     private void goHistoryDown() {
-        String next = this.history.next();
+        String next = this.user_interface.getCommandHistory().next();
         if (next != null) {
             this.console_cmd.setText(next);
         } else {
