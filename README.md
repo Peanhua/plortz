@@ -36,7 +36,7 @@ By default, the program starts in graphical user interface, but it also has a co
 ## Commands:
 Most commands require arguments, giving incorrect number of arguments prints the usage.
 
-Commands are read from stdin and produce no output on success.
+Commands are read from the graphical console or stdin and produce no output on success.
 
 * Create new terrain: ```new```
 * Apply gaussian distribution to generate a bump (a mountain/hill/hole): ```gauss```
@@ -50,6 +50,7 @@ Commands are read from stdin and produce no output on success.
 * Quit: ```quit``` (or EOF)
 * Help: ```help```
 * Command history: ```history```
+* Re-execute commands from history: ```!```
 
 Example terrain generation:
 ```
