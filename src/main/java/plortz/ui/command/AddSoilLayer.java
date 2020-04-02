@@ -35,7 +35,7 @@ public class AddSoilLayer extends Command {
             return;
         }
         
-        if (this.args.size() != 6 && this.args.size() != 7) {
+        if (this.args.size() != 7 && this.args.size() != 8) {
             ui.showMessage("Incorrect number of arguments.");
             this.showUsage(ui);
             return;
@@ -46,12 +46,14 @@ public class AddSoilLayer extends Command {
             return;
         }
         
-        Position center = new Position(Integer.parseInt(this.args.get(3)), Integer.parseInt(this.args.get(4)));
+        double amount = Double.parseDouble(this.args.get(2));
         
-        if (this.args.size() == 6) {
-            this.circle(ui, soil_type, center);
-        } else if (this.args.size() == 7) {
-            this.rectangle(ui, soil_type, center);
+        Position center = new Position(Integer.parseInt(this.args.get(4)), Integer.parseInt(this.args.get(5)));
+        
+        if (this.args.size() == 7) {
+            this.circle(ui, soil_type, amount, center);
+        } else if (this.args.size() == 8) {
+            this.rectangle(ui, soil_type, amount, center);
         }
     }
     
@@ -63,8 +65,8 @@ public class AddSoilLayer extends Command {
     @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
-        rv.add("Usage: " + this.args.get(0) + " <type> circle <x> <y> <radius>");
-        rv.add("       " + this.args.get(0) + " <type> rect <x> <y> <width> <height>");
+        rv.add("Usage: " + this.args.get(0) + " <type> <amount> circle <x> <y> <radius>");
+        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <height>");
         return rv;
     }
     
@@ -89,29 +91,29 @@ public class AddSoilLayer extends Command {
         return soil_type;
     }        
     
-    private void circle(UserInterface ui, SoilLayer.Type soil_type, Position center) {
+    private void circle(UserInterface ui, SoilLayer.Type soil_type, double amount, Position center) {
         if (!this.args.get(2).equals("circle")) {
             ui.showMessage("Error while parsing arguments, expected \"circle\", but got \"" + this.args.get(2) + "\".");
             this.showUsage(ui);
             return;
         }
-        int radius = Integer.parseInt(this.args.get(5));
+        int radius = Integer.parseInt(this.args.get(6));
         
-        Tool tool = new plortz.tool.AddSoilLayer(soil_type, 1.0, center, radius);
+        Tool tool = new plortz.tool.AddSoilLayer(soil_type, amount, center, radius);
         tool.apply(ui.getTerrain());
     }
 
-    private void rectangle(UserInterface ui, SoilLayer.Type soil_type, Position center) {
-        if (!this.args.get(2).equals("rect")) {
-            ui.showMessage("Error while parsing arguments, expected \"rect\", but got \"" + this.args.get(2) + "\".");
+    private void rectangle(UserInterface ui, SoilLayer.Type soil_type, double amount, Position center) {
+        if (!this.args.get(3).equals("rect")) {
+            ui.showMessage("Error while parsing arguments, expected \"rect\", but got \"" + this.args.get(3) + "\".");
             this.showUsage(ui);
             return;
         }
 
-        int width = Integer.parseInt(this.args.get(5));
-        int height = Integer.parseInt(this.args.get(6));
+        int width = Integer.parseInt(this.args.get(6));
+        int height = Integer.parseInt(this.args.get(7));
         
-        Tool tool = new plortz.tool.AddSoilLayer(soil_type, 1.0, center, width, height);
+        Tool tool = new plortz.tool.AddSoilLayer(soil_type, amount, center, width, height);
         tool.apply(ui.getTerrain());
     }
     
