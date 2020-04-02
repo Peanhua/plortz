@@ -18,49 +18,33 @@ package plortz.ui.command;
 
 import java.util.List;
 import plortz.collections.MyArrayList;
-import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * Command to apply the RandomNoise tool over the terrain.
- * 
+ *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class RandomNoise extends Command {
+public class SetRandomSeed extends Command {
 
     @Override
     public void execute(UserInterface ui) {
-        if (!this.requireTerrain(ui)) {
-            return;
-        }
-        
         if (this.args.size() != 2) {
-            ui.showMessage("Incorrect number of arguments.");
             this.showUsage(ui);
             return;
         }
-        
-        double scale;
-        try {
-            scale = Double.parseDouble(this.args.get(1));
-        } catch (Exception e) {
-            ui.showMessage("Failed to parse arguments: " + e.getMessage());
-            return;
-        }
-        
-        Tool tool = new plortz.tool.RandomNoise(scale, ui.getRandom());
-        tool.apply(ui.getTerrain());
+        long seed = Long.parseLong(this.args.get(1));
+        ui.getRandom().setSeed(seed);
     }
 
     @Override
     public String getShortDescription() {
-        return "Adjust altitudes with random values.";
+        return "Seeds the random number generator with a new value.";
     }
 
     @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
-        rv.add("Usage: " + this.args.get(0) + " <scale>");
+        rv.add("Usage: " + args.get(0) + " <seed>");
         return rv;
     }
 }

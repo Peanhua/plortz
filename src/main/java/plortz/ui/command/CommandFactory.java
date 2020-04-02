@@ -54,6 +54,7 @@ public class CommandFactory {
         this.commands.put("help",          Help.class);
         this.commands.put("history",       History.class);
         this.commands.put("!",             ExecuteCommandsFromHistory.class);
+        this.commands.put("random_seed",   SetRandomSeed.class);
     }
     
     public Command create(String string) {

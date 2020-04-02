@@ -16,7 +16,9 @@
  */
 package plortz.ui;
 
+import java.util.Random;
 import plortz.CommandHistory;
+import plortz.MersenneTwister;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
 import plortz.terrain.Terrain;
@@ -38,14 +40,16 @@ public abstract class UserInterface {
     private final Subject        onTerrainChange;
     private final Subject        onMessage;
     private String               message; // Current message
+    private Random               random_generator;
     
     public UserInterface() {
-        this.running         = true;
-        this.command_factory = CommandFactory.getInstance();
-        this.command_history = new CommandHistory();
-        this.terrain         = null;
-        this.onTerrainChange = new Subject();
-        this.onMessage       = new Subject();
+        this.running          = true;
+        this.command_factory  = CommandFactory.getInstance();
+        this.command_history  = new CommandHistory();
+        this.terrain          = null;
+        this.onTerrainChange  = new Subject();
+        this.onMessage        = new Subject();
+        this.random_generator = new MersenneTwister();
     }
     
     public boolean isRunning() {
@@ -107,5 +111,9 @@ public abstract class UserInterface {
     
     public CommandHistory getCommandHistory() {
         return this.command_history;
+    }
+    
+    public Random getRandom() {
+        return this.random_generator;
     }
 }

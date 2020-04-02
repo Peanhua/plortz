@@ -17,7 +17,6 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.MersenneTwister;
 import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
@@ -54,7 +53,7 @@ public class DiamondSquare extends Command {
             return;
         }
         
-        Tool ds = new plortz.tool.DiamondSquare(scale, new MersenneTwister());
+        Tool ds = new plortz.tool.DiamondSquare(scale, ui.getRandom());
         ds.apply(ui.getTerrain());
     }
     

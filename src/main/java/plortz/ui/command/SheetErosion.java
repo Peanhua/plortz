@@ -17,7 +17,6 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.MersenneTwister;
 import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
@@ -34,7 +33,7 @@ public class SheetErosion extends Command {
             return;
         }
         
-        Tool tool = new plortz.tool.SheetErosion(new MersenneTwister(0));
+        Tool tool = new plortz.tool.SheetErosion(ui.getRandom());
         tool.apply(ui.getTerrain());
     }
 

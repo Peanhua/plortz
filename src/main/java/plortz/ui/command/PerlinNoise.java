@@ -17,7 +17,6 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.MersenneTwister;
 import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
@@ -43,7 +42,7 @@ public class PerlinNoise extends Command {
         if (this.args.size() >= 3) {
             density = Double.parseDouble(this.args.get(2));
         }
-        Tool perlin = new plortz.tool.PerlinNoise(scale, density, new MersenneTwister(0));
+        Tool perlin = new plortz.tool.PerlinNoise(scale, density, ui.getRandom());
         perlin.apply(ui.getTerrain());
     }
 
