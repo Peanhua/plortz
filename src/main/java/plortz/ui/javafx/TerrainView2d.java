@@ -147,6 +147,10 @@ public class TerrainView2d extends Widget {
                 double altitude = tile.getAltitude(true);
                 altitude -= minmax.getX();
                 altitude /= (minmax.getY() - minmax.getX());
+                if (Double.isNaN(altitude)) {
+                    altitude = 0.0;
+                }
+                altitude = 0.1 + altitude * 0.9;
                 
                 Vector rgb = tile.getTopSoil().getRGB();
                 int r = (int) (rgb.getX() * 255.0 * altitude);
