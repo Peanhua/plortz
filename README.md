@@ -48,3 +48,39 @@ Commands are read from stdin and produce no output on success.
 * Simple ascii dump: ```dump``` (any extra argument dumps normalized values)
 * Save to .TGA file: ```save```
 * Quit: ```quit``` (or EOF)
+* Help: ```help```
+
+Example terrain generation:
+```
+new 500 500
+perlin 1 0.0125
+perlin 0.5 0.025
+perlin 0.25 0.05
+perlin 0.125 0.1
+perlin 0.0625 0.2
+add_soil sand rect 250 250 500 500
+gauss 250 390 0.3 150 0.5
+sheet_erosion
+save terrain.tga
+```
+
+Another example:
+```
+new 257 257
+ds 10
+add_soil sand 1 rect 128 128 260 260
+sheet_erosion
+sheet_erosion
+sheet_erosion
+```
+
+Yet another:
+```
+new 200 200
+gauss 100 100 0.4 30 10
+add_soil sand 1 rect 50 50 100 100
+sheet_erosion
+sheet_erosion
+sheet_erosion
+sheet_erosion
+```
