@@ -53,10 +53,13 @@ public class ExecuteCommandsFromHistory extends Command {
             ui.showMessage(this.args.get(0) + ": Invalid range " + (start + 1) + "-" + (end + 1) + ", valid range is 1-" + (history.size()) + ".");
             return;
         }
-
+        this.executeHistoryCommands(ui, start, end);
+    }
+    
+    private void executeHistoryCommands(UserInterface ui, int start, int end) {
         CommandFactory cf = CommandFactory.getInstance();
         for (int i = start; i <= end; i++) {
-            String input = history.get(i);
+            String input = ui.getCommandHistory().get().get(i);
             ui.showMessage("> " + input);
             Command cmd = cf.create(input);
             if (cmd != null) {

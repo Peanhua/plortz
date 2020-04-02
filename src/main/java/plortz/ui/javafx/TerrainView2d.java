@@ -144,24 +144,30 @@ public class TerrainView2d extends Widget {
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile tile = terrain.getTile(x, y);
-                
-                double altitude = tile.getAltitude(true);
-                altitude -= minmax.getX();
-                altitude /= (minmax.getY() - minmax.getX());
-                if (Double.isNaN(altitude)) {
-                    altitude = 0.0;
-                }
-                altitude = 0.1 + altitude * 0.9;
-                
-                Vector rgb = tile.getTopSoil().getRGB();
-                int r = (int) (rgb.getX() * 255.0 * altitude);
-                int g = (int) (rgb.getY() * 255.0 * altitude);
-                int b = (int) (rgb.getZ() * 255.0 * altitude);
-                int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
-                pw.setArgb(x, y, argb);
+                double altitude = 0.1 + this.getNormalizedAltitude(tile, minmax) * 0.9;
+                pw.setArgb(x, y, this.getTileARGB(tile, altitude));
             }
         }
         
         return image;
+    }
+    
+    private double getNormalizedAltitude(Tile tile, Vector minmax) {
+        double altitude = tile.getAltitude(true);
+        altitude -= minmax.getX();
+        altitude /= (minmax.getY() - minmax.getX());
+        if (Double.isNaN(altitude)) {
+            altitude = 0.0;
+        }
+        return altitude;
+    }
+    
+    private int getTileARGB(Tile tile, double altitude) {
+        Vector rgb = tile.getTopSoil().getRGB();
+        int r = (int) (rgb.getX() * 255.0 * altitude);
+        int g = (int) (rgb.getY() * 255.0 * altitude);
+        int b = (int) (rgb.getZ() * 255.0 * altitude);
+        int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
+        return argb;
     }
 }

@@ -44,9 +44,10 @@ public class AddRandomSoilPatches extends Command {
         int count = Integer.parseInt(this.args.get(1));
         int radius = Integer.parseInt(this.args.get(2));
         double depth = Double.parseDouble(this.args.get(3));
-        
-        Terrain terrain = ui.getTerrain();
-        Random random = ui.getRandom();
+        this.addPatches(ui.getTerrain(), ui.getRandom(), count, radius, depth);
+    }
+    
+    private void addPatches(Terrain terrain, Random random, int count, int radius, double depth) {
         SoilLayer.Type[] types = SoilLayer.Type.values();
         for (int i = 0; i < count; i++) {
             SoilLayer.Type type = types[random.nextInt(types.length - 1)];
