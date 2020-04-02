@@ -24,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import plortz.CommandHistory;
 import plortz.ui.UserInterface;
 import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
@@ -39,10 +40,12 @@ public class Console extends Widget {
     private final CommandFactory command_factory;
     TextField                    console_cmd;
     VBox                         console_messages;
+    private final CommandHistory history;
 
     public Console(UserInterface user_interface) {
         this.user_interface  = user_interface;
         this.command_factory = CommandFactory.getInstance();
+        this.history         = new CommandHistory();
         this.user_interface.listenOnMessage(() -> this.onMessage());
     }
     
@@ -59,18 +62,34 @@ public class Console extends Widget {
         
         console_cmd = new TextField();
         pane.getChildren().add(console_cmd);
-        console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            this.onCmdKeyReleased(event);
-        });
+        console_cmd.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> this.onCmdKeyPressed(event));
+        console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> this.onCmdKeyReleased(event));
         
         return pane;
     }
     
-    private void onCmdKeyReleased(KeyEvent event) {
-        if (event.getCode() != KeyCode.ENTER) {
-            return;
+    private void onCmdKeyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case UP:
+                this.goHistoryUp();
+                break;
+            case DOWN:
+                this.goHistoryDown();
+                break;
         }
+    }
+
+    private void onCmdKeyReleased(KeyEvent event) {
+        switch (event.getCode()) {
+            case ENTER:
+                this.processInput();
+                break;
+        }
+    }
+    
+    private void processInput() {
         String input = this.console_cmd.getText();
+        this.history.add(input);
         this.user_interface.showMessage("> " + input);
         Command cmd = this.command_factory.create(input);
         if (cmd != null) {
@@ -80,6 +99,22 @@ public class Console extends Widget {
             this.user_interface.showMessage("Try \"help\".");
         }
         this.console_cmd.clear();
+    }
+    
+    private void goHistoryUp() {
+        String previous = this.history.previous();
+        if (previous != null) {
+            this.console_cmd.setText(previous);
+        }
+    }
+    
+    private void goHistoryDown() {
+        String next = this.history.next();
+        if (next != null) {
+            this.console_cmd.setText(next);
+        } else {
+            this.console_cmd.clear();
+        }
     }
 
     @Override
