@@ -30,7 +30,8 @@ import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * A widget showing the current terrain as an 2d image.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class TerrainView2d extends Widget {

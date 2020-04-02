@@ -23,7 +23,8 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command to perform sheet erosion on the terrain.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SheetErosion extends Command {

@@ -25,7 +25,8 @@ import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * The JavaFX application class responsible of setting up the JavaFX stuffs.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Main extends Application {

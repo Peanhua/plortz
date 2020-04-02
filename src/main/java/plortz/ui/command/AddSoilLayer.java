@@ -24,7 +24,8 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command to add soil on top of an area.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AddSoilLayer extends Command {

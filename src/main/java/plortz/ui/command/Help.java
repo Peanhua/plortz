@@ -21,7 +21,8 @@ import plortz.collections.MyArrayList;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command to show help on commands.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Help extends Command {

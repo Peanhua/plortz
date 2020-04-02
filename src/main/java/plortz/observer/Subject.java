@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.collections.MyArrayList;
 
 /**
- *
+ * Observer pattern, the subject object.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Subject {

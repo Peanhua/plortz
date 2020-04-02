@@ -130,8 +130,8 @@ public class DiamondSquare extends Tool {
     /**
      * Checks that the size is 2^n+1
      * 
-     * @param size
-     * @return true if the size is valid
+     * @param size The size to check.
+     * @return True if the size is valid.
      */
     public static boolean checkSize(int size) {
         if (size % 2 != 1) {

@@ -45,11 +45,11 @@ public class AddSoilLayer extends Tool {
     /**
      * Constructor for rectangle area.
      * 
-     * @param soil_type
-     * @param amount
-     * @param center
-     * @param width
-     * @param height 
+     * @param soil_type The type of the soil to add.
+     * @param amount    The amount (vertical).
+     * @param center    Center of the rectangle.
+     * @param width     Width of the rectangle.
+     * @param height    Height of the rectangle.
      */
     public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
         this.soil_type = soil_type;
@@ -63,10 +63,10 @@ public class AddSoilLayer extends Tool {
     /**
      * Constructor for circle area.
      * 
-     * @param soil_type
-     * @param amount
-     * @param center
-     * @param radius 
+     * @param soil_type The type of the soil to add.
+     * @param amount    The amount (vertical).
+     * @param center    Center of the circle.
+     * @param radius    Radius of the circle.
      */
     public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position center, int radius) {
         this.soil_type = soil_type;

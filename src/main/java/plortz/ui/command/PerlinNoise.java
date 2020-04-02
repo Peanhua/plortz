@@ -23,7 +23,8 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command to apply the Perlin noise tool.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class PerlinNoise extends Command {

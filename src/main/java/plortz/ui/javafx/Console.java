@@ -29,7 +29,8 @@ import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
 
 /**
- *
+ * A widget containing command input and command history.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Console extends Widget {
