@@ -57,6 +57,7 @@ public class CommandFactory {
         this.commands.put("!",             ExecuteCommandsFromHistory.class);
         this.commands.put("random_seed",   SetRandomSeed.class);
         this.commands.put("random_soil",   AddRandomSoilPatches.class);
+        this.commands.put("smooth",        SmoothAltitudes.class);
     }
     
     public Command create(String string) {

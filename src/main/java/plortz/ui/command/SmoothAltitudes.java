@@ -18,37 +18,32 @@ package plortz.ui.command;
 
 import java.util.List;
 import plortz.collections.MyArrayList;
-import plortz.terrain.Position;
-import plortz.terrain.SoilLayer;
 import plortz.tool.Tool;
+import plortz.ui.UserInterface;
 
 /**
- * Command to insert soil at the bottom.
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class InsertSoilAtBottom extends AddSoilLayer {
+public class SmoothAltitudes extends Command {
+    @Override
+    public void execute(UserInterface ui) {
+        if (!this.requireTerrain(ui)) {
+            return;
+        }
+        Tool tool = new plortz.tool.SmoothAltitudes();
+        tool.apply(ui.getTerrain());
+    }
 
     @Override
     public String getShortDescription() {
-        return "Inserts a layer of soil at the bottom of the terrain.";
+        return "Smooth the altitudes to remove irregularities.";
     }
 
     @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
-        rv.add("Usage: " + this.args.get(0) + " <type> <amount> circle <x> <y> <radius>");
-        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <height>");
+        rv.add("Usage: " + this.args.get(0));
         return rv;
-    }
-
-    @Override
-    protected Tool getCircleTool(SoilLayer.Type soil_type, double amount, Position center, int radius) {
-        return new plortz.tool.InsertSoilLayer(0, soil_type, amount, center, radius);
-    }
-    
-    @Override
-    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
-        return new plortz.tool.InsertSoilLayer(0, soil_type, amount, center, width, height);
     }
 }
