@@ -45,39 +45,38 @@ public class PerlinNoise extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
-        this.gradient_width  = (int) ((double) terrain.getWidth() * this.density);
-        this.gradient_height = (int) ((double) terrain.getHeight() * this.density);
-        
-        this.gradients = new Vector[gradient_width * gradient_height];
-        for (int i = 0; i < this.gradients.length; i++) {
-            this.gradients[i] = this.generateRandomUnitVector();
-        }
+        this.setupGradients(terrain);
         for (int y = 0; y < terrain.getHeight(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                // Candidate is the location of the current tile in the gradient space.
-                // The maximum x and y coordinates are one less than the gradient size because there must always be a gradient around all sides of the candidate point.
-                Vector candidate = new Vector((double) x / (double) (terrain.getWidth())  * (gradient_width  - 1),
-                                              (double) y / (double) (terrain.getHeight()) * (gradient_height - 1));
-                int cx = (int) candidate.getX();
-                int cy = (int) candidate.getY();
-                
-                double topleft     = this.getGradientDotProduct(cx + 0, cy + 0, candidate);
-                double topright    = this.getGradientDotProduct(cx + 1, cy + 0, candidate);
-                double bottomleft  = this.getGradientDotProduct(cx + 0, cy + 1, candidate);
-                double bottomright = this.getGradientDotProduct(cx + 1, cy + 1, candidate);
-                
-                double lerpweight_x = this.smootherstep(0, 1, candidate.getX() - (double) cx);
-                double lerpweight_y = this.smootherstep(0, 1, candidate.getY() - (double) cy);
-
-                double top    = this.lerp(topleft,    topright,    lerpweight_x);
-                double bottom = this.lerp(bottomleft, bottomright, lerpweight_x);
-                double result = this.lerp(top, bottom, lerpweight_y);
-                
-                terrain.getTile(x, y).adjustTopSoilAmount(result * this.scale);
+                double noise = this.getPerlinNoiseAt(terrain, x, y);
+                terrain.getTile(x, y).adjustTopSoilAmount(noise * this.scale);
             }
         }
         terrain.zeroBottomSoilLayer();
         terrain.changed();
+    }
+    
+    private double getPerlinNoiseAt(Terrain terrain, int x, int y) {
+        // Candidate is the location of the current tile in the gradient space.
+        // The maximum x and y coordinates are one less than the gradient size because there must always be a gradient around all sides of the candidate point.
+        Vector candidate = new Vector((double) x / (double) (terrain.getWidth())  * (gradient_width  - 1),
+                                      (double) y / (double) (terrain.getHeight()) * (gradient_height - 1));
+        int cx = (int) candidate.getX();
+        int cy = (int) candidate.getY();
+
+        double topleft     = this.getGradientDotProduct(cx + 0, cy + 0, candidate);
+        double topright    = this.getGradientDotProduct(cx + 1, cy + 0, candidate);
+        double bottomleft  = this.getGradientDotProduct(cx + 0, cy + 1, candidate);
+        double bottomright = this.getGradientDotProduct(cx + 1, cy + 1, candidate);
+
+        double lerpweight_x = this.smootherstep(0, 1, candidate.getX() - (double) cx);
+        double lerpweight_y = this.smootherstep(0, 1, candidate.getY() - (double) cy);
+
+        double top    = this.lerp(topleft,    topright,    lerpweight_x);
+        double bottom = this.lerp(bottomleft, bottomright, lerpweight_x);
+        double result = this.lerp(top, bottom, lerpweight_y);
+        
+        return result;
     }
     
     
@@ -131,4 +130,21 @@ public class PerlinNoise extends Tool {
         }
         return x;
     }
+    
+    private void setupGradients(Terrain terrain) {
+        this.gradient_width  = (int) ((double) terrain.getWidth() * this.density);
+        this.gradient_height = (int) ((double) terrain.getHeight() * this.density);
+        if (this.gradient_width < 2) {
+            this.gradient_width = 2;
+        }
+        if (this.gradient_height < 2) {
+            this.gradient_height = 2;
+        }
+
+        this.gradients = new Vector[gradient_width * gradient_height];
+        for (int i = 0; i < this.gradients.length; i++) {
+            this.gradients[i] = this.generateRandomUnitVector();
+        }
+    }
+
 }
