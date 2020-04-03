@@ -69,6 +69,19 @@ public class ObserverTest {
     }
 
     @Test
+    public void multipleObserversAreCalled() {
+        MyObserver[] observers = new MyObserver[10];
+        for (int i = 0; i < observers.length; i++) {
+            observers[i] = new MyObserver();
+            subject.addObserver(observers[i]);
+        }
+        subject.notifyObservers();
+        for (int i = 0; i < observers.length; i++) {
+            assertEquals(1, observers[i].callCount);
+        }
+    }
+
+    @Test
     public void removedObserverIsNotCalled() {
         MyObserver observer = new MyObserver();
         subject.addObserver(observer);

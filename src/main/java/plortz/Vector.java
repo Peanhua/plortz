@@ -94,6 +94,15 @@ public class Vector {
     }
     
     
+    public void set(Vector source) {
+        if (this.coords.length != source.coords.length) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 0; i < this.coords.length; i++) {
+            this.coords[i] = source.coords[i];
+        }
+    }
+    
     public void setX(double x) {
         this.coords[0] = x;
     }
