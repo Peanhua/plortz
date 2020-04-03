@@ -59,6 +59,7 @@ public class CommandFactory {
         this.commands.put("random_soil",   AddRandomSoilPatches.class);
         this.commands.put("smooth",        SmoothAltitudes.class);
         this.commands.put("scale",         ScaleHeights.class);
+        this.commands.put("info",          Info.class);
     }
     
     public Command create(String string) {
