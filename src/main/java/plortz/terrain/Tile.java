@@ -17,6 +17,7 @@
 package plortz.terrain;
 
 import java.util.List;
+import java.util.function.Consumer;
 import plortz.Vector;
 import plortz.collections.MyArrayList;
 
@@ -142,6 +143,12 @@ public class Tile {
             soil = new SoilLayer(type, amount);
             this.soil_layers.add(layer, soil);
         }
+    }
+    
+    public void scaleSoilLayers(double factor) {
+        this.soil_layers.forEach((SoilLayer layer) ->
+                layer.setAmount(layer.getAmount() * factor)
+        );
     }
 
     /**

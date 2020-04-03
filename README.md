@@ -55,6 +55,7 @@ Commands are read from the graphical console or stdin and produce no output on s
 * Re-execute commands from history: ```!```
 * Set random seed: ```random_seed```
 * Add random patches of soil: ```random_soil```
+* Scale all the heights: ```scale```
 
 Example terrain generation:
 ```
