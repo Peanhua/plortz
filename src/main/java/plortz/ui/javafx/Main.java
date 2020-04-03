@@ -58,29 +58,31 @@ public class Main extends Application {
         root.setBottom(console.createUserInterface());
         
         this.is2d = true;
-        Node terrain_view2d = new TerrainView2d(my_ui).createUserInterface();
-        Node terrain_view3d = new TerrainView3d(my_ui).createUserInterface();
-        StackPane terrain_view = new StackPane();
-        terrain_view.getChildren().addAll(terrain_view3d, terrain_view2d);
-        root.setCenter(terrain_view);
-        
-        Button button = new Button("3d");
-        button.setOnAction(e -> {
-            if (this.is2d) {
-                terrain_view3d.toFront();
-                button.setText("2d");
-            } else {
-                terrain_view2d.toFront();
-                button.setText("3d");
-            }
-            this.is2d = !this.is2d;
-        });
-        root.setLeft(button);
+        if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
+            Node terrain_view2d = new TerrainView2d(my_ui).createUserInterface();
+            Node terrain_view3d = new TerrainView3d(my_ui).createUserInterface();
+            StackPane terrain_view = new StackPane();
+            terrain_view.getChildren().addAll(terrain_view3d, terrain_view2d);
+            root.setCenter(terrain_view);
+
+            Button button = new Button("3d");
+            button.setOnAction(e -> {
+                if (this.is2d) {
+                    terrain_view3d.toFront();
+                    button.setText("2d");
+                } else {
+                    terrain_view2d.toFront();
+                    button.setText("3d");
+                }
+                this.is2d = !this.is2d;
+            });
+            root.setLeft(button);
+        } else {
+            root.setCenter(new TerrainView2d(my_ui).createUserInterface());
+        }
         
         my_ui.showMessage("Welcome to Plortz.");
         my_ui.showMessage("Type \"help\" to get started.");
-        
-        //System.out.println("3d supported? " + Platform.isSupported(ConditionalFeature.SCENE3D));
     }
     
     public static void run(UserInterface my_ui) {
