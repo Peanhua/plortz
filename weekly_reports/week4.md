@@ -1,6 +1,6 @@
 # Week 4
 
-Added tool using perlin noise to adjust the altitudes, a sheet erosion tool to roll loose landmass downhill, and a smoothing operation using median filtering. Accidentally first created average filter and the difference was surprisingly easy to see in naked eye, so it was an interesting accident. Will be adding at least one more filter to the smoothing tool based on edge detection and using that information to do less smoothing at the edges. That will probably be slow because the whole terrain needs to be scanned at least twice, but interested to see how the results differ.
+Added tool using perlin noise to adjust the altitudes, a sheet erosion tool to roll loose landmass downhill, a scaling tool to scale the altitudes by a factor, and a smoothing operation using median filtering. Accidentally first created average filter and the difference was surprisingly easy to see in naked eye, so it was an interesting accident. Will be adding at least one more filter to the smoothing tool based on edge detection and using that information to do less smoothing at the edges. That will probably be slow because the whole terrain needs to be scanned at least twice, but interested to see how the results differ.
 
 Added soil layer system with couple simple tools. The system allows different types of soils to be stacked on top of each others, and is quite instrumental for the sheet erosion to work in a more natural way, for example sand rolls down from top of steep cliff exposing the cliff. It will also be important when carving rivers and such.
 
