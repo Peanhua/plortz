@@ -51,7 +51,7 @@ public class PerlinNoiseTest {
     public void setUp() {
         testdelta = 0.00001;
         this.terrain = new Terrain(100, 100);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
@@ -66,7 +66,7 @@ public class PerlinNoiseTest {
     @Test
     public void allTilesAreAltered() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 TestTile tt = (TestTile) terrain.getTile(x, y);
                 assertNotNull(tt);
@@ -78,7 +78,7 @@ public class PerlinNoiseTest {
     @Test
     public void allTilesAreAlteredOnlyOnce() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 TestTile tt = (TestTile) terrain.getTile(x, y);
                 assertNotNull(tt);
@@ -91,7 +91,7 @@ public class PerlinNoiseTest {
     public void alterationsAreInCorrectRange01() {
         tool = new PerlinNoise(1.0, 0.2, new MersenneTwister(0));
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 double altitude = terrain.getTile(x, y).getAltitude(false);
                 // The range needs to actually be [0,2] because of the zeroing:

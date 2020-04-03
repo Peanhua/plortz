@@ -67,7 +67,7 @@ public class AddSoilLayer extends Command {
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <type> <amount> circle <x> <y> <radius>");
-        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <height>");
+        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <length>");
         return rv;
     }
     
@@ -115,14 +115,14 @@ public class AddSoilLayer extends Command {
             return;
         }
 
-        int width = Integer.parseInt(this.args.get(6));
-        int height = Integer.parseInt(this.args.get(7));
+        int width  = Integer.parseInt(this.args.get(6));
+        int length = Integer.parseInt(this.args.get(7));
         
-        Tool tool = getRectangleTool(soil_type, amount, center, width, height);
+        Tool tool = getRectangleTool(soil_type, amount, center, width, length);
         tool.apply(ui.getTerrain());
     }
     
-    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
-        return new plortz.tool.AddSoilLayer(soil_type, amount, center, width, height);
+    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int length) {
+        return new plortz.tool.AddSoilLayer(soil_type, amount, center, width, length);
     }
 }

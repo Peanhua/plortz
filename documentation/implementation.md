@@ -1,8 +1,5 @@
 # Implementation
 
-## Terms
-Throughout the code and documentation, the term "height" is used incorrectly in place of the horizontal dimension "length". Whenever a vertical value is in question, the terms "vertical" and "altitude" are used. This may be fixed later.
-
 ## The program structure
 The program works on a rectangular area of terrain which has elevation and other data. The area is divided by square tiles, each tile containing information about the layers of soils underneath it. The data is modified using instances of tools. Only the top-most surface of the data will be in the generated output.
 

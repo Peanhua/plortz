@@ -50,7 +50,7 @@ public class RandomNoiseTest {
     public void setUp() {
         testdelta = 0.000001;
         terrain = new Terrain(9, 9);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
@@ -65,7 +65,7 @@ public class RandomNoiseTest {
     @Test
     public void allTilesAreAltered() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
             }
@@ -75,7 +75,7 @@ public class RandomNoiseTest {
     @Test
     public void allTilesAreAlteredOnlyOnce() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 TestTile tt = (TestTile) terrain.getTile(x, y);
                 assertNotNull(tt);

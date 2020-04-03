@@ -36,7 +36,7 @@ public class AddSoilLayer extends Tool {
     private final AreaType area_type;
     private final Position center;
     private final int      width;
-    private final int      height;
+    private final int      length;
     private boolean[]      processed;      // Holds true for each tile already processed, used to avoid processing same tile multiple times.
     private int            processed_size; // The number of elements in processed array is processed_size * processed_size.
     protected final SoilLayer.Type soil_type;
@@ -49,15 +49,15 @@ public class AddSoilLayer extends Tool {
      * @param amount    The amount (vertical).
      * @param center    Center of the rectangle.
      * @param width     Width of the rectangle.
-     * @param height    Height of the rectangle.
+     * @param length    Length of the rectangle.
      */
-    public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
+    public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position center, int width, int length) {
         this.soil_type = soil_type;
         this.amount    = amount;
         this.area_type = AreaType.Rectangle;
         this.center    = new Position(center);
         this.width     = width;
-        this.height    = height;
+        this.length    = length;
     }
 
     /**
@@ -74,7 +74,7 @@ public class AddSoilLayer extends Tool {
         this.area_type = AreaType.Circle;
         this.center    = new Position(center);
         this.width     = radius;
-        this.height    = 0;
+        this.length    = 0;
     }
     
     @Override
@@ -121,8 +121,8 @@ public class AddSoilLayer extends Tool {
     }
     
     private void addRectangleLayer(Terrain terrain) {
-        for (int dy = 0; dy < this.height; dy++) {
-            int y = this.center.getY() + dy - this.height / 2;
+        for (int dy = 0; dy < this.length; dy++) {
+            int y = this.center.getY() + dy - this.length / 2;
             for (int dx = 0; dx < this.width; dx++) {
                 this.processTile(terrain, this.center.getX() + dx - this.width / 2, y);
             }

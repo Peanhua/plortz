@@ -41,7 +41,7 @@ public class AsciiWriter extends Writer {
         
         Vector minmax = terrain.getAltitudeRange();
         
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 double altitude = terrain.getTile(x, y).getAltitude(false);
                 if (normalize) {

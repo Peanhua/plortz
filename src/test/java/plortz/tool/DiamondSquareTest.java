@@ -51,7 +51,7 @@ public class DiamondSquareTest {
     public void setUp() {
         testdelta = 0.000001;
         terrain = new Terrain(9, 9);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
@@ -70,10 +70,10 @@ public class DiamondSquareTest {
         if (x == terrain.getWidth() - 1 && y == 0) {
             return true;
         }
-        if (x == 0 && y == terrain.getHeight() - 1) {
+        if (x == 0 && y == terrain.getLength() - 1) {
             return true;
         }
-        if (x == terrain.getWidth() - 1 && y == terrain.getHeight() - 1) {
+        if (x == terrain.getWidth() - 1 && y == terrain.getLength() - 1) {
             return true;
         }
         return false;
@@ -83,7 +83,7 @@ public class DiamondSquareTest {
     @Test
     public void allTilesAreAltered() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 if (!isCorner(terrain, x, y)) {
                     assertTrue(terrain.getTile(x, y).getAltitude(false) > testdelta);
@@ -95,7 +95,7 @@ public class DiamondSquareTest {
     @Test
     public void allTilesAreAlteredOnlyOnce() {
         tool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 if (!isCorner(terrain, x, y)) {
                     TestTile tt = (TestTile) terrain.getTile(x, y);

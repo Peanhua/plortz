@@ -78,9 +78,9 @@ public class TargaWriterTest {
     @Test
     public void getBytesReturnCorrectNumberOfBytes() {
         for (Terrain t : empty_terrains) {
-            assertEquals(18 + t.getWidth() * t.getHeight(), writer.getBytes(t).length);
+            assertEquals(18 + t.getWidth() * t.getLength(), writer.getBytes(t).length);
         }
-        assertEquals(18 + constructed_terrain.getWidth() * constructed_terrain.getHeight(), writer.getBytes(constructed_terrain).length);
+        assertEquals(18 + constructed_terrain.getWidth() * constructed_terrain.getLength(), writer.getBytes(constructed_terrain).length);
     }
     
     @Test

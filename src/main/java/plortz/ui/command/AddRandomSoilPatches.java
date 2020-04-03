@@ -53,7 +53,7 @@ public class AddRandomSoilPatches extends Command {
             SoilLayer.Type type = types[random.nextInt(types.length - 1)];
             double r = (double) radius * (0.5 + random.nextDouble());
             Position pos = new Position(random.nextInt(terrain.getWidth() - 1),
-                                        random.nextInt(terrain.getHeight() - 1));
+                                        random.nextInt(terrain.getLength() - 1));
             Tool adder = new plortz.tool.AddSoilLayer(type, depth, pos, (int) r);
             adder.apply(terrain);
         }

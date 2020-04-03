@@ -39,7 +39,7 @@ public class TargaWriter extends Writer {
     
     @Override
     protected byte[] getBytes(Terrain terrain) {
-        if (terrain.getWidth() > 0xffff || terrain.getHeight() > 0xffff) {
+        if (terrain.getWidth() > 0xffff || terrain.getLength() > 0xffff) {
             throw new IllegalArgumentException("Targa file can not exceed the size of 65535 pixels.");
         }
 
@@ -73,8 +73,8 @@ public class TargaWriter extends Writer {
         header[11] = 0;
         header[12] = (byte) (terrain.getWidth() & 0xff); // Image width, least significant byte
         header[13] = (byte) (terrain.getWidth() >> 8);
-        header[14] = (byte) (terrain.getHeight() & 0xff); // Image height
-        header[15] = (byte) (terrain.getHeight() >> 8);
+        header[14] = (byte) (terrain.getLength() & 0xff); // Image height
+        header[15] = (byte) (terrain.getLength() >> 8);
         header[16] = 8; // Pixel depth
         header[17] = 0; // Image descriptor
         return header;
@@ -96,10 +96,10 @@ public class TargaWriter extends Writer {
      * @return
      */
     private byte[] getBody(Terrain terrain) {
-        byte[] image = new byte[terrain.getWidth() * terrain.getHeight()];
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        byte[] image = new byte[terrain.getWidth() * terrain.getLength()];
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                image[x + (terrain.getHeight() - y - 1) * terrain.getWidth()] = this.getImageByte(terrain, x, y);
+                image[x + (terrain.getLength() - y - 1) * terrain.getWidth()] = this.getImageByte(terrain, x, y);
             }
         }
         return image;
@@ -115,9 +115,9 @@ public class TargaWriter extends Writer {
      * @return 
      */
     private byte[] getCompressedBody(Terrain terrain) {
-        byte[] tmp = new byte[terrain.getWidth() * terrain.getHeight() * 2]; // Workspace, reserve some extra in case compression yields very bad result
+        byte[] tmp = new byte[terrain.getWidth() * terrain.getLength() * 2]; // Workspace, reserve some extra in case compression yields very bad result
         int pos = 0;
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             int x = 0;
             while (x < terrain.getWidth()) {
                 int count = this.countNextRlePacketSizeOfSameBytes(terrain, x, y);

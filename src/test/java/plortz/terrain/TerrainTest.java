@@ -62,7 +62,7 @@ public class TerrainTest {
     @Test
     public void basicGettersWork() {
         assertEquals(2, terrain.getWidth());
-        assertEquals(5, terrain.getHeight());
+        assertEquals(5, terrain.getLength());
     }
     
     @Test
@@ -94,7 +94,7 @@ public class TerrainTest {
     
     @Test
     public void isValidTilePositionWorksForValidPositions() {
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 assertTrue(terrain.isValidTilePosition(new Position(x, y)));
             }
@@ -168,7 +168,7 @@ public class TerrainTest {
     
     @Test
     public void zeroBottomLayerDoesNotLeaveNegativeAmounts() {
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.getTile(x, y).getBottomSoil().setAmount(-(x + 1)/(y + 1));
             }

@@ -31,15 +31,15 @@ import plortz.observer.Subject;
  */
 public class Terrain implements Iterable<Tile> {
     private final int     width;
-    private final int     height;
+    private final int     length;
     private final Tile[]  tiles;
     private final Subject onChange;
     
-    public Terrain(int width, int height, SoilLayer.Type bottom_layer) {
+    public Terrain(int width, int length, SoilLayer.Type bottom_layer) {
         this.width  = width;
-        this.height = height;
-        this.tiles  = new Tile[width * height];
-        for (int y = 0; y < height; y++) {
+        this.length = length;
+        this.tiles  = new Tile[width * length];
+        for (int y = 0; y < length; y++) {
             for (int x = 0; x < width; x++) {
                 this.tiles[x + y * width] = new Tile(new Position(x, y), bottom_layer, 0.0);
             }
@@ -47,15 +47,15 @@ public class Terrain implements Iterable<Tile> {
         this.onChange = new Subject();
     }
     
-    public Terrain(int width, int height) {
-        this(width, height, SoilLayer.Type.CLIFF);
+    public Terrain(int width, int length) {
+        this(width, length, SoilLayer.Type.CLIFF);
     }
     
     public Terrain(Terrain source) {
         this.width  = source.width;
-        this.height = source.height;
-        this.tiles  = new Tile[width * height];
-        for (int i = 0; i < width * height; i++) {
+        this.length = source.length;
+        this.tiles  = new Tile[width * length];
+        for (int i = 0; i < width * length; i++) {
             this.tiles[i] = new Tile(source.tiles[i]);
         }
         this.onChange = new Subject();
@@ -68,7 +68,7 @@ public class Terrain implements Iterable<Tile> {
             
             @Override
             public boolean hasNext() {
-                return pos < width * height;
+                return pos < width * length;
             }
             
             @Override
@@ -105,8 +105,8 @@ public class Terrain implements Iterable<Tile> {
         return this.width;
     }
     
-    public int getHeight() {
-        return this.height;
+    public int getLength() {
+        return this.length;
     }
     
     public Tile getTile(int x, int y) {
@@ -142,7 +142,7 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public boolean isValidTilePosition(int x, int y) {
-        if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+        if (x < 0 || y < 0 || x >= this.width || y >= this.length) {
             return false;
         }
         return true;
@@ -158,7 +158,7 @@ public class Terrain implements Iterable<Tile> {
         double min = this.tiles[0].getAltitude(false);
         double max = this.tiles[0].getAltitude(false);
         
-        for (int i = 0; i < this.width * this.height; i++) {
+        for (int i = 0; i < this.width * this.length; i++) {
             double alt = this.tiles[i].getAltitude(false);
             if (alt < min) {
                 min = alt;
@@ -184,7 +184,7 @@ public class Terrain implements Iterable<Tile> {
      */
     public void zeroBottomSoilLayer() {
         double minamount = 0.0;
-        for (int i = 0; i < this.width * this.height; i++) {
+        for (int i = 0; i < this.width * this.length; i++) {
             double amt = this.tiles[i].getBottomSoil().getAmount();
             if (amt < minamount) {
                 minamount = amt;
@@ -193,7 +193,7 @@ public class Terrain implements Iterable<Tile> {
         
         if (minamount < 0.0) {
             minamount = -minamount;
-            for (int i = 0; i < this.width * this.height; i++) {
+            for (int i = 0; i < this.width * this.length; i++) {
                 this.tiles[i].getBottomSoil().adjustAmount(minamount);
             }
         }

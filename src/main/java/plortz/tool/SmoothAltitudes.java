@@ -108,13 +108,13 @@ public class SmoothAltitudes extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
-        this.new_amounts = new double[terrain.getWidth() * terrain.getHeight()];
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        this.new_amounts = new double[terrain.getWidth() * terrain.getLength()];
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 this.new_amounts[x + y * terrain.getWidth()] = this.filter.filter(terrain, x, y);
             }
         }
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.getTile(x, y).setTopSoilAmount(this.new_amounts[x + y * terrain.getWidth()]);
             }

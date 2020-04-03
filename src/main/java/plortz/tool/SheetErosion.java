@@ -44,7 +44,7 @@ public class SheetErosion extends Tool {
     public void apply(Terrain terrain) {
         this.setupNeighborOffsets(terrain);
         this.setupTiles(terrain);
-        this.moving = new boolean[terrain.getWidth() * terrain.getHeight()];
+        this.moving = new boolean[terrain.getWidth() * terrain.getLength()];
         
         for (Tile tile : this.tiles) {
             Tile neighbor = this.getLowestNeighborTile(terrain, tile);
@@ -57,8 +57,8 @@ public class SheetErosion extends Tool {
     }
     
     private void setupTiles(Terrain terrain) {
-        this.tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
-        this.tmp_tiles = new Tile[terrain.getWidth() * terrain.getHeight()];
+        this.tiles = new Tile[terrain.getWidth() * terrain.getLength()];
+        this.tmp_tiles = new Tile[terrain.getWidth() * terrain.getLength()];
         int i = 0;
         for (Tile tile : terrain) {
             this.tiles[i++] = tile;

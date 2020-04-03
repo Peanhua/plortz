@@ -50,8 +50,8 @@ public class DiamondSquare extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
-        if (terrain.getWidth() != terrain.getHeight()) {
-            throw new InvalidParameterException("Invalid terrain dimensions (the width and height must be equal).");
+        if (terrain.getWidth() != terrain.getLength()) {
+            throw new InvalidParameterException("Invalid terrain dimensions (the width and length must be equal).");
         }
         if (!checkSize(terrain.getWidth())) {
             throw new InvalidParameterException("Invalid terrain dimensions (must be 2^n+1)");
@@ -70,7 +70,7 @@ public class DiamondSquare extends Tool {
     private void diamondStep(Terrain terrain, int distance) {
         ValidPositionList positions = new ValidPositionList(terrain);
         Position middle = new Position(0, 0);
-        for (int y = 0; y <= terrain.getHeight() - distance; y += distance) {
+        for (int y = 0; y <= terrain.getLength() - distance; y += distance) {
             for (int x = 0; x <= terrain.getWidth() - distance; x += distance) {
                 positions.clear();
                 positions.add(x,            y);
@@ -88,7 +88,7 @@ public class DiamondSquare extends Tool {
     private void squareStep(Terrain terrain, int distance) {
         ValidPositionList positions = new ValidPositionList(terrain);
         Position middle = new Position(0, 0);
-        for (int y = 0; y < terrain.getHeight(); y += distance) {
+        for (int y = 0; y < terrain.getLength(); y += distance) {
             for (int x = 0; x < terrain.getWidth(); x += distance) {
                 positions.clear();
                 // The middle is centered to the right of x, y:

@@ -106,7 +106,7 @@ public class TerrainView2d extends Widget {
             return;
         }
         
-        Vector size = this.zoomToFit(new Vector(terrain.getWidth(), terrain.getHeight()), new Vector(this.width, this.height));
+        Vector size = this.zoomToFit(new Vector(terrain.getWidth(), terrain.getLength()), new Vector(this.width, this.height));
         double x = this.width  / 2.0 - size.getX() / 2.0;
         double y = this.height / 2.0 - size.getY() / 2.0;
         this.graphics_context.drawImage(this.getImage(terrain), x, y, size.getX(), size.getY());
@@ -136,12 +136,12 @@ public class TerrainView2d extends Widget {
     }
     
     private Image getImage(Terrain terrain) {
-        WritableImage image = new WritableImage(terrain.getWidth(), terrain.getHeight());
+        WritableImage image = new WritableImage(terrain.getWidth(), terrain.getLength());
 
         PixelWriter pw = image.getPixelWriter();
         Vector minmax = terrain.getAltitudeRange();
         
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile tile = terrain.getTile(x, y);
                 double altitude = 0.1 + this.getNormalizedAltitude(tile, minmax) * 0.9;

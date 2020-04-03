@@ -52,7 +52,7 @@ public class SheetErosionTest {
     public void setUp() {
         testdelta = 0.00001;
         this.terrain = new Terrain(100, 100, SoilLayer.Type.SAND);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
@@ -61,7 +61,7 @@ public class SheetErosionTest {
         this.edges = 10;
         for (int y = -edges; y <= edges; y++) {
             for (int x = -edges; x <= edges; x++) {
-                terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getHeight() / 2).setTopSoilAmount(10.0);
+                terrain.getTile(x + terrain.getWidth() / 2, y + terrain.getLength() / 2).setTopSoilAmount(10.0);
             }
         }
         tool = new SheetErosion(new TestRandom());
@@ -76,7 +76,7 @@ public class SheetErosionTest {
         tool.apply(terrain);
         
         int x = terrain.getWidth() / 2;
-        int y = terrain.getHeight() / 2;
+        int y = terrain.getLength() / 2;
         
         int dx, dy;
         // vertical edges

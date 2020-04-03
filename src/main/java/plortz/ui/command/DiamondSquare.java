@@ -48,8 +48,8 @@ public class DiamondSquare extends Command {
             return;
         }
         
-        if (ui.getTerrain().getWidth() != ui.getTerrain().getHeight() || !plortz.tool.DiamondSquare.checkSize(ui.getTerrain().getWidth())) {
-            ui.showMessage("The terrain size is not suitable for diamond-square algorithm. Width must equal height, and both be (2^n)+1.");
+        if (ui.getTerrain().getWidth() != ui.getTerrain().getLength() || !plortz.tool.DiamondSquare.checkSize(ui.getTerrain().getWidth())) {
+            ui.showMessage("The terrain size is not suitable for diamond-square algorithm. Width must equal length, and both be (2^n)+1.");
             return;
         }
         

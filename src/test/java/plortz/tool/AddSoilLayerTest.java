@@ -52,7 +52,7 @@ public class AddSoilLayerTest {
     public void setUp() {
         testdelta = 0.000001;
         terrain = new Terrain(100, 100);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
@@ -68,7 +68,7 @@ public class AddSoilLayerTest {
     @Test
     public void rectangleAffectsTheCorrectArea() {
         rectangletool.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 if (x >= 50 - 25 && x < 50 + 25 && y >= 50 - 25 && y < 50 + 25) {
                     assertEquals(SoilLayer.Type.SAND, terrain.getTile(x, y).getTopSoil().getType());
@@ -83,7 +83,7 @@ public class AddSoilLayerTest {
     public void rectangleAffectsTheCorrectAmount() {
         rectangletool.apply(terrain);
         int count = 0;
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 if (terrain.getTile(x, y).getTopSoil().getType() == SoilLayer.Type.SAND) {
                     count++;
@@ -97,7 +97,7 @@ public class AddSoilLayerTest {
     public void circleAffectsApproximatelyTheCorrectAmount() {
         circletool.apply(terrain);
         int count = 0;
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 if (terrain.getTile(x, y).getTopSoil().getType() == SoilLayer.Type.SAND) {
                     count++;

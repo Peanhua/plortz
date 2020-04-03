@@ -88,7 +88,7 @@ public class GaussianDistributionTest {
             0.000001, 0.000015, 0.000169, 0.000961, 0.002725, 0.003856, 0.002725, 0.000961, 0.000169, 0.000015 
         };
         gauss.apply(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 assertEquals(heights[x + y * terrain.getWidth()], terrain.getTile(x, y).getAltitude(false), testdelta);
             }

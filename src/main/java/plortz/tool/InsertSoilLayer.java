@@ -37,10 +37,10 @@ public class InsertSoilLayer extends AddSoilLayer {
      * @param amount    The amount (vertical).
      * @param center    Center of the rectangle.
      * @param width     Width of the rectangle.
-     * @param height    Height of the rectangle.
+     * @param length    Length of the rectangle.
      */
-    public InsertSoilLayer(int layer, SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
-        super(soil_type, amount, center, width, height);
+    public InsertSoilLayer(int layer, SoilLayer.Type soil_type, double amount, Position center, int width, int length) {
+        super(soil_type, amount, center, width, length);
         this.layer = layer;
     }
 

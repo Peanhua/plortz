@@ -36,19 +36,19 @@ public class NewTerrain extends Command {
             return;
         }
         
-        int width = Integer.parseInt(args.get(1));
-        int height = Integer.parseInt(args.get(2));
+        int width  = Integer.parseInt(args.get(1));
+        int length = Integer.parseInt(args.get(2));
         
         if (width <= 0) {
             ui.showMessage("Minimum width is 1.");
             return;
         }
-        if (height <= 0) {
-            ui.showMessage("Minimum height is 1.");
+        if (length <= 0) {
+            ui.showMessage("Minimum length is 1.");
             return;
         }
         
-        ui.setTerrain(new Terrain(width, height));
+        ui.setTerrain(new Terrain(width, length));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class NewTerrain extends Command {
     @Override
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
-        rv.add("Usage: " + args.get(0) + " <width> <height>");
+        rv.add("Usage: " + args.get(0) + " <width> <length>");
         return rv;
     }
 }

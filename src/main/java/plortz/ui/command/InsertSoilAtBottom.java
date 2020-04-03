@@ -38,7 +38,7 @@ public class InsertSoilAtBottom extends AddSoilLayer {
     public List<String> getUsage() {
         List<String> rv = new MyArrayList<>(String.class);
         rv.add("Usage: " + this.args.get(0) + " <type> <amount> circle <x> <y> <radius>");
-        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <height>");
+        rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <length>");
         return rv;
     }
 
@@ -48,7 +48,7 @@ public class InsertSoilAtBottom extends AddSoilLayer {
     }
     
     @Override
-    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int height) {
-        return new plortz.tool.InsertSoilLayer(0, soil_type, amount, center, width, height);
+    protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int length) {
+        return new plortz.tool.InsertSoilLayer(0, soil_type, amount, center, width, length);
     }
 }

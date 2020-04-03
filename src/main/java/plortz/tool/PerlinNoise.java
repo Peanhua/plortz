@@ -34,7 +34,7 @@ public class PerlinNoise extends Tool {
     private final double density;
     
     private int      gradient_width;
-    private int      gradient_height;
+    private int      gradient_length;
     private Vector[] gradients;
     
     public PerlinNoise(double scale, double density, Random random) {
@@ -46,7 +46,7 @@ public class PerlinNoise extends Tool {
     @Override
     public void apply(Terrain terrain) {
         this.setupGradients(terrain);
-        for (int y = 0; y < terrain.getHeight(); y++) {
+        for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 double noise = this.getPerlinNoiseAt(terrain, x, y);
                 terrain.getTile(x, y).adjustTopSoilAmount(noise * this.scale);
@@ -60,7 +60,7 @@ public class PerlinNoise extends Tool {
         // Candidate is the location of the current tile in the gradient space.
         // The maximum x and y coordinates are one less than the gradient size because there must always be a gradient around all sides of the candidate point.
         Vector candidate = new Vector((double) x / (double) (terrain.getWidth())  * (gradient_width  - 1),
-                                      (double) y / (double) (terrain.getHeight()) * (gradient_height - 1));
+                                      (double) y / (double) (terrain.getLength()) * (gradient_length - 1));
         int cx = (int) candidate.getX();
         int cy = (int) candidate.getY();
 
@@ -133,15 +133,15 @@ public class PerlinNoise extends Tool {
     
     private void setupGradients(Terrain terrain) {
         this.gradient_width  = (int) ((double) terrain.getWidth() * this.density);
-        this.gradient_height = (int) ((double) terrain.getHeight() * this.density);
+        this.gradient_length = (int) ((double) terrain.getLength() * this.density);
         if (this.gradient_width < 2) {
             this.gradient_width = 2;
         }
-        if (this.gradient_height < 2) {
-            this.gradient_height = 2;
+        if (this.gradient_length < 2) {
+            this.gradient_length = 2;
         }
 
-        this.gradients = new Vector[gradient_width * gradient_height];
+        this.gradients = new Vector[this.gradient_width * this.gradient_length];
         for (int i = 0; i < this.gradients.length; i++) {
             this.gradients[i] = this.generateRandomUnitVector();
         }
