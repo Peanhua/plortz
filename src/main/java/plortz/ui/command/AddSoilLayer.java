@@ -93,8 +93,8 @@ public class AddSoilLayer extends Command {
     }        
     
     private void circle(UserInterface ui, SoilLayer.Type soil_type, double amount, Position center) {
-        if (!this.args.get(2).equals("circle")) {
-            ui.showMessage("Error while parsing arguments, expected \"circle\", but got \"" + this.args.get(2) + "\".");
+        if (!this.args.get(3).equals("circle")) {
+            ui.showMessage("Error while parsing arguments, expected \"circle\", but got \"" + this.args.get(3) + "\".");
             this.showUsage(ui);
             return;
         }
