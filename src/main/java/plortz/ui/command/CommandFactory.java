@@ -82,13 +82,20 @@ public class CommandFactory {
         }
         MyArrayList<String> args = new MyArrayList<>(String.class);
         int start = 0;
-        for (int i = 1; i < string.length(); i++) {
+        for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == ' ') {
                 args.add(string.substring(start, i));
                 start = i + 1;
             }
         }
         args.add(string.substring(start));
+        
+        // Prune empty args:
+        for (int i = args.size() - 1; i >= 0; i--) {
+            if (args.get(i).isEmpty()) {
+                args.remove(i);
+            }
+        }
         
         return args;
     }
