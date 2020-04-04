@@ -114,7 +114,7 @@ public class TerrainTest {
     public void copyConstructorDoesDeepCopy() {
         Terrain t = new Terrain(terrain);
         assertNotEquals(terrain.getTile(0, 0), t.getTile(0, 0));
-        t.getTile(0, 0).setTopSoilAmount(1.0);
+        t.getTile(0, 0).setTopSoilAmount(2.0);
         assertTrue(t.getTile(0, 0).getAltitude(false) - terrain.getTile(0, 0).getAltitude(false) > 0.1);
     }
     
