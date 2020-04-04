@@ -16,6 +16,7 @@
  */
 package plortz.ui.javafx;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -101,6 +102,7 @@ public class Console extends Widget {
         String previous = this.user_interface.getCommandHistory().previous();
         if (previous != null) {
             this.console_cmd.setText(previous);
+            Platform.runLater(() -> console_cmd.positionCaret(previous.length()));
         }
     }
     
@@ -108,6 +110,7 @@ public class Console extends Widget {
         String next = this.user_interface.getCommandHistory().next();
         if (next != null) {
             this.console_cmd.setText(next);
+            Platform.runLater(() -> console_cmd.positionCaret(next.length()));
         } else {
             this.console_cmd.clear();
         }
