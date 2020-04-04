@@ -22,7 +22,7 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * Command to apply the Perlin noise tool.
+ * Command to execute the Perlin noise tool.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -42,8 +42,8 @@ public class PerlinNoise extends Command {
         if (this.args.size() >= 3) {
             density = Double.parseDouble(this.args.get(2));
         }
-        Tool perlin = new plortz.tool.PerlinNoise(scale, density, ui.getRandom());
-        perlin.apply(ui.getTerrain());
+        Tool tool = new plortz.tool.PerlinNoise(scale, density, ui.getRandom());
+        this.applyTool(ui, tool);
     }
 
     @Override

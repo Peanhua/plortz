@@ -22,7 +22,7 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * Command to apply the GaussianDistribution tool over the terrain.
+ * Command to execute the GaussianDistribution tool over the terrain.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -54,7 +54,7 @@ public class GaussianDistribution extends Command {
         }
         
         Tool tool = new plortz.tool.GaussianDistribution(x, y, var, h, v);
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
     
     @Override

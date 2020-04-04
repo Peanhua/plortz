@@ -34,7 +34,7 @@ public class SheetErosion extends Command {
         }
         
         Tool tool = new plortz.tool.SheetErosion(ui.getRandom());
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
 
     @Override

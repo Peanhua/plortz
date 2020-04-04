@@ -22,7 +22,7 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * Command to apply the RandomNoise tool over the terrain.
+ * Command to execute the RandomNoise tool over the terrain.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -49,7 +49,7 @@ public class RandomNoise extends Command {
         }
         
         Tool tool = new plortz.tool.RandomNoise(scale, ui.getRandom());
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
 
     @Override

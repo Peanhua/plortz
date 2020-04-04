@@ -48,7 +48,9 @@ public class NewTerrain extends Command {
             return;
         }
         
+        this.startApplyingTools();
         ui.setTerrain(new Terrain(width, length));
+        this.endApplyingTools(ui);
     }
 
     @Override

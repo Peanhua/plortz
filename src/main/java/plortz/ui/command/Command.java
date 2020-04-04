@@ -16,7 +16,10 @@
  */
 package plortz.ui.command;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
@@ -29,6 +32,7 @@ import plortz.ui.UserInterface;
  */
 public abstract class Command {
     protected List<String> args;
+    private Instant        start_time;
     
     public void setArgs(List<String> args) {
         this.args = args;
@@ -46,6 +50,25 @@ public abstract class Command {
         }
         return true;
     }
+    
+    protected void applyTool(UserInterface ui, Tool tool) {
+        this.startApplyingTools();
+        tool.apply(ui.getTerrain());
+        this.endApplyingTools(ui);
+    }
+    
+    protected void startApplyingTools() {
+        this.start_time = Instant.now();
+    }
+    
+    protected void endApplyingTools(UserInterface ui) {
+        if (ui.getOutputTiming()) {
+            Instant end_time = Instant.now();
+            Duration duration = Duration.between(start_time, end_time);
+            ui.showMessage("Execution time: " + duration);
+        }
+    }
+        
     
     public abstract void execute(UserInterface ui);
     public abstract String getShortDescription();

@@ -101,7 +101,7 @@ public class AddSoilLayer extends Command {
         int radius = Integer.parseInt(this.args.get(6));
         
         Tool tool = this.getCircleTool(soil_type, amount, center, radius);
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
     
     protected Tool getCircleTool(SoilLayer.Type soil_type, double amount, Position center, int radius) {
@@ -119,7 +119,7 @@ public class AddSoilLayer extends Command {
         int length = Integer.parseInt(this.args.get(7));
         
         Tool tool = getRectangleTool(soil_type, amount, center, width, length);
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
     
     protected Tool getRectangleTool(SoilLayer.Type soil_type, double amount, Position center, int width, int length) {

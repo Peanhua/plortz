@@ -59,7 +59,7 @@ public class SmoothAltitudes extends Command {
             }
         }
         Tool tool = new plortz.tool.ApplyFilter(filter);
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
 
     @Override

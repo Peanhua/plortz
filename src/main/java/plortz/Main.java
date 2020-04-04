@@ -27,10 +27,14 @@ import plortz.ui.UserInterface;
  */
 public class Main {
     public static void main(String args[]) {
-        boolean use_gui = true;
+        boolean use_gui       = true;
+        boolean output_timing = false;
+        
         for (String arg : args) {
             if (arg.equals("--no-gui")) {
                 use_gui = false;
+            } else if (arg.equals("--timing")) {
+                output_timing = true;
             } else {
                 System.out.println("Unknown argument '" + arg + "'");
                 return;
@@ -43,6 +47,7 @@ public class Main {
         } else {
             ui = new ConsoleUI(System.in, System.out);
         }
+        ui.setOutputTiming(output_timing);
         ui.run();
     }
 }

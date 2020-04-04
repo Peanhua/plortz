@@ -44,7 +44,7 @@ public class ScaleHeights extends Command {
         }
         
         Tool tool = new plortz.tool.ScaleHeights(factor);
-        tool.apply(ui.getTerrain());
+        this.applyTool(ui, tool);
     }
 
     @Override

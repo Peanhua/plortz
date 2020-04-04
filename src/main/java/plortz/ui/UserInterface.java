@@ -22,8 +22,6 @@ import plortz.MersenneTwister;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
 import plortz.terrain.Terrain;
-import plortz.ui.command.Command;
-import plortz.ui.command.CommandFactory;
 
 /**
  * The abstract base class for the user interface implementations.
@@ -40,6 +38,7 @@ public abstract class UserInterface {
     private final Subject        on_message;
     private String               message; // Current message
     private final Random         random_generator;
+    private boolean              output_timing;
     
     public UserInterface() {
         this.running           = true;
@@ -48,6 +47,7 @@ public abstract class UserInterface {
         this.on_terrain_change = new Subject();
         this.on_message        = new Subject();
         this.random_generator  = new MersenneTwister();
+        this.output_timing     = false;
     }
     
     public boolean isRunning() {
@@ -97,5 +97,13 @@ public abstract class UserInterface {
     
     public Random getRandom() {
         return this.random_generator;
+    }
+    
+    public void setOutputTiming(boolean enabled) {
+        this.output_timing = enabled;
+    }
+    
+    public boolean getOutputTiming() {
+        return this.output_timing;
     }
 }

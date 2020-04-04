@@ -35,28 +35,30 @@ public class AddRandomSoilPatches extends Command {
         if (!this.requireTerrain(ui)) {
             return;
         }
-        
         if (this.args.size() != 4) {
             this.showUsage(ui);
             return;
         }
-        
         int count = Integer.parseInt(this.args.get(1));
         int radius = Integer.parseInt(this.args.get(2));
         double depth = Double.parseDouble(this.args.get(3));
-        this.addPatches(ui.getTerrain(), ui.getRandom(), count, radius, depth);
+        this.addPatches(ui, count, radius, depth);
     }
     
-    private void addPatches(Terrain terrain, Random random, int count, int radius, double depth) {
+    private void addPatches(UserInterface ui, int count, int radius, double depth) {
+        this.startApplyingTools();
+        Terrain terrain = ui.getTerrain();
+        Random random = ui.getRandom();
         SoilLayer.Type[] types = SoilLayer.Type.values();
         for (int i = 0; i < count; i++) {
             SoilLayer.Type type = types[random.nextInt(types.length - 1)];
             double r = (double) radius * (0.5 + random.nextDouble());
             Position pos = new Position(random.nextInt(terrain.getWidth() - 1),
                                         random.nextInt(terrain.getLength() - 1));
-            Tool adder = new plortz.tool.AddSoilLayer(type, depth, pos, (int) r);
-            adder.apply(terrain);
+            Tool tool = new plortz.tool.AddSoilLayer(type, depth, pos, (int) r);
+            tool.apply(terrain);
         }
+        this.endApplyingTools(ui);
     }
     
 

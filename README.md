@@ -33,6 +33,10 @@ The program can also be run with ```mvn javafx:run``` in addition to the normal 
 By default, the program starts in graphical user interface, but it also has a command-line user interface which can be activated by specifying --no-gui when starting:
 ```mvn exec:java -Dexec.args="--no-gui"```
 
+To output the timing information, start with "--timing" argument, for example:
+```mvn exec:java -Dexec.args="--timing"```
+Note that in the graphical user interface the timing information includes the time spent on redrawing the user interface.
+
 
 ## Commands:
 Most commands require arguments, giving incorrect number of arguments prints the usage.

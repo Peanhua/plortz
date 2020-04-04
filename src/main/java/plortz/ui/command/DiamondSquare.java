@@ -22,7 +22,7 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * Command to apply the DiamondSquare tool over the terrain.
+ * Command to execute the DiamondSquare tool over the terrain.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -53,8 +53,8 @@ public class DiamondSquare extends Command {
             return;
         }
         
-        Tool ds = new plortz.tool.DiamondSquare(scale, ui.getRandom());
-        ds.apply(ui.getTerrain());
+        Tool tool = new plortz.tool.DiamondSquare(scale, ui.getRandom());
+        this.applyTool(ui, tool);
     }
     
     @Override
