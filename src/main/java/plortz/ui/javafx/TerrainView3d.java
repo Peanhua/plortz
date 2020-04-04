@@ -16,6 +16,7 @@
  */
 package plortz.ui.javafx;
 
+import javafx.application.Platform;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -68,9 +69,7 @@ public class TerrainView3d extends Widget {
         
         ui.listenOnTerrainChange(() -> {
             this.refresh();
-            this.ui.getTerrain().listenOnChange(() -> {
-                this.refresh();
-            });
+            this.ui.getTerrain().listenOnChange(() -> Platform.runLater(() -> this.refresh()));
         });
     }
     

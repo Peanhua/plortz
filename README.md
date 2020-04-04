@@ -35,7 +35,6 @@ By default, the program starts in graphical user interface, but it also has a co
 
 To output the timing information, start with "--timing" argument, for example:
 ```mvn exec:java -Dexec.args="--timing"```
-Note that in the graphical user interface the timing information includes the time spent on redrawing the user interface.
 
 
 ## Commands:

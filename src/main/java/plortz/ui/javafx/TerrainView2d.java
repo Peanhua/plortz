@@ -16,6 +16,7 @@
  */
 package plortz.ui.javafx;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -53,9 +54,7 @@ public class TerrainView2d extends Widget {
         
         ui.listenOnTerrainChange(() -> {
             this.refresh();
-            this.ui.getTerrain().listenOnChange(() -> {
-                this.refresh();
-            });
+            this.ui.getTerrain().listenOnChange(() -> Platform.runLater(() -> this.refresh()));
         });
     }
     
