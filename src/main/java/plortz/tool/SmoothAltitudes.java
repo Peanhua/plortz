@@ -21,6 +21,7 @@ import plortz.MergeSort;
 import plortz.collections.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
+import plortz.tool.smoothing_filters.SmoothingFilter;
 
 /**
  * Tool to smooth the altitudes of the terrain.
@@ -28,82 +29,12 @@ import plortz.terrain.Tile;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SmoothAltitudes extends Tool {
-
-    private abstract class Filter {
-        protected final int half_window_size;
-        
-        public Filter(int window_size) {
-            if (window_size % 2 == 0) {
-                throw new IllegalArgumentException();
-            }
-            this.half_window_size = window_size / 2;
-        }
-        
-        public abstract double filter(Terrain terrain, int x, int y);
-    }
     
-    private class AverageFilter extends Filter {
-        private final double[] window;
-
-        public AverageFilter(int window_size) {
-            super(window_size);
-            this.window = new double[window_size * window_size];
-        }
-        
-        @Override
-        public double filter(Terrain terrain, int x, int y) {
-            int count = 0;
-            double average = 0.0;
-            for (int dy = -this.half_window_size; dy <= this.half_window_size; dy++) {
-                for (int dx = -this.half_window_size; dx <= this.half_window_size; dx++) {
-                    Tile t = terrain.getTile(x + dx, y + dy);
-                    if (t != null) {
-                        count++;
-                        average += t.getAltitude(false);
-                    }
-                }
-            }
-            return average / (double) count;
-        }
-    }
-
-    private class MedianFilter extends Filter {
-        private final List<Double>      window;
-        private final List<Double>      tmp_window;
-        private final MergeSort<Double> sorter;
-        
-        public MedianFilter(int window_size) {
-            super(window_size);
-            this.window = new MyArrayList<>(Double.class);
-            this.tmp_window = new MyArrayList<>(Double.class);
-            this.sorter = new MergeSort<>();
-            // Reserve space for the temporary array required by the sort:
-            for (int i = 0; i < window_size * window_size; i++) {
-                this.tmp_window.add(0.0);
-            }
-        }
-        
-        @Override
-        public double filter(Terrain terrain, int x, int y) {
-            window.clear();
-            for (int dy = -this.half_window_size; dy <= this.half_window_size; dy++) {
-                for (int dx = -this.half_window_size; dx <= this.half_window_size; dx++) {
-                    Tile t = terrain.getTile(x + dx, y + dy);
-                    if (t != null) {
-                        this.window.add(t.getAltitude(false));
-                    }
-                }
-            }
-            this.sorter.sort(this.window, this.tmp_window, (Double a, Double b) -> a < b);
-            return this.window.get(this.window.size() / 2);
-        }
-    }
+    private double[]              new_amounts;
+    private final SmoothingFilter filter;
     
-    private double[]     new_amounts;
-    private final Filter filter;
-    
-    public SmoothAltitudes() {
-        this.filter = new MedianFilter(3);
+    public SmoothAltitudes(SmoothingFilter filter) {
+        this.filter = filter;
     }
     
     @Override
