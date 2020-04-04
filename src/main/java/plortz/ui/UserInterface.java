@@ -34,39 +34,39 @@ import plortz.ui.command.CommandFactory;
  */
 public abstract class UserInterface {
     private boolean              running;
-    private final CommandFactory command_factory;
     private final CommandHistory command_history;
     private Terrain              terrain;
-    private final Subject        onTerrainChange;
-    private final Subject        onMessage;
+    private final Subject        on_terrain_change;
+    private final Subject        on_message;
     private String               message; // Current message
-    private Random               random_generator;
+    private final Random         random_generator;
     
     public UserInterface() {
-        this.running          = true;
-        this.command_factory  = CommandFactory.getInstance();
-        this.command_history  = new CommandHistory();
-        this.terrain          = null;
-        this.onTerrainChange  = new Subject();
-        this.onMessage        = new Subject();
-        this.random_generator = new MersenneTwister();
+        this.running           = true;
+        this.command_history   = new CommandHistory();
+        this.terrain           = null;
+        this.on_terrain_change = new Subject();
+        this.on_message        = new Subject();
+        this.random_generator  = new MersenneTwister();
     }
     
     public boolean isRunning() {
         return this.running;
     }
     
+    public abstract void run();
+    
     public void stop() {
         this.running = false;
     }
     
-    public Terrain getTerrain() {
+    public final Terrain getTerrain() {
         return this.terrain;
     }
     
-    public void setTerrain(Terrain terrain) {
+    public final void setTerrain(Terrain terrain) {
         this.terrain = terrain;
-        this.onTerrainChange.notifyObservers();
+        this.on_terrain_change.notifyObservers();
     }
     
     /**
@@ -74,38 +74,20 @@ public abstract class UserInterface {
      * 
      * @param observer The observer object to be called upon change.
      */
-    public void listenOnTerrainChange(Observer observer) {
-        this.onTerrainChange.addObserver(observer);
+    public final void listenOnTerrainChange(Observer observer) {
+        this.on_terrain_change.addObserver(observer);
     }
     
-    public void listenOnMessage(Observer observer) {
-        this.onMessage.addObserver(observer);
+    public final void listenOnMessage(Observer observer) {
+        this.on_message.addObserver(observer);
     }
 
-    
-    public void tick() {
-        if (!this.running) {
-            return;
-        }
-        
-        String input = this.getNextCommand();
-        Command cmd = this.command_factory.create(input);
-        if (cmd != null) {
-            cmd.execute(this);
-        } else if (input != null && input.length() > 0) {
-            this.showMessage("Unknown command: " + input);
-            this.showMessage("Try \"help\".");
-        }
-    }
-    
-    public abstract String getNextCommand();
-    
-    public void showMessage(String message) {
+    public final void showMessage(String message) {
         this.message = message;
-        this.onMessage.notifyObservers();
+        this.on_message.notifyObservers();
     }
     
-    public String getMessage() {
+    public final String getMessage() {
         return this.message;
     }
     

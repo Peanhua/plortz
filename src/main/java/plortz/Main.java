@@ -37,15 +37,12 @@ public class Main {
             }
         }
         
+        UserInterface ui = null;
         if (use_gui) {
-            GraphicalUI gui = new GraphicalUI();
-            gui.run();
-            
+            ui = new GraphicalUI();
         } else {
-            UserInterface console = new ConsoleUI();
-            while (console.isRunning()) {
-                console.tick();
-            }
+            ui = new ConsoleUI(System.in, System.out);
         }
+        ui.run();
     }
 }

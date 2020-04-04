@@ -21,21 +21,15 @@ import javafx.application.Platform;
 /**
  * User interface with JavaFX.
  * 
- * Uses consoles terrain.
- * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class GraphicalUI extends UserInterface {
     
+    @Override
     public void run() {
         plortz.ui.javafx.Main.run(this);
     }
     
-    @Override
-    public String getNextCommand() {
-        return null;
-    }
-
     @Override
     public void stop() {
         super.stop();

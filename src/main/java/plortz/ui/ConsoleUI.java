@@ -19,6 +19,8 @@ package plortz.ui;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
+import plortz.ui.command.Command;
+import plortz.ui.command.CommandFactory;
 
 /**
  * User interface reading commands operating with stdin and stdout.
@@ -28,20 +30,31 @@ import java.util.Scanner;
 public class ConsoleUI extends UserInterface {
     private final Scanner     input;
     private final PrintStream output;
+    private final CommandFactory command_factory;
 
     public ConsoleUI(InputStream input, PrintStream output) {
         super();
-        this.input   = new Scanner(input);
-        this.output  = output;
+        this.input           = new Scanner(input);
+        this.output          = output;
+        this.command_factory = CommandFactory.getInstance();
         this.listenOnMessage(() -> this.output.println(this.getMessage()));
     }
     
-    public ConsoleUI() {
-        this(System.in, System.out);
+    @Override
+    public void run() {
+        while (this.isRunning()) {
+            String command = this.getNextCommand();
+            Command cmd = this.command_factory.create(command);
+            if (cmd != null) {
+                cmd.execute(this);
+            } else if (command != null && command.length() > 0) {
+                this.showMessage("Unknown command: " + command);
+                this.showMessage("Try \"help\".");
+            }
+        }
     }
     
-    @Override
-    public String getNextCommand() {
+    private String getNextCommand() {
         if (!this.input.hasNextLine()) {
             this.stop();
             return null;
