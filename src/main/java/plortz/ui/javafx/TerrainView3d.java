@@ -112,7 +112,7 @@ public class TerrainView3d extends Widget {
         */
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setFarClip(500);
-        camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, 0, -100));
+        camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, -10, -100));
 
         Group root3D = new Group(camera, box, this.terrain_meshes[0]); //, this.terrain_meshes[1], this.terrain_meshes[2]);
         scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.BALANCED);
