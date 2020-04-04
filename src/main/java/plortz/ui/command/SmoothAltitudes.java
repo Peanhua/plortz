@@ -19,9 +19,9 @@ package plortz.ui.command;
 import java.util.List;
 import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
-import plortz.tool.smoothing_filters.AverageSmoothingFilter;
-import plortz.tool.smoothing_filters.MedianSmoothingFilter;
-import plortz.tool.smoothing_filters.SmoothingFilter;
+import plortz.tool.filters.AverageSmoothingFilter;
+import plortz.tool.filters.MedianSmoothingFilter;
+import plortz.tool.filters.SmoothingFilter;
 import plortz.ui.UserInterface;
 
 /**
@@ -54,7 +54,7 @@ public class SmoothAltitudes extends Command {
                 return;
             }
         }
-        Tool tool = new plortz.tool.SmoothAltitudes(filter);
+        Tool tool = new plortz.tool.ApplyFilter(filter);
         tool.apply(ui.getTerrain());
     }
 

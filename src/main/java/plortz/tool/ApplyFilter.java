@@ -16,24 +16,20 @@
  */
 package plortz.tool;
 
-import java.util.List;
-import plortz.MergeSort;
-import plortz.collections.MyArrayList;
 import plortz.terrain.Terrain;
-import plortz.terrain.Tile;
-import plortz.tool.smoothing_filters.SmoothingFilter;
+import plortz.tool.filters.SmoothingFilter;
 
 /**
  * Tool to smooth the altitudes of the terrain.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class SmoothAltitudes extends Tool {
+public class ApplyFilter extends Tool {
     
     private double[]              new_amounts;
     private final SmoothingFilter filter;
     
-    public SmoothAltitudes(SmoothingFilter filter) {
+    public ApplyFilter(SmoothingFilter filter) {
         this.filter = filter;
     }
     
