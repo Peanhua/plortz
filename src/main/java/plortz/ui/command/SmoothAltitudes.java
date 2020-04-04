@@ -21,7 +21,7 @@ import plortz.collections.MyArrayList;
 import plortz.tool.Tool;
 import plortz.tool.filters.AverageSmoothingFilter;
 import plortz.tool.filters.MedianSmoothingFilter;
-import plortz.tool.filters.SmoothingFilter;
+import plortz.tool.filters.Filter;
 import plortz.ui.UserInterface;
 
 /**
@@ -40,7 +40,7 @@ public class SmoothAltitudes extends Command {
             return;
         }
         
-        SmoothingFilter filter = null;
+        Filter filter = null;
         if (this.args.size() == 1) {
             filter = new MedianSmoothingFilter(3);
         } else if (this.args.size() == 3) {

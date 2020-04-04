@@ -17,7 +17,7 @@
 package plortz.tool;
 
 import plortz.terrain.Terrain;
-import plortz.tool.filters.SmoothingFilter;
+import plortz.tool.filters.Filter;
 
 /**
  * Tool to smooth the altitudes of the terrain.
@@ -27,9 +27,9 @@ import plortz.tool.filters.SmoothingFilter;
 public class ApplyFilter extends Tool {
     
     private double[]              new_amounts;
-    private final SmoothingFilter filter;
+    private final Filter filter;
     
-    public ApplyFilter(SmoothingFilter filter) {
+    public ApplyFilter(Filter filter) {
         this.filter = filter;
     }
     

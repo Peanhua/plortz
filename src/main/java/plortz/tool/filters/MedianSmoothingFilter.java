@@ -27,7 +27,7 @@ import plortz.terrain.Tile;
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class MedianSmoothingFilter extends SmoothingFilter {
+public class MedianSmoothingFilter extends Filter {
     private final List<Double>      window;
     private final List<Double>      tmp_window;
     private final MergeSort<Double> sorter;

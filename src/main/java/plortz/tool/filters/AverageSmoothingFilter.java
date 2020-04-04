@@ -24,7 +24,7 @@ import plortz.terrain.Tile;
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class AverageSmoothingFilter extends SmoothingFilter {
+public class AverageSmoothingFilter extends Filter {
     private final double[] window;
 
     public AverageSmoothingFilter(int window_size) {
