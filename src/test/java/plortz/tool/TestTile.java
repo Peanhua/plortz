@@ -24,7 +24,7 @@ import plortz.terrain.SoilLayer;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-class TestTile extends Tile {
+public class TestTile extends Tile {
 
     public int altitude_adjust_counter;
 

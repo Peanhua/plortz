@@ -95,4 +95,56 @@ public class TileTest {
         dirt.adjustTopSoilAmount(-2.0);
         assertEquals(SoilLayer.Type.DIRT, dirt.getTopSoil().getType());
     }
+    
+    @Test
+    public void insertingSoilLayerIncreasesTheTotalHeight() {
+        double orig = dirt.getAltitude(false);
+        dirt.insertSoil(0, SoilLayer.Type.SAND, 1.0);
+        assertTrue(dirt.getAltitude(false) > orig);
+    }
+    
+    @Test
+    public void insertingAtBottomChangesBottom() {
+        dirt.insertSoil(0, SoilLayer.Type.SAND, 1.0);
+        assertEquals(SoilLayer.Type.SAND, dirt.getBottomSoil().getType());
+    }
+
+    @Test
+    public void insertingAtTopDoesNotChangeBottom() {
+        dirt.insertSoil(1, SoilLayer.Type.SAND, 1.0);
+        assertEquals(SoilLayer.Type.DIRT, dirt.getBottomSoil().getType());
+    }
+    
+    @Test
+    public void insertingSameTypeDoesNotAddNewLayer() {
+        dirt.insertSoil(0, SoilLayer.Type.DIRT, 1.0);
+        assertEquals(dirt.getBottomSoil(), dirt.getTopSoil());
+    }
+    
+    @Test
+    public void scalingChangesAltitudeProperly() {
+        double orig = sand.getAltitude(false);
+        sand.scaleSoilLayers(2.0);
+        assertTrue(orig < sand.getAltitude(false));
+    }
+    
+    @Test
+    public void scalingWithIllegalValueThrowsException() {
+        boolean exception_thrown;
+        exception_thrown = false;
+        try {
+            sand.scaleSoilLayers(0.0);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+        
+        exception_thrown = false;
+        try {
+            sand.scaleSoilLayers(-1.0);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
 }

@@ -143,4 +143,24 @@ public class VectorTest {
         assertEquals(30.0, m.getY(), testdelta);
         assertEquals(40.0, m.getZ(), testdelta);
     }
+    
+    @Test
+    public void settingFromOtherVectorWorks() {
+        Vector src = new Vector(2.0, 3.0, 4.0);
+        Vector dst = new Vector(0, 0, 0);
+        dst.set(src);
+        assertEquals(src.getX(), dst.getX(), testdelta);
+        assertEquals(src.getY(), dst.getY(), testdelta);
+        assertEquals(src.getZ(), dst.getZ(), testdelta);
+    }
+    
+    @Test
+    public void settingFromOtherVectorDoesNotChangeTheSource() {
+        Vector src = new Vector(2.0, 3.0, 4.0);
+        Vector dst = new Vector(0, 0, 0);
+        dst.set(src);
+        assertEquals(2.0, src.getX(), testdelta);
+        assertEquals(3.0, src.getY(), testdelta);
+        assertEquals(4.0, src.getZ(), testdelta);
+    }
 }

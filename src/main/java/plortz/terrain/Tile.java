@@ -133,8 +133,12 @@ public class Tile {
         if (amount <= 0.0) {
             throw new IllegalArgumentException();
         }
-        if (layer < 0 || layer >= this.soil_layers.size()) {
+        if (layer < 0 || layer > this.soil_layers.size()) {
             throw new IndexOutOfBoundsException();
+        }
+        if (layer == this.soil_layers.size()) { // Inserting at top is same as adding
+            this.addSoil(type, amount);
+            return;
         }
         SoilLayer soil = this.soil_layers.get(layer);
         if (soil.getType() == type) {
@@ -146,6 +150,9 @@ public class Tile {
     }
     
     public void scaleSoilLayers(double factor) {
+        if (factor <= 0) {
+            throw new IllegalArgumentException();
+        }
         this.soil_layers.forEach((SoilLayer layer) ->
                 layer.setAmount(layer.getAmount() * factor)
         );
