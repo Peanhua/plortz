@@ -44,3 +44,35 @@ Practically all computer systems nowadays contains processors with multiple core
 The blue patches are the ones the player could possibly move in the near future. One way to render the scene with patches aligned in 2d-grid like this, is to render two to four patches closest to the player, the green patch and one to three blue patches. The worst case scenario is that player moves diagonally, and five new patches need to be generated to anticipate the next move.
 
 Usually in systems like this, the size of a single patch is considerably smaller than in a system where the whole playarea is in one patch, thus a smaller patch size is chosen as a reference: 512x512 tiles. Time available (product of size of a patch and the maximum speed of the player) to generate up to five patches is most likely going to be in the order of few seconds.
+
+
+### Measuring
+The duration of executing the tools by commands are calculated using [java.time.Instant.now()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Instant.html#now()), which uses system clock. System clock can go backwards and the resolution is not guaranteed, in practice the resolution on this computer and Java implementation is fine enough for the measuring purposes here. The possibility of clock going backwards is also ignored.
+
+The graphical user interface uses JavaFX which runs two or more threads, one thread for the application and one or more threads for the renderer and media, see [JavaFX architecture](https://docs.oracle.com/javase/8/javafx/get-started-tutorial/jfx-architecture.htm#A1107438). When the program executes a command the terrain is updated and the JavaFX scene is updated. The program calculates the time used, but the user interface is then rendered a bit later in the other thread(s), the amount of time spent rendering is significant, but is not visible in the timing information obtained by the program because the execution after the JavaFX scene update does not wait for the rendering. Because the user interface is not responding while the rendering is performed, it must be also measured and taken into account. This is done using the built-in logger by starting with "javafx.pulseLogger=true". Example output from this:
+```
+PULSE: 1 [0ms:276ms]
+T19 (0 +143ms): CSS Pass
+T19 (144 +13ms): Layout Pass
+T19 (157 +1ms): Update bounds
+T19 (159 +0ms): Waiting for previous rendering
+T19 (159 +17ms): Copy state to render graph
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 : Slow background path for null
+T16 (192 +78ms): Painting
+T16 (270 +6ms): Presenting
+Counters:
+        CacheFilter rebuilding: 1
+        Cached region background image used: 4
+        NGRegion renderBackgrounds slow path: 7
+        Nodes rendered: 24
+        Nodes visited during render: 31
+        Rendering region background image to cache: 4
+```
+The most important is the first line ```PULSE: 1 [0ms:276ms]``` means that this was the first event, 0ms after the previous, and it took 276ms in total. When there are multiple events occuring within a short period of time, the line ```T19 (159 +0ms): Waiting for previous rendering``` becomes also important, because time spent on waiting on previous rendering is not part of this rendering, and needs to be subtracted from the total. Otherwise the same time is counted for multiple times.
+
