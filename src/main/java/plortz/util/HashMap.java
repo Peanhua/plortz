@@ -28,31 +28,31 @@ import java.util.Set;
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class CommandMap implements Map<String, Class> {
+public class HashMap<K, V> implements Map<K, V> {
     
-    private class Bucket {
+    private class Bucket<K, V> {
         
-        private final List<String> keys;
-        private final List<Class>  values;
+        private final List<K> keys;
+        private final List<V> values;
         
         public Bucket() {
             this.keys   = new MyArrayList<>();
             this.values = new MyArrayList<>();
         }
         
-        public boolean containsKey(String key) {
+        public boolean containsKey(K key) {
             return this.keys.contains(key);
         }
         
-        public boolean contains(Class c) {
-            return this.values.contains(c);
+        public boolean contains(V v) {
+            return this.values.contains(v);
         }
         
-        public List<Class> getValues() {
+        public List<V> getValues() {
             return this.values;
         }
         
-        public Class get(String key) {
+        public V get(K key) {
             int index = this.keys.indexOf(key);
             if (index < 0) {
                 return null;
@@ -60,12 +60,12 @@ public class CommandMap implements Map<String, Class> {
             return this.values.get(index);
         }
         
-        public void put(String key, Class value) {
+        public void put(K key, V value) {
             this.keys.add(key);
             this.values.add(value);
         }
         
-        public void remove(String key) {
+        public void remove(K key) {
             int index = this.keys.indexOf(key);
             if (index < 0) {
                 return;
@@ -80,18 +80,18 @@ public class CommandMap implements Map<String, Class> {
         }
     }
     
-    private final Set<String>  keys;
-    private final List<Bucket> buckets;
+    private final Set<K>             keys;
+    private final List<Bucket<K, V>> buckets;
 
-    public CommandMap() {
+    public HashMap() {
         this.keys    = new ListSet<>();
         this.buckets = new MyArrayList<>();
         for (int i = 0; i < 20; i++) {
-            this.buckets.add(new Bucket());
+            this.buckets.add(new Bucket<>());
         }
     }
     
-    private int getBucketIndex(String key) {
+    private int getBucketIndex(K key) {
         return Math.abs(key.hashCode()) % this.buckets.size();
     }
     
@@ -105,10 +105,11 @@ public class CommandMap implements Map<String, Class> {
         return this.size() == 0;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean containsValue(Object o) {
-        Class c = (Class) o;
-        for (Bucket bucket : this.buckets) {
+        V c = (V) o; // unchecked cast
+        for (Bucket<K, V> bucket : this.buckets) {
             if (bucket.contains(c)) {
                 return true;
             }
@@ -117,63 +118,65 @@ public class CommandMap implements Map<String, Class> {
     }
 
     @Override
-    public Set<String> keySet() {
+    public Set<K> keySet() {
         return this.keys;
     }
 
     @Override
-    public Collection<Class> values() {
-        List<Class> rv = new MyArrayList<>();
-        for (Bucket bucket : this.buckets) {
+    public Collection<V> values() {
+        List<V> rv = new MyArrayList<>();
+        for (Bucket<K, V> bucket : this.buckets) {
             rv.addAll(bucket.getValues());
         }
         return rv;
     }
 
     @Override
-    public Set<Entry<String, Class>> entrySet() {
+    public Set<Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
-    public Class get(Object o) {
+    public V get(Object o) {
         if (o == null) {
             return null;
         }
-        final String key = (String) o;
+        final K key = (K) o; // unchecked cast
         return this.buckets.get(this.getBucketIndex(key)).get(key);
     }
 
     @Override
-    public Class put(String k, Class v) {
-        Class oldval = this.get(k);
+    public V put(K k, V v) {
+        V oldval = this.get(k);
         this.buckets.get(this.getBucketIndex(k)).put(k, v);
         return oldval;
     }
 
     @Override
-    public Class remove(Object o) {
+    public V remove(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Class> map) {
+    public void putAll(Map<? extends K, ? extends V> map) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void clear() {
-        for (Bucket bucket : this.buckets) {
+        for (Bucket<K, V> bucket : this.buckets) {
             bucket.clear();
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean containsKey(Object o) {
         if (o == null) {
             return false;
         }
-        final String key = (String) o;
+        final K key = (K) o; // unchecked cast
         return this.buckets.get(this.getBucketIndex(key)).containsKey(key);
     }
 }
