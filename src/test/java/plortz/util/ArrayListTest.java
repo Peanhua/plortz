@@ -27,12 +27,12 @@ import static org.junit.Assert.*;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class MyArrayListTest {
+public class ArrayListTest {
     
     private ArrayList<String>  string_list;
     private ArrayList<Integer> int_list;
     
-    public MyArrayListTest() {
+    public ArrayListTest() {
     }
     
     @BeforeClass
@@ -340,4 +340,30 @@ public class MyArrayListTest {
         assertTrue(string_list.get(1).equals(b));
         assertTrue(string_list.get(2).equals(c));
     }
+    
+    @Test
+    public void indexOfReturnsCorrectValue() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        
+        assertEquals(0, string_list.indexOf(a));
+        assertEquals(1, string_list.indexOf(b));
+        assertEquals(2, string_list.indexOf(c));
+    }
+    
+    @Test
+    public void indexOfReturnsNegativeForNonExistingValue() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        assertTrue(string_list.indexOf("nelkku") < 0);
+    }
+        
 }

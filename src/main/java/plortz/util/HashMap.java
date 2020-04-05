@@ -60,9 +60,21 @@ public class HashMap<K, V> implements Map<K, V> {
             return this.values.get(index);
         }
         
-        public void put(K key, V value) {
+        /**
+         * Puts an item into the bucket.
+         * @param key   The key.
+         * @param value The item.
+         * @return      True if the key was already in the bucket.
+         */
+        public boolean put(K key, V value) {
+            int index = this.keys.indexOf(key);
+            if (index >= 0) {
+                this.values.set(index, value);
+                return true;
+            }
             this.keys.add(key);
             this.values.add(value);
+            return false;
         }
         
         public void remove(K key) {
@@ -149,7 +161,9 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V put(K k, V v) {
         V oldval = this.get(k);
-        this.buckets.get(this.getBucketIndex(k)).put(k, v);
+        if (!this.buckets.get(this.getBucketIndex(k)).put(k, v)) {
+            this.keys.add(k);
+        }
         return oldval;
     }
 

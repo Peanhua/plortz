@@ -185,14 +185,21 @@ public class ArrayList<E> implements List<E> {
         return -1;
     }
 
-    
-    
-
-
     @Override
     public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.indexOf(o) >= 0;
     }
+    
+    @Override
+    public boolean addAll(Collection<? extends E> clctn) {
+        int oldsize = this.size();
+        clctn.forEach((e) -> this.add(e));
+        return oldsize != this.size();
+    }
+
+    
+
+
 
     @Override
     public Object[] toArray() {
@@ -206,11 +213,6 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean containsAll(Collection<?> clctn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> clctn) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
