@@ -36,8 +36,8 @@ public class HashMap<K, V> implements Map<K, V> {
         private final List<V> values;
         
         public Bucket() {
-            this.keys   = new MyArrayList<>();
-            this.values = new MyArrayList<>();
+            this.keys   = new ArrayList<>();
+            this.values = new ArrayList<>();
         }
         
         public boolean containsKey(K key) {
@@ -85,7 +85,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     public HashMap() {
         this.keys    = new ListSet<>();
-        this.buckets = new MyArrayList<>();
+        this.buckets = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             this.buckets.add(new Bucket<>());
         }
@@ -124,7 +124,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<V> values() {
-        List<V> rv = new MyArrayList<>();
+        List<V> rv = new ArrayList<>();
         for (Bucket<K, V> bucket : this.buckets) {
             rv.addAll(bucket.getValues());
         }

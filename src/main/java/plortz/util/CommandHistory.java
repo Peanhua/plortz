@@ -29,7 +29,7 @@ public class CommandHistory {
     private int                cursor;
     
     public CommandHistory() {
-        this.history = new MyArrayList<>();
+        this.history = new ArrayList<>();
         this.cursor  = 0;
     }
     

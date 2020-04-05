@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Set;
 import plortz.util.HashMap;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 
 /**
  * Singleton factory to generate command object from given command string.
@@ -81,7 +81,7 @@ public class CommandFactory {
         if (string == null) {
             return null;
         }
-        MyArrayList<String> args = new MyArrayList<>();
+        ArrayList<String> args = new ArrayList<>();
         int start = 0;
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == ' ') {

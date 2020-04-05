@@ -29,8 +29,8 @@ import static org.junit.Assert.*;
  */
 public class MyArrayListTest {
     
-    private MyArrayList<String>  string_list;
-    private MyArrayList<Integer> int_list;
+    private ArrayList<String>  string_list;
+    private ArrayList<Integer> int_list;
     
     public MyArrayListTest() {
     }
@@ -45,8 +45,8 @@ public class MyArrayListTest {
     
     @Before
     public void setUp() {
-        string_list = new MyArrayList<>();
-        int_list = new MyArrayList<>();
+        string_list = new ArrayList<>();
+        int_list = new ArrayList<>();
     }
     
     @After

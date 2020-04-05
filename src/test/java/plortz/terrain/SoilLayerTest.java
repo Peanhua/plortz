@@ -24,7 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import plortz.util.Vector;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 
 /**
  *
@@ -66,7 +66,7 @@ public class SoilLayerTest {
     
     @Test
     public void allTypesHaveDifferentRGBValues() {
-        List<Vector> colors = new MyArrayList<>();
+        List<Vector> colors = new ArrayList<>();
         
         for (SoilLayer.Type type : SoilLayer.Type.values()) {
             layer = new SoilLayer(type, 0.0);

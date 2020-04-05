@@ -22,15 +22,17 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * A simple arraylist based Set.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
+ * @param <E> The element type.
  */
 public class ListSet<E> implements Set<E> {
 
     private final List<E> list;
     
     public ListSet() {
-        this.list = new MyArrayList<>();
+        this.list = new ArrayList<>();
     }
     
     @Override

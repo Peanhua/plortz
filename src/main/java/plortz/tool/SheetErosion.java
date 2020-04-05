@@ -21,7 +21,7 @@ import java.util.Random;
 import plortz.terrain.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 
 /**
  * Rolls loose land mass downhill.
@@ -68,7 +68,7 @@ public class SheetErosion extends Tool {
     }
     
     private void setupNeighborOffsets(Terrain terrain) {
-        this.neighbor_offsets = new MyArrayList<>();
+        this.neighbor_offsets = new ArrayList<>();
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 if (y == 0 && x == 0) {

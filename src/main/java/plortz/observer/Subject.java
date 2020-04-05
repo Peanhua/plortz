@@ -17,7 +17,7 @@
 package plortz.observer;
 
 import java.util.List;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 
 /**
  * Observer pattern, the subject object.
@@ -28,7 +28,7 @@ public class Subject {
     private final List<Observer> observers;
     
     public Subject() {
-        this.observers = new MyArrayList<>();
+        this.observers = new ArrayList<>();
     }
     
     /**

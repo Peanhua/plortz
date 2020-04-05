@@ -18,7 +18,7 @@ package plortz.tool.filters;
 
 import java.util.List;
 import plortz.util.MergeSort;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 
@@ -34,8 +34,8 @@ public class MedianSmoothingFilter extends Filter {
 
     public MedianSmoothingFilter(int window_size) {
         super(window_size);
-        this.window = new MyArrayList<>();
-        this.tmp_window = new MyArrayList<>();
+        this.window = new ArrayList<>();
+        this.tmp_window = new ArrayList<>();
         this.sorter = new MergeSort<>();
         // Reserve space for the temporary array required by the sort:
         for (int i = 0; i < window_size * window_size; i++) {

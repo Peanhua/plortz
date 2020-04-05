@@ -26,13 +26,13 @@ import java.util.ListIterator;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The type of the element.
  */
-public class MyArrayList<E> implements List<E> {
+public class ArrayList<E> implements List<E> {
     
     public class Iterator<E> implements java.util.Iterator<E> {
-        private final MyArrayList<E> list;
+        private final ArrayList<E> list;
         private int                  pos;
         
-        public Iterator(MyArrayList<E> list) {
+        public Iterator(ArrayList<E> list) {
             this.list = list;
             this.pos  = 0;
         }
@@ -60,7 +60,7 @@ public class MyArrayList<E> implements List<E> {
     private int      allocated_size;
     private int      used_size;
     
-    public MyArrayList() {
+    public ArrayList() {
         this.allocated_size = 0;
         this.used_size      = 0;
         this.allocate(16);

@@ -17,7 +17,7 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.util.MyArrayList;
+import plortz.util.ArrayList;
 import plortz.io.AsciiWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;
@@ -55,7 +55,7 @@ public class WriteToConsole extends Command {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>();
+        List<String> rv = new ArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " [normalize]");
         return rv;
     }
