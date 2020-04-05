@@ -17,6 +17,7 @@
 package plortz.tool;
 
 import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 import plortz.tool.filters.Filter;
 
 /**
@@ -26,7 +27,7 @@ import plortz.tool.filters.Filter;
  */
 public class ApplyFilter extends Tool {
     
-    private double[]              new_amounts;
+    private double[]     new_amounts;
     private final Filter filter;
     
     public ApplyFilter(Filter filter) {
@@ -43,7 +44,8 @@ public class ApplyFilter extends Tool {
         }
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                terrain.getTile(x, y).setTopSoilAmount(this.new_amounts[x + y * terrain.getWidth()]);
+                Tile tile = terrain.getTile(x, y);
+                tile.adjustTopSoilAmount(this.new_amounts[x + y * terrain.getWidth()] - tile.getAltitude(false));
             }
         }
         terrain.zeroBottomSoilLayer();
