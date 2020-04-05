@@ -21,10 +21,7 @@ There is a lack of unit tests performed on certain areas that are considered uni
 
 
 ## Manual testing
-Manual testing has been performed mostly using the command line user interface, as it allows using scripts. For example:
-```
-echo -e 'new 500 500\nperlin 1 0.0125\nperlin 0.5 0.025\nperlin 0.25 0.05\nperlin 0.125 0.1\nperlin 0.0625 0.2\nsave foo.tga\n' | mvn compile exec:java -Dexec.args="--no-gui" && display foo.tga
-```
+Manual testing has been performed both using the command line and the graphical user interface. The command line allows to script the testing more easily, whereas the use of the graphical user interface allows to spot issues in the results more easily.
 
 
 ## Performance testing
@@ -46,4 +43,4 @@ Practically all computer systems nowadays contains processors with multiple core
 
 The blue patches are the ones the player could possibly move in the near future. One way to render the scene with patches aligned in 2d-grid like this, is to render two to four patches closest to the player, the green patch and one to three blue patches. The worst case scenario is that player moves diagonally, and five new patches need to be generated to anticipate the next move.
 
-Usually in systems like this, the size of a single patch is considerably smaller than in a system where the whole playarea is in one patch, thus a smaller patch size is chosen as a reference: 512x512 tiles. Time to generate up to five patches is most likely going to be in the order of few seconds.
+Usually in systems like this, the size of a single patch is considerably smaller than in a system where the whole playarea is in one patch, thus a smaller patch size is chosen as a reference: 512x512 tiles. Time available (product of size of a patch and the maximum speed of the player) to generate up to five patches is most likely going to be in the order of few seconds.
