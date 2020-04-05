@@ -18,7 +18,7 @@ package plortz.tool;
 
 import java.util.Random;
 import plortz.terrain.Terrain;
-import plortz.Vector;
+import plortz.util.Vector;
 
 /**
  * Adjusts the altitudes using perlin noise.

@@ -18,7 +18,7 @@ package plortz.ui.command;
 
 import java.io.RandomAccessFile;
 import java.util.List;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 import plortz.io.TargaWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;

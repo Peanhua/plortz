@@ -18,7 +18,7 @@ package plortz.terrain;
 
 import java.security.InvalidParameterException;
 import java.util.Iterator;
-import plortz.Vector;
+import plortz.util.Vector;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
 

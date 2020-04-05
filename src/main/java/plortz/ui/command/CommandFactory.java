@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 
 /**
  * Singleton factory to generate command object from given command string.

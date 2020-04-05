@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import plortz.Vector;
-import plortz.collections.MyArrayList;
+import plortz.util.Vector;
+import plortz.util.MyArrayList;
 
 /**
  *

@@ -21,7 +21,7 @@ import java.util.Random;
 import plortz.terrain.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 
 /**
  * Rolls loose land mass downhill.

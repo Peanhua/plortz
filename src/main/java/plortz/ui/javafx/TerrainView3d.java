@@ -35,7 +35,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import plortz.Vector;
+import plortz.util.Vector;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;

@@ -25,7 +25,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import plortz.Vector;
+import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;

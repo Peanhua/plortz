@@ -17,7 +17,7 @@
 package plortz.io;
 
 import java.io.ByteArrayOutputStream;
-import plortz.Vector;
+import plortz.util.Vector;
 import plortz.terrain.Terrain;
 
 /**

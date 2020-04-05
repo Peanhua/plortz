@@ -17,7 +17,7 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.ui.UserInterface;
 

@@ -17,8 +17,8 @@
 package plortz.ui;
 
 import java.util.Random;
-import plortz.CommandHistory;
-import plortz.MersenneTwister;
+import plortz.util.CommandHistory;
+import plortz.util.MersenneTwister;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
 import plortz.terrain.Terrain;

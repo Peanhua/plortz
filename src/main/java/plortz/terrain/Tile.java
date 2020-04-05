@@ -18,8 +18,8 @@ package plortz.terrain;
 
 import java.util.List;
 import java.util.function.Consumer;
-import plortz.Vector;
-import plortz.collections.MyArrayList;
+import plortz.util.Vector;
+import plortz.util.MyArrayList;
 
 /**
  * A single tile in the Terrain.

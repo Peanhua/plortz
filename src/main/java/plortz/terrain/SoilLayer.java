@@ -16,7 +16,7 @@
  */
 package plortz.terrain;
 
-import plortz.Vector;
+import plortz.util.Vector;
 
 /**
  * The type of the tile, describes static properties of the type.

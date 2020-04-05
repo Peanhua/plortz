@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz;
+package plortz.util;
 
 import java.util.List;
-import plortz.collections.MyArrayList;
 
 /**
  * Keeps history of issued commands.

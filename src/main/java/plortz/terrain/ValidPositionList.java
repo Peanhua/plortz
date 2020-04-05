@@ -17,7 +17,7 @@
 package plortz.terrain;
 
 import java.util.Iterator;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 
 /**
  * A list containing only valid positions for the given terrain.

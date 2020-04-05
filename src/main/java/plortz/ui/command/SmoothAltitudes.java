@@ -17,7 +17,7 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.collections.MyArrayList;
+import plortz.util.MyArrayList;
 import plortz.tool.Tool;
 import plortz.tool.filters.AverageSmoothingFilter;
 import plortz.tool.filters.MedianSmoothingFilter;

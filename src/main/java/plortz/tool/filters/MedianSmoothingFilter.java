@@ -17,8 +17,8 @@
 package plortz.tool.filters;
 
 import java.util.List;
-import plortz.MergeSort;
-import plortz.collections.MyArrayList;
+import plortz.util.MergeSort;
+import plortz.util.MyArrayList;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 
