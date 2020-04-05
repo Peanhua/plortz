@@ -33,6 +33,7 @@ public class InsertSoilLayer extends AddSoilLayer {
     /**
      * Constructor for rectangle area.
      * 
+     * @param layer     The layer index to insert at.
      * @param soil_type The type of the soil to add.
      * @param amount    The amount (vertical).
      * @param center    Center of the rectangle.
@@ -47,6 +48,7 @@ public class InsertSoilLayer extends AddSoilLayer {
     /**
      * Constructor for circle area.
      * 
+     * @param layer     The layer index to insert at.
      * @param soil_type The type of the soil to add.
      * @param amount    The amount (vertical).
      * @param center    Center of the circle.
