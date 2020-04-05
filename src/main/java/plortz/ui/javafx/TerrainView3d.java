@@ -16,7 +16,6 @@
  */
 package plortz.ui.javafx;
 
-import javafx.application.Platform;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -26,7 +25,6 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -45,12 +43,7 @@ import plortz.ui.UserInterface;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class TerrainView3d extends Widget {
-    private UserInterface   ui;
-    private BorderPane      container;
-    private int             width;
-    private int             height;
-    
+public class TerrainView3d extends TerrainView {
     private MeshView[]      terrain_meshes;
     private SubScene        scene3d;
     
@@ -60,35 +53,17 @@ public class TerrainView3d extends Widget {
     private double          mouse_rotate_speed;
     
     public TerrainView3d(UserInterface ui) {
-        this.ui               = ui;
-        this.container        = null;
-        this.width            = 0;
-        this.height           = 0;
-        this.terrain_meshes   = new MeshView[1]; //SoilLayer.Type.values().length];
-        this.mouse_oldpos     = new Vector(0, 0);
-        this.rotate_x         = new Rotate(-30, Rotate.X_AXIS);
-        this.rotate_y         = new Rotate(0, Rotate.Y_AXIS);
+        super(ui);
+        this.terrain_meshes     = new MeshView[1]; //SoilLayer.Type.values().length];
+        this.mouse_oldpos       = new Vector(0, 0);
+        this.rotate_x           = new Rotate(-30, Rotate.X_AXIS);
+        this.rotate_y           = new Rotate(0, Rotate.Y_AXIS);
         this.mouse_rotate_speed = 0.2;
-        
-        ui.listenOnTerrainChange(() -> {
-            this.refresh();
-            this.ui.getTerrain().listenOnChange(() -> Platform.runLater(() -> this.refresh()));
-        });
     }
     
     @Override
     public Node createUserInterface() {
-        this.container = new BorderPane();
-        this.container.setMinWidth(0);
-        this.container.setMinHeight(0);
-        this.container.setMaxWidth(Double.MAX_VALUE);
-        this.container.setMaxHeight(Double.MAX_VALUE);
-
-        this.width  = 0;
-        this.height = 0;
-        
-        this.container.widthProperty().addListener((o) -> this.onResized());
-        this.container.heightProperty().addListener((o) -> this.onResized());
+        super.createUserInterface();
         
         for (int i = 0; i < this.terrain_meshes.length; i++) {
             this.terrain_meshes[i] = new MeshView();
@@ -137,27 +112,24 @@ public class TerrainView3d extends Widget {
     }
     
 
-
-    private void onResized() {
-        this.width  = (int) this.container.getWidth();
-        this.height = (int) this.container.getHeight();
-
+    @Override
+    protected void onResized() {
+        super.onResized();
         this.scene3d.setWidth(this.width);
         this.scene3d.setHeight(this.height);
-        
         this.refresh();
     }
 
 
     @Override
     public void refresh() {
-        if (this.width == 0 || this.ui.getTerrain() == null) {
+        if (this.width == 0 || this.user_interface.getTerrain() == null) {
             return;
         }
         for (int i = 0; i < this.terrain_meshes.length; i++) {
-            this.terrain_meshes[i].setMesh(this.generateMesh(SoilLayer.Type.values()[i], this.ui.getTerrain()));
+            this.terrain_meshes[i].setMesh(this.generateMesh(SoilLayer.Type.values()[i], this.user_interface.getTerrain()));
             PhongMaterial m = new PhongMaterial();
-            m.setDiffuseMap(this.getImage(this.ui.getTerrain()));
+            m.setDiffuseMap(this.getImage(this.user_interface.getTerrain()));
             this.terrain_meshes[i].setMaterial(m);
         }
     }
@@ -179,6 +151,7 @@ public class TerrainView3d extends Widget {
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
                 /*
+                * Generate a quad from two triangles:
                 * AB
                 * CD
                 */
@@ -206,24 +179,13 @@ public class TerrainView3d extends Widget {
         WritableImage image = new WritableImage(terrain.getWidth(), terrain.getLength());
 
         PixelWriter pw = image.getPixelWriter();
-        Vector minmax = terrain.getAltitudeRange();
-        
+
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile tile = terrain.getTile(x, y);
-                pw.setArgb(x, y, this.getTileARGB(tile));
+                pw.setArgb(x, y, this.getTileARGB(tile, 1.0));
             }
         }
-        
         return image;
-    }
-    
-    private int getTileARGB(Tile tile) {
-        Vector rgb = tile.getTopSoil().getRGB();
-        int r = (int) (rgb.getX() * 255.0);
-        int g = (int) (rgb.getY() * 255.0);
-        int b = (int) (rgb.getZ() * 255.0);
-        int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
-        return argb;
     }
 }

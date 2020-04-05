@@ -16,14 +16,12 @@
  */
 package plortz.ui.javafx;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
@@ -35,59 +33,30 @@ import plortz.ui.UserInterface;
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class TerrainView2d extends Widget {
+public class TerrainView2d extends TerrainView {
 
-    private UserInterface   ui;
-    private Pane            container;
     private Canvas          canvas;
     private GraphicsContext graphics_context;
-    private int             width;
-    private int             height;
     
     public TerrainView2d(UserInterface ui) {
-        this.ui               = ui;
-        this.container        = null;
+        super(ui);
         this.canvas           = null;
         this.graphics_context = null;
-        this.width            = 0;
-        this.height           = 0;
-        
-        ui.listenOnTerrainChange(() -> {
-            this.refresh();
-            this.ui.getTerrain().listenOnChange(() -> Platform.runLater(() -> this.refresh()));
-        });
     }
     
     @Override
     public Node createUserInterface() {
-        this.container = new Pane();
-        this.container.setMaxWidth(Double.MAX_VALUE);
-        this.container.setMaxHeight(Double.MAX_VALUE);
-
-        this.width            = 0;
-        this.height           = 0;
         this.canvas           = null;
         this.graphics_context = null;
-        
-        this.container.widthProperty().addListener((o) -> this.onResized());
-        this.container.heightProperty().addListener((o) -> this.onResized());
-
-        return this.container;
+        return super.createUserInterface();
     }
-    
-    private void onResized() {
-        this.width  = (int) this.container.getWidth();
-        this.height = (int) this.container.getHeight();
-        
-        if (this.canvas != null) {
-            this.container.getChildren().remove(this.canvas);
-        }
-        
+
+    @Override
+    protected void onResized() {
+        super.onResized();
         this.canvas = new Canvas(this.width, this.height);
         this.graphics_context = canvas.getGraphicsContext2D();
-
-        this.container.getChildren().add(this.canvas);
-        
+        this.container.setCenter(this.canvas);
         this.refresh();
     }
 
@@ -100,7 +69,7 @@ public class TerrainView2d extends Widget {
         this.graphics_context.setFill(Color.BLACK);
         this.graphics_context.fillRect(0, 0, this.width, this.height);
 
-        Terrain terrain = this.ui.getTerrain();
+        Terrain terrain = this.user_interface.getTerrain();
         if (terrain == null) {
             return;
         }
@@ -159,14 +128,5 @@ public class TerrainView2d extends Widget {
             altitude = 0.0;
         }
         return altitude;
-    }
-    
-    private int getTileARGB(Tile tile, double altitude) {
-        Vector rgb = tile.getTopSoil().getRGB();
-        int r = (int) (rgb.getX() * 255.0 * altitude);
-        int g = (int) (rgb.getY() * 255.0 * altitude);
-        int b = (int) (rgb.getZ() * 255.0 * altitude);
-        int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
-        return argb;
     }
 }
