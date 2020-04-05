@@ -66,7 +66,7 @@ public class SoilLayerTest {
     
     @Test
     public void allTypesHaveDifferentRGBValues() {
-        List<Vector> colors = new MyArrayList<>(Vector.class);
+        List<Vector> colors = new MyArrayList<>();
         
         for (SoilLayer.Type type : SoilLayer.Type.values()) {
             layer = new SoilLayer(type, 0.0);

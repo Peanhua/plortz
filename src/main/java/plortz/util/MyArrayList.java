@@ -16,7 +16,6 @@
  */
 package plortz.util;
 
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,12 +28,7 @@ import java.util.ListIterator;
  */
 public class MyArrayList<E> implements List<E> {
     
-    private E[]            array;
-    private int            allocated_size;
-    private int            used_size;
-    private final Class<E> element_class;
-    
-    private class Iterator<E> implements java.util.Iterator<E> {
+    public class Iterator<E> implements java.util.Iterator<E> {
         private final MyArrayList<E> list;
         private int                  pos;
         
@@ -61,18 +55,20 @@ public class MyArrayList<E> implements List<E> {
         }
     }
     
+
+    private Object[] array;
+    private int      allocated_size;
+    private int      used_size;
     
-    public MyArrayList(Class<E> c) {
+    public MyArrayList() {
         this.allocated_size = 0;
         this.used_size      = 0;
-        this.element_class  = c;
         this.allocate(16);
     }
     
-    @SuppressWarnings({"unchecked"})
     private void allocate(int amount) {
-        E[] old = this.array;
-        this.array = (E[]) Array.newInstance(this.element_class, amount); // unchecked cast
+        Object[] old = this.array;
+        this.array = new Object[amount];
         this.allocated_size = amount;
         for (int i = 0; i < this.used_size; i++) {
             this.array[i] = old[i];
@@ -102,12 +98,13 @@ public class MyArrayList<E> implements List<E> {
         this.used_size = 0;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public E get(int i) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        return this.array[i];
+        return (E) this.array[i]; // unchecked cast
     }
 
     @Override
@@ -115,14 +112,15 @@ public class MyArrayList<E> implements List<E> {
         return this.used_size == 0;
     }
     
+    @SuppressWarnings({"unchecked"})
     @Override
     public E set(int i, E e) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        E previous = this.array[i];
+        Object previous = this.array[i];
         this.array[i] = e;
-        return previous;
+        return (E) previous; // unchecked cast
     }
 
     @Override
@@ -130,17 +128,18 @@ public class MyArrayList<E> implements List<E> {
         return new Iterator<>(this);
     }
     
+    @SuppressWarnings({"unchecked"})
     @Override
     public E remove(int i) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        E removed = this.array[i];
+        Object removed = this.array[i];
         for (int j = i; j < this.used_size - 1; j++) {
             this.array[j] = this.array[j + 1];
         }
         this.used_size--;
-        return removed;
+        return (E) removed; // unchecked cast
     }
 
     @Override
@@ -171,6 +170,19 @@ public class MyArrayList<E> implements List<E> {
         }
         this.array[i] = e;
         this.used_size++;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        for (int i = 0; i < this.used_size; i++) {
+            if (o == null && this.array[i] == null) {
+                return i;
+            }
+            if (o != null && this.array[i].equals(o)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     
@@ -214,11 +226,6 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean retainAll(Collection<?> clctn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int indexOf(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

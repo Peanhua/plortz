@@ -17,7 +17,6 @@
 package plortz.terrain;
 
 import java.util.List;
-import java.util.function.Consumer;
 import plortz.util.Vector;
 import plortz.util.MyArrayList;
 
@@ -32,14 +31,14 @@ public class Tile {
     private final Position        position;
     
     public Tile(Position position, SoilLayer.Type type, double amount) {
-        this.soil_layers  = new MyArrayList<>(SoilLayer.class);
+        this.soil_layers  = new MyArrayList<>();
         this.soil_layers.add(new SoilLayer(type, amount));
         this.water_height = -1;
         this.position     = new Position(position);
     }
     
     public Tile(Tile source) {
-        this.soil_layers = new MyArrayList<>(SoilLayer.class);
+        this.soil_layers = new MyArrayList<>();
         for (SoilLayer layer : source.soil_layers) {
             this.soil_layers.add(new SoilLayer(layer));
         }

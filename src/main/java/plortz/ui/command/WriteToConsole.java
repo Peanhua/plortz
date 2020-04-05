@@ -55,7 +55,7 @@ public class WriteToConsole extends Command {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>(String.class);
+        List<String> rv = new MyArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " [normalize]");
         return rv;
     }

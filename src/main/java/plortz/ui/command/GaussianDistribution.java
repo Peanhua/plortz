@@ -64,7 +64,7 @@ public class GaussianDistribution extends Command {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>(String.class);
+        List<String> rv = new MyArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " <x> <y> <var> <h> <v>");
         rv.add("  <x> <y> the center coordinates");
         rv.add("  <var>   variance");

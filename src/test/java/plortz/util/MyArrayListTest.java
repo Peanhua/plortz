@@ -45,8 +45,8 @@ public class MyArrayListTest {
     
     @Before
     public void setUp() {
-        string_list = new MyArrayList<>(String.class);
-        int_list = new MyArrayList<>(Integer.class);
+        string_list = new MyArrayList<>();
+        int_list = new MyArrayList<>();
     }
     
     @After

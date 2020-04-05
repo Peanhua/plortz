@@ -69,7 +69,7 @@ public class SmoothAltitudes extends Command {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>(String.class);
+        List<String> rv = new MyArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " [filter window_size] ");
         rv.add("Where [filter] is one of: median, average");
         rv.add("And [window_size] is an uneven integer number, minimum 3.");

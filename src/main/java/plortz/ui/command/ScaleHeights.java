@@ -54,7 +54,7 @@ public class ScaleHeights extends Command {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>(String.class);
+        List<String> rv = new MyArrayList<>();
         rv.add("Usage: " + args.get(0) + " <factor>");
         return rv;
     }

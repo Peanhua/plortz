@@ -28,7 +28,7 @@ public class Subject {
     private final List<Observer> observers;
     
     public Subject() {
-        this.observers = new MyArrayList<>(Observer.class);
+        this.observers = new MyArrayList<>();
     }
     
     /**

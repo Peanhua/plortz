@@ -36,7 +36,7 @@ public class InsertSoilAtBottom extends AddSoilLayer {
 
     @Override
     public List<String> getUsage() {
-        List<String> rv = new MyArrayList<>(String.class);
+        List<String> rv = new MyArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " <type> <amount> circle <x> <y> <radius>");
         rv.add("       " + this.args.get(0) + " <type> <amount> rect <x> <y> <width> <length>");
         return rv;

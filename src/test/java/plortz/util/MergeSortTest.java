@@ -54,8 +54,8 @@ public class MergeSortTest {
     }
     
     private void setupData(int count) {
-        data = new MyArrayList<>(Integer.class);
-        tmp = new MyArrayList<>(Integer.class);
+        data = new MyArrayList<>();
+        tmp = new MyArrayList<>();
         for (int i = 0; i < count; i++) {
             data.add(random.nextInt());
             tmp.add(0);

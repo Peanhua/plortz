@@ -30,7 +30,7 @@ public class ValidPositionList implements Iterable<Position> {
     
     public ValidPositionList(Terrain terrain) {
         this.terrain   = terrain;
-        this.positions = new MyArrayList<>(Position.class);
+        this.positions = new MyArrayList<>();
     }
     
     public void clear() {

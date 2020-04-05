@@ -34,8 +34,8 @@ public class MedianSmoothingFilter extends Filter {
 
     public MedianSmoothingFilter(int window_size) {
         super(window_size);
-        this.window = new MyArrayList<>(Double.class);
-        this.tmp_window = new MyArrayList<>(Double.class);
+        this.window = new MyArrayList<>();
+        this.tmp_window = new MyArrayList<>();
         this.sorter = new MergeSort<>();
         // Reserve space for the temporary array required by the sort:
         for (int i = 0; i < window_size * window_size; i++) {

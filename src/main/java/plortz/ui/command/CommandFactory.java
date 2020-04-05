@@ -17,9 +17,9 @@
 package plortz.ui.command;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import plortz.util.CommandMap;
 import plortz.util.MyArrayList;
 
 /**
@@ -37,10 +37,10 @@ public class CommandFactory {
         return CommandFactory.instance;
     }
     
-    private final HashMap<String, Class> commands;
+    private final CommandMap commands;
     
     private CommandFactory() {
-        this.commands = new HashMap<>();
+        this.commands = new CommandMap();
         this.commands.put("quit",          Quit.class);
         this.commands.put("dump",          WriteToConsole.class);
         this.commands.put("save",          WriteToTargaFile.class);
@@ -81,7 +81,7 @@ public class CommandFactory {
         if (string == null) {
             return null;
         }
-        MyArrayList<String> args = new MyArrayList<>(String.class);
+        MyArrayList<String> args = new MyArrayList<>();
         int start = 0;
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == ' ') {
