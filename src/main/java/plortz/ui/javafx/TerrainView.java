@@ -32,12 +32,14 @@ public abstract class TerrainView extends Widget {
     protected BorderPane      container;
     protected int             width;
     protected int             height;
+    protected boolean         active;
     
     public TerrainView(UserInterface ui) {
         this.user_interface   = ui;
         this.container        = null;
         this.width            = 0;
         this.height           = 0;
+        this.active           = false;
         ui.listenOnTerrainChange(() -> {
             this.refresh();
             this.user_interface.getTerrain().listenOnChange(() -> {
@@ -75,5 +77,12 @@ public abstract class TerrainView extends Widget {
         int b = (int) (rgb.getZ() * 255.0 * altitude);
         int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
         return argb;
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
+        if (active) {
+            this.refresh();
+        }
     }
 }

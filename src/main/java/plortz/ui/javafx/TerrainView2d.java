@@ -63,7 +63,7 @@ public class TerrainView2d extends TerrainView {
 
     @Override
     public void refresh() {
-        if (this.width == 0 || this.canvas == null) {
+        if (!this.active || this.width == 0 || this.canvas == null) {
             return;
         }
         this.graphics_context.setFill(Color.BLACK);

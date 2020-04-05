@@ -123,7 +123,7 @@ public class TerrainView3d extends TerrainView {
 
     @Override
     public void refresh() {
-        if (this.width == 0 || this.user_interface.getTerrain() == null) {
+        if (!this.active || this.width == 0 || this.user_interface.getTerrain() == null) {
             return;
         }
         for (int i = 0; i < this.terrain_meshes.length; i++) {

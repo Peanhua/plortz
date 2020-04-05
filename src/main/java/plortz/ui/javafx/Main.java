@@ -59,26 +59,35 @@ public class Main extends Application {
         
         this.is2d = true;
         if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
-            Node terrain_view2d = new TerrainView2d(my_ui).createUserInterface();
-            Node terrain_view3d = new TerrainView3d(my_ui).createUserInterface();
-            StackPane terrain_view = new StackPane();
-            terrain_view.getChildren().addAll(terrain_view3d, terrain_view2d);
-            root.setCenter(terrain_view);
+            TerrainView tv2d = new TerrainView2d(my_ui);
+            TerrainView tv3d = new TerrainView3d(my_ui);
+            Node terrain_view2d = tv2d.createUserInterface();
+            Node terrain_view3d = tv3d.createUserInterface();
+            StackPane terrain_view_container = new StackPane();
+            terrain_view_container.getChildren().addAll(terrain_view3d, terrain_view2d);
+            root.setCenter(terrain_view_container);
+            tv2d.setActive(true);
 
             Button button = new Button("3d");
             button.setOnAction(e -> {
                 if (this.is2d) {
+                    tv2d.setActive(false);
                     terrain_view3d.toFront();
+                    tv3d.setActive(true);
                     button.setText("2d");
                 } else {
+                    tv3d.setActive(false);
                     terrain_view2d.toFront();
+                    tv2d.setActive(true);
                     button.setText("3d");
                 }
                 this.is2d = !this.is2d;
             });
             root.setLeft(button);
         } else {
-            root.setCenter(new TerrainView2d(my_ui).createUserInterface());
+            TerrainView tv2d = new TerrainView2d(my_ui);
+            root.setCenter(tv2d.createUserInterface());
+            tv2d.setActive(true);
         }
         
         my_ui.showMessage("Welcome to Plortz.");
