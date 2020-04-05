@@ -44,7 +44,7 @@ public class HashMap<K, V> implements Map<K, V> {
             return this.keys.contains(key);
         }
         
-        public boolean contains(V v) {
+        public boolean containsValue(V v) {
             return this.values.contains(v);
         }
         
@@ -67,6 +67,9 @@ public class HashMap<K, V> implements Map<K, V> {
          * @return      True if the key was already in the bucket.
          */
         public boolean put(K key, V value) {
+            if (key == null) {
+                throw new NullPointerException();
+            }
             int index = this.keys.indexOf(key);
             if (index >= 0) {
                 this.values.set(index, value);
@@ -77,7 +80,12 @@ public class HashMap<K, V> implements Map<K, V> {
             return false;
         }
         
-        public void remove(K key) {
+        /**
+         * Removes an item from the bucket.
+         * 
+         * @param key The item to be removed.
+         */
+        public void removeByKey(K key) {
             int index = this.keys.indexOf(key);
             if (index < 0) {
                 return;
@@ -122,7 +130,7 @@ public class HashMap<K, V> implements Map<K, V> {
     public boolean containsValue(Object o) {
         V c = (V) o; // unchecked cast
         for (Bucket<K, V> bucket : this.buckets) {
-            if (bucket.contains(c)) {
+            if (bucket.containsValue(c)) {
                 return true;
             }
         }
@@ -167,9 +175,21 @@ public class HashMap<K, V> implements Map<K, V> {
         return oldval;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     public V remove(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (o == null) {
+            return null;
+        }
+        final K key = (K) o; // unchecked cast
+        if (!this.keys.contains(key)) {
+            return null;
+        }
+        Bucket<K, V> bucket = this.buckets.get(this.getBucketIndex(key));
+        V oldval = bucket.get(key);
+        bucket.removeByKey(key);
+        this.keys.remove(key);
+        return oldval;
     }
 
     @Override
@@ -182,6 +202,7 @@ public class HashMap<K, V> implements Map<K, V> {
         for (Bucket<K, V> bucket : this.buckets) {
             bucket.clear();
         }
+        this.keys.clear();
     }
 
     @SuppressWarnings({"unchecked"})

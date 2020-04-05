@@ -147,4 +147,36 @@ public class HashMapTest {
         }
         assertEquals(count, map.values().size());
     }
+    
+    @Test
+    public void keySetReturnsEmptyListAfterClear() {
+        int count = 432;
+        for (int i= 0; i < count; i++) {
+            map.put("sdfsdf#" + i, i);
+        }
+        map.clear();
+        assertEquals(0, map.keySet().size());
+    }
+    
+    @Test
+    public void removingDecreasesSize() {
+        int count = 100;
+        for (int i= 0; i < count; i++) {
+            map.put("sdf#" + i, i);
+        }
+        int oldsize = map.size();
+        map.remove("sdf#" + (count / 2));
+        assertEquals(oldsize - 1, map.size());
+    }
+    
+    @Test
+    public void removingNonExistingItemDoesNotChangeSize() {
+        int count = 100;
+        for (int i= 0; i < count; i++) {
+            map.put("sdf#" + i, i);
+        }
+        int oldsize = map.size();
+        map.remove("sdfskljfsljfsldf");
+        assertEquals(oldsize, map.size());
+    }
 }
