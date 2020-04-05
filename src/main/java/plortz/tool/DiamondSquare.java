@@ -20,7 +20,6 @@ import java.security.InvalidParameterException;
 import java.util.Random;
 import plortz.terrain.Position;
 import plortz.terrain.Terrain;
-import plortz.terrain.Tile;
 import plortz.terrain.ValidPositionList;
 
 /**
@@ -34,8 +33,10 @@ import plortz.terrain.ValidPositionList;
  */
 public class DiamondSquare extends Tool {
 
-    private final double   scale;
-    private Random         random;
+    private final double scale;
+    private final Random random;
+    private double       current_scale;
+    private double[]     altitudes;
 
     /**
      * 
@@ -57,15 +58,34 @@ public class DiamondSquare extends Tool {
             throw new InvalidParameterException("Invalid terrain dimensions (must be 2^n+1)");
         }
         
-        for (int distance = terrain.getWidth() - 1; distance > 1; distance /= 2) {
-            diamondStep(terrain, distance);
-            squareStep(terrain, distance);
-        }
+        this.runAlgorithm(terrain);
         
+        // Apply the results to the terrain:
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                terrain.getTile(x, y).adjustTopSoilAmount(this.altitudes[x + y * terrain.getWidth()]);
+            }
+        }
         terrain.zeroBottomSoilLayer();
         terrain.changed();
     }
+
     
+    private void runAlgorithm(Terrain terrain) {
+        this.current_scale = this.scale;
+        this.altitudes = new double[terrain.getWidth() * terrain.getLength()];
+
+        this.setAltitude(terrain, 0,                      0,                       this.random.nextDouble() * this.current_scale);
+        this.setAltitude(terrain, terrain.getWidth() - 1, 0,                       this.random.nextDouble() * this.current_scale);
+        this.setAltitude(terrain, terrain.getWidth() - 1, terrain.getLength() - 1, this.random.nextDouble() * this.current_scale);
+        this.setAltitude(terrain, 0,                      terrain.getLength() - 1, this.random.nextDouble() * this.current_scale);
+        
+        for (int distance = terrain.getWidth() - 1; distance > 1; distance /= 2) {
+            diamondStep(terrain, distance);
+            squareStep(terrain, distance);
+            this.current_scale *= 0.5;
+        }
+    }
     
     private void diamondStep(Terrain terrain, int distance) {
         ValidPositionList positions = new ValidPositionList(terrain);
@@ -78,8 +98,7 @@ public class DiamondSquare extends Tool {
                 positions.add(x,            y + distance);
                 positions.add(x + distance, y + distance);
                 middle.set(x + distance / 2, y + distance / 2);
-                Tile tile = terrain.getTile(middle);
-                tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
+                this.setAltitude(terrain, middle, this.getAltitudeChange(terrain, positions));
             }
         }
     }
@@ -90,40 +109,45 @@ public class DiamondSquare extends Tool {
         Position middle = new Position(0, 0);
         for (int y = 0; y < terrain.getLength(); y += distance) {
             for (int x = 0; x < terrain.getWidth(); x += distance) {
-                positions.clear();
                 // The middle is centered to the right of x, y:
                 middle.set(x + distance / 2, y);
                 if (terrain.isValidTilePosition(middle)) {
+                    positions.clear();
                     positions.add(x,                y);
                     positions.add(x + distance / 2, y - distance / 2);
                     positions.add(x + distance,     y);
                     positions.add(x + distance / 2, y + distance / 2);
-                    Tile tile = terrain.getTile(middle);
-                    tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
+                    this.setAltitude(terrain, middle, this.getAltitudeChange(terrain, positions));
                 }
                 // The middle is centered to below of x, y:
                 middle.set(x, y + distance / 2);
                 if (terrain.isValidTilePosition(middle)) {
+                    positions.clear();
                     positions.add(x,                y);
                     positions.add(x - distance / 2, y + distance / 2);
                     positions.add(x + distance / 2, y + distance / 2);
                     positions.add(x,                y + distance);
-                    Tile tile = terrain.getTile(middle);
-                    tile.adjustTopSoilAmount(this.getAltitudeChange(terrain, positions));
+                    this.setAltitude(terrain, middle, this.getAltitudeChange(terrain, positions));
                 }
             }
         }
     }
 
+    private void setAltitude(Terrain terrain, int x, int y, double altitude) {
+        this.altitudes[x + y * terrain.getWidth()] = altitude;
+    }
+    
+    private void setAltitude(Terrain terrain, Position position, double altitude) {
+        this.setAltitude(terrain, position.getX(), position.getY(), altitude);
+    }
     
     private double getAltitudeChange(Terrain terrain, ValidPositionList positions) {
         double average = 0.0;
         for (Position p : positions) {
-            average += terrain.getTile(p).getAltitude(false);
+            average += this.altitudes[p.getX() + p.getY() * terrain.getWidth()];
         }
         average /= (double) positions.size();
-        
-        return average + (this.random.nextDouble() * 2.0 - 1.0) * this.scale;
+        return average + (this.random.nextDouble() * 2.0 - 1.0) * this.current_scale;
     }
     
     
@@ -137,7 +161,6 @@ public class DiamondSquare extends Tool {
         if (size % 2 != 1) {
             return false;
         }
-        
         size -= 1;
         int tmp = 1;
         while (tmp < size) {
@@ -146,7 +169,6 @@ public class DiamondSquare extends Tool {
         if (tmp > size) {
             return false;
         }
-
         return true;
     }
 }
