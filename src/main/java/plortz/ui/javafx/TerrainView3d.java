@@ -23,6 +23,9 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -153,24 +156,26 @@ public class TerrainView3d extends Widget {
         }
         for (int i = 0; i < this.terrain_meshes.length; i++) {
             this.terrain_meshes[i].setMesh(this.generateMesh(SoilLayer.Type.values()[i], this.ui.getTerrain()));
+            PhongMaterial m = new PhongMaterial();
+            m.setDiffuseMap(this.getImage(this.ui.getTerrain()));
+            this.terrain_meshes[i].setMaterial(m);
         }
     }
     
     
     private TriangleMesh generateMesh(SoilLayer.Type soil_type, Terrain terrain) {
         TriangleMesh mesh = new TriangleMesh();
-
+        
         float offsetx = -terrain.getWidth() / 2;
         float offsety = -terrain.getLength() / 2;
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile t = terrain.getTile(x, y);
                 mesh.getPoints().addAll(offsetx + x, (float) -t.getAltitude(true), offsety + y);
+                mesh.getTexCoords().addAll((float) x / (float) terrain.getWidth(), (float) y / (float) terrain.getLength());
             }
         }
 
-        mesh.getTexCoords().addAll(0, 0);
-        
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
                 /*
@@ -185,11 +190,40 @@ public class TerrainView3d extends Widget {
                 mesh.getFaces().addAll(c, 0, b, 0, a, 0);
                 mesh.getFaces().addAll(c, 0, d, 0, b, 0);
                 */
-                mesh.getFaces().addAll(c, 0, a, 0, b, 0);
-                mesh.getFaces().addAll(b, 0, d, 0, c, 0);
+                int ta = x + y * terrain.getWidth();
+                int tb = ta + 1;
+                int tc = ta + terrain.getWidth();
+                int td = tc + 1;
+                mesh.getFaces().addAll(c, tc, a, ta, b, tb);
+                mesh.getFaces().addAll(b, tb, d, td, c, tc);
             }
         }
         
         return mesh;
+    }
+    
+    private Image getImage(Terrain terrain) {
+        WritableImage image = new WritableImage(terrain.getWidth(), terrain.getLength());
+
+        PixelWriter pw = image.getPixelWriter();
+        Vector minmax = terrain.getAltitudeRange();
+        
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                Tile tile = terrain.getTile(x, y);
+                pw.setArgb(x, y, this.getTileARGB(tile));
+            }
+        }
+        
+        return image;
+    }
+    
+    private int getTileARGB(Tile tile) {
+        Vector rgb = tile.getTopSoil().getRGB();
+        int r = (int) (rgb.getX() * 255.0);
+        int g = (int) (rgb.getY() * 255.0);
+        int b = (int) (rgb.getZ() * 255.0);
+        int argb = (0xff << 24) | (r << 16) | (g << 8) | b;
+        return argb;
     }
 }
