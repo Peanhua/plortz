@@ -34,7 +34,6 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import plortz.util.Vector;
-import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
@@ -44,34 +43,38 @@ import plortz.ui.UserInterface;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class TerrainView3d extends TerrainView {
-    private MeshView[]      terrain_meshes;
-    private SubScene        scene3d;
+    private MeshView      terrain_mesh;
+    private SubScene      scene3d;
+    // The terrain size for which the current mesh is constructed for.
+    private int           terrain_mesh_width;
+    private int           terrain_mesh_length;
+    private WritableImage terrain_mesh_texture;
     
-    private final Vector    mouse_oldpos;
-    private final Rotate    rotate_x;
-    private final Rotate    rotate_y;
-    private double          mouse_rotate_speed;
+    private final Vector  mouse_oldpos;
+    private final Rotate  rotate_x;
+    private final Rotate  rotate_y;
+    private double        mouse_rotate_speed;
     
     public TerrainView3d(UserInterface ui) {
         super(ui);
-        this.terrain_meshes     = new MeshView[1]; //SoilLayer.Type.values().length];
-        this.mouse_oldpos       = new Vector(0, 0);
-        this.rotate_x           = new Rotate(-30, Rotate.X_AXIS);
-        this.rotate_y           = new Rotate(0, Rotate.Y_AXIS);
-        this.mouse_rotate_speed = 0.2;
+        this.terrain_mesh         = null;
+        this.scene3d              = null;
+        this.terrain_mesh_width   = 0;
+        this.terrain_mesh_length  = 0;
+        this.terrain_mesh_texture = null;
+        this.mouse_oldpos         = new Vector(0, 0);
+        this.rotate_x             = new Rotate(-30, Rotate.X_AXIS);
+        this.rotate_y             = new Rotate(0, Rotate.Y_AXIS);
+        this.mouse_rotate_speed   = 0.2;
     }
     
     @Override
     public Node createUserInterface() {
         super.createUserInterface();
         
-        for (int i = 0; i < this.terrain_meshes.length; i++) {
-            this.terrain_meshes[i] = new MeshView();
-            this.terrain_meshes[i].setCullFace(CullFace.NONE);
-        }
-        
-        //this.terrain_mesh.setMesh(trapezoid);
-        this.container.getChildren().addAll(this.terrain_meshes);
+        this.terrain_mesh = new MeshView();
+        this.terrain_mesh.setCullFace(CullFace.NONE);
+        this.container.getChildren().add(this.terrain_mesh);
         
         AmbientLight light = new AmbientLight(Color.YELLOW);
         //light.setTranslateZ(1);
@@ -80,18 +83,14 @@ public class TerrainView3d extends TerrainView {
         box.setMaterial(new PhongMaterial(Color.WHITE));
         
         PhongMaterial m = new PhongMaterial(Color.RED);
-        this.terrain_meshes[0].setMaterial(m);
-        light.getScope().add(this.terrain_meshes[0]);
+        this.terrain_mesh.setMaterial(m);
+        light.getScope().add(this.terrain_mesh);
         
-        /*
-        this.terrain_meshes[1].setMaterial(new PhongMaterial(Color.GREEN));
-        this.terrain_meshes[2].setMaterial(new PhongMaterial(Color.BLUE));
-        */
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setFarClip(500);
         camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, -10, -100));
 
-        Group root3D = new Group(camera, box, this.terrain_meshes[0]); //, this.terrain_meshes[1], this.terrain_meshes[2]);
+        Group root3D = new Group(camera, box, this.terrain_mesh);
         scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.BALANCED);
         scene3d.setFill(Color.BLACK);
         scene3d.setCamera(camera);
@@ -123,21 +122,26 @@ public class TerrainView3d extends TerrainView {
 
     @Override
     public void refresh() {
-        if (!this.active || this.width == 0 || this.user_interface.getTerrain() == null) {
+        Terrain terrain = this.user_interface.getTerrain();
+        if (!this.active || this.width == 0 || terrain == null) {
             return;
         }
-        for (int i = 0; i < this.terrain_meshes.length; i++) {
-            this.terrain_meshes[i].setMesh(this.generateMesh(SoilLayer.Type.values()[i], this.user_interface.getTerrain()));
+        if (terrain.getWidth() != this.terrain_mesh_width || terrain.getLength() != this.terrain_mesh_length) {
+            this.terrain_mesh_width = terrain.getWidth();
+            this.terrain_mesh_length = terrain.getLength();
+            this.terrain_mesh.setMesh(this.generateMesh(this.user_interface.getTerrain()));
             PhongMaterial m = new PhongMaterial();
-            m.setDiffuseMap(this.getImage(this.user_interface.getTerrain()));
-            this.terrain_meshes[i].setMaterial(m);
+            this.terrain_mesh_texture = this.getImage(this.user_interface.getTerrain());
+            m.setDiffuseMap(this.terrain_mesh_texture);
+            this.terrain_mesh.setMaterial(m);
+        } else {
+            this.updateMesh(terrain);
         }
     }
     
     
-    private TriangleMesh generateMesh(SoilLayer.Type soil_type, Terrain terrain) {
+    private TriangleMesh generateMesh(Terrain terrain) {
         TriangleMesh mesh = new TriangleMesh();
-        
         float offsetx = -terrain.getWidth() / 2;
         float offsety = -terrain.getLength() / 2;
         for (int y = 0; y < terrain.getLength(); y++) {
@@ -147,7 +151,6 @@ public class TerrainView3d extends TerrainView {
                 mesh.getTexCoords().addAll((float) x / (float) terrain.getWidth(), (float) y / (float) terrain.getLength());
             }
         }
-
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
                 /*
@@ -171,11 +174,30 @@ public class TerrainView3d extends TerrainView {
                 mesh.getFaces().addAll(b, tb, d, td, c, tc);
             }
         }
-        
         return mesh;
     }
     
-    private Image getImage(Terrain terrain) {
+    private void updateMesh(Terrain terrain) {
+        TriangleMesh mesh = (TriangleMesh) this.terrain_mesh.getMesh();
+        // Update the y coordinates of the points (x and z remain the same):
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                Tile t = terrain.getTile(x, y);
+                int pos = 3 * (x + y * terrain.getWidth());
+                mesh.getPoints().set(pos + 1, (float) -t.getAltitude(true));
+            }
+        }
+        // Update the texture:
+        PixelWriter pw = this.terrain_mesh_texture.getPixelWriter();
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                Tile tile = terrain.getTile(x, y);
+                pw.setArgb(x, y, this.getTileARGB(tile, 1.0));
+            }
+        }
+    }
+    
+    private WritableImage getImage(Terrain terrain) {
         WritableImage image = new WritableImage(terrain.getWidth(), terrain.getLength());
 
         PixelWriter pw = image.getPixelWriter();
