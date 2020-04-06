@@ -22,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -73,7 +72,6 @@ public class TerrainView3d extends TerrainView {
         super.createUserInterface();
         
         this.terrain_mesh = new MeshView();
-        this.terrain_mesh.setCullFace(CullFace.NONE);
         this.container.getChildren().add(this.terrain_mesh);
         
         AmbientLight light = new AmbientLight(Color.YELLOW);
@@ -142,13 +140,14 @@ public class TerrainView3d extends TerrainView {
     
     private TriangleMesh generateMesh(Terrain terrain) {
         TriangleMesh mesh = new TriangleMesh();
+        Vector minmax = terrain.getAltitudeRange();
         float offsetx = -terrain.getWidth() / 2;
         float offsety = -terrain.getLength() / 2;
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile t = terrain.getTile(x, y);
-                mesh.getPoints().addAll(offsetx + x, (float) -t.getAltitude(true), offsety + y);
-                mesh.getTexCoords().addAll((float) x / (float) terrain.getWidth(), (float) y / (float) terrain.getLength());
+                mesh.getPoints().addAll(offsetx + x, (float) -(t.getAltitude(true) - minmax.getX()), offsety + y);
+                mesh.getTexCoords().addAll(((float) x + 0.5f) / (float) terrain.getWidth(), ((float) y + 0.5f) / (float) terrain.getLength());
             }
         }
         for (int y = 0; y < terrain.getLength() - 1; y++) {
@@ -179,12 +178,13 @@ public class TerrainView3d extends TerrainView {
     
     private void updateMesh(Terrain terrain) {
         TriangleMesh mesh = (TriangleMesh) this.terrain_mesh.getMesh();
+        Vector minmax = terrain.getAltitudeRange();
         // Update the y coordinates of the points (x and z remain the same):
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile t = terrain.getTile(x, y);
                 int pos = 3 * (x + y * terrain.getWidth());
-                mesh.getPoints().set(pos + 1, (float) -t.getAltitude(true));
+                mesh.getPoints().set(pos + 1, (float) -(t.getAltitude(true) - minmax.getX()));
             }
         }
         // Update the texture:
