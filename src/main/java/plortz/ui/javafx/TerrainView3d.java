@@ -27,7 +27,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
@@ -44,7 +43,7 @@ import plortz.ui.UserInterface;
 public class TerrainView3d extends TerrainView {
     private MeshView      terrain_mesh;
     private SubScene      scene3d;
-    // The terrain size for which the current mesh is constructed for.
+    // The terrain size for which the current mesh is constructed for:
     private int           terrain_mesh_width;
     private int           terrain_mesh_length;
     private WritableImage terrain_mesh_texture;
@@ -74,7 +73,7 @@ public class TerrainView3d extends TerrainView {
         this.terrain_mesh = new MeshView();
         this.container.getChildren().add(this.terrain_mesh);
         
-        AmbientLight light = new AmbientLight(Color.YELLOW);
+        //AmbientLight light = new AmbientLight(Color.YELLOW);
         //light.setTranslateZ(1);
 
         Box box = new Box(0.5, 0.5, 0.5);
@@ -82,14 +81,14 @@ public class TerrainView3d extends TerrainView {
         
         PhongMaterial m = new PhongMaterial(Color.RED);
         this.terrain_mesh.setMaterial(m);
-        light.getScope().add(this.terrain_mesh);
+        //light.getScope().add(this.terrain_mesh);
         
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setFarClip(500);
-        camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, -10, -100));
+        camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, -20, -100));
 
         Group root3D = new Group(camera, box, this.terrain_mesh);
-        scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.BALANCED);
+        scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.DISABLED);
         scene3d.setFill(Color.BLACK);
         scene3d.setCamera(camera);
         
