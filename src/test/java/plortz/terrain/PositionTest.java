@@ -64,4 +64,11 @@ public class PositionTest {
         assertEquals(9, position.getX());
         assertEquals(12, position.getY());
     }
+    
+    @Test
+    public void equalWorksBetweenTwoDifferentObjects() {
+        Position a = new Position(5, 3);
+        Position b = new Position(5, 3);
+        assertTrue(a.equals(b));
+    }
 }

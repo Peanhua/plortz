@@ -71,7 +71,12 @@ public abstract class TerrainView extends Widget {
     }
 
     protected int getTileARGB(Tile tile, double altitude) {
-        Vector rgb = tile.getTopSoil().getRGB();
+        Vector rgb;
+        if (tile.getWater() > 0.0) {
+            rgb = new Vector(0, 0, 1);
+        } else {
+            rgb = tile.getTopSoil().getRGB();
+        }
         int r = (int) (rgb.getX() * 255.0 * altitude);
         int g = (int) (rgb.getY() * 255.0 * altitude);
         int b = (int) (rgb.getZ() * 255.0 * altitude);

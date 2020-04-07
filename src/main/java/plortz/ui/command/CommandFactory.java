@@ -60,6 +60,7 @@ public class CommandFactory {
         this.commands.put("smooth",        SmoothAltitudes.class);
         this.commands.put("scale",         ScaleHeights.class);
         this.commands.put("info",          Info.class);
+        this.commands.put("water",         AddWater.class);
     }
     
     public Command create(String string) {

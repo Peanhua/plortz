@@ -167,6 +167,20 @@ public class Tile {
         this.water_height = water_height;
     }
     
+    public void adjustWater(double amount) {
+        if (this.water_height < 0.0) {
+            if (amount > 0.0) {
+                this.water_height = amount;
+            }
+        } else {
+            this.water_height += amount;
+        }
+    }
+    
+    public double getWater() {
+        return this.water_height;
+    }
+    
     
     /**
      * Return the slope from this to the target.

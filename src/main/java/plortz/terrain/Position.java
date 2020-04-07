@@ -34,6 +34,12 @@ public class Position {
         this.x = source.x;
         this.y = source.y;
     }
+    
+    public Position(Position source, int delta_x, int delta_y) {
+        this(source);
+        this.x += delta_x;
+        this.y += delta_y;
+    }
 
     public void set(int x, int y) {
         this.x = x;
@@ -57,4 +63,14 @@ public class Position {
     public String toString() {
         return "(x=" + this.x + ",y=" + this.y + ")";
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        Position other = (Position) obj;
+        if (other == null) {
+            return false;
+        }
+        return this.x == other.x && this.y == other.y;
+    }
+    // Note, hashCode() is not implemented.
 }

@@ -350,9 +350,9 @@ public class ArrayListTest {
         string_list.add(b);
         string_list.add(c);
         
-        assertEquals(0, string_list.indexOf(a));
-        assertEquals(1, string_list.indexOf(b));
-        assertEquals(2, string_list.indexOf(c));
+        assertEquals(0, string_list.indexOf("eka"));
+        assertEquals(1, string_list.indexOf("toka"));
+        assertEquals(2, string_list.indexOf("kolkko"));
     }
     
     @Test
