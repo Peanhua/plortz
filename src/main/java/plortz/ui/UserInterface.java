@@ -33,6 +33,7 @@ import plortz.terrain.Terrain;
 public abstract class UserInterface {
     private boolean              running;
     private final CommandHistory command_history;
+    private final String         command_history_filename;
     private Terrain              terrain;
     private final Subject        on_terrain_change;
     private final Subject        on_message;
@@ -43,11 +44,18 @@ public abstract class UserInterface {
     public UserInterface() {
         this.running           = true;
         this.command_history   = new CommandHistory();
+        this.command_history_filename = ".plortz_history";
         this.terrain           = null;
         this.on_terrain_change = new Subject();
         this.on_message        = new Subject();
         this.random_generator  = new MersenneTwister();
         this.output_timing     = false;
+        
+        try {
+            this.command_history.load(this.command_history_filename);
+        } catch (Exception e) {
+            // Silently ignored.
+        }
     }
     
     public boolean isRunning() {
@@ -58,6 +66,11 @@ public abstract class UserInterface {
     
     public void stop() {
         this.running = false;
+        try {
+            this.command_history.save(this.command_history_filename);
+        } catch (Exception e) {
+            System.err.println("Failed to write history to \"" + this.command_history_filename + "\": " + e.getMessage());
+        }
     }
     
     public final Terrain getTerrain() {

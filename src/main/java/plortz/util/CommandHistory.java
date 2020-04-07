@@ -16,7 +16,12 @@
  */
 package plortz.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Keeps history of issued commands.
@@ -63,5 +68,20 @@ public class CommandHistory {
         this.cursor++;
         String rv = this.history.get(this.cursor);
         return rv;
+    }
+    
+    public void save(String filename) throws IOException {
+        PrintStream file = new PrintStream(filename);
+        this.history.forEach((line) -> {
+            file.println(line);
+        });
+    }
+    
+    public void load(String filename) throws FileNotFoundException {
+        Scanner s = new Scanner(new File(filename));
+        while (s.hasNextLine()) {
+            String line = s.nextLine();
+            this.add(line);
+        }
     }
 }
