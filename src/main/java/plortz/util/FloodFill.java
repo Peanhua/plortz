@@ -56,6 +56,9 @@ public class FloodFill {
                         if (dx == 0 && dy == 0) {
                             continue;
                         }
+                        if (dx != 0 && dy != 0) { // Skip diagonal
+                            continue;
+                        }
                         if (!this.filled.isValidPosition(x + dx, y + dy)) {
                             continue;
                         }

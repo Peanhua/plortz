@@ -127,11 +127,11 @@ public class FloodFillTest {
 
     String[] map1 = {
         "01234",
-        "1xxxx",
+        "1dxxd",
         "2x  x",
         "3x  x",
         "4x  x",
-        "5xxxx"
+        "5dxxd"
     };
     @Test
     public void testMap1() {
@@ -140,11 +140,11 @@ public class FloodFillTest {
     
     String[] map2 = {
         "0123456789",
-        "1xxxxxxxxx",
+        "1dxxxxxxxd",
         "2x       x",
         "3x       x",
         "4x       x",
-        "5xxxxxxxxx"
+        "5dxxxxxxxd"
     };
     @Test
     public void testMap2() {
@@ -153,11 +153,11 @@ public class FloodFillTest {
 
     String[] map3 = {
         "0123456789",
-        "1xxxxxxxxx",
+        "1dxxxxxxxd",
         "2x       x",
-        "3x x  xxxx",
+        "3x x  xxxd",
         "4x x     x",
-        "5xxxxxxxxx"
+        "5dxdxxxxxd"
     };
     @Test
     public void testMap3() {
@@ -166,42 +166,42 @@ public class FloodFillTest {
 
     String[] map4 = {
         ".....................................................................",
-        "...................xxxxxxxxxxxxxxxxxxxxxxx...........................",
-        "...............xxxxx                     xxxxx.......................",
-        "...........xxxxx                             xxxxxxxx................",
-        "........xxxx                                        xxxxx............",
-        "......xxx                                               xx...........",
-        ".....xx                                                  xx..........",
-        "....xx                                                    xxx........",
-        "...xx                                                       xx.......",
-        ".xxx           xxxxxx                xxxxxxxxx               xx......",
-        ".x            xx....xx              xx.......xx               xx.....",
-        ".x           xx......xx            xx.........x                xx....",
-        ".x           x........x            xx........xx                 xx...",
-        "xx           xx......xx             xx......xx                   xx..",
-        "x             xxxxxxxx               xxxxxxxx                     xx.",
-        "x                                                                  xx",
+        "...................dxxxxxxxxxxxxxxxxxxxxxd...........................",
+        "...............dxxxx                     xxxxd.......................",
+        "...........dxxxx                             xxxxxxxd................",
+        "........dxxx                                        xxxxd............",
+        "......dxx                                               xd...........",
+        ".....dx                                                  xd..........",
+        "....dx                                                    xxd........",
+        "...dx                                                       xd.......",
+        ".dxx           xxxxxx                xxxxxxxxx               xd......",
+        ".x            xd....dx              xd.......dx               xd.....",
+        ".x           xd......dx            xd.........x                xd....",
+        ".x           x........x            xd........dx                 xd...",
+        "dx           xd......dx             xd......dx                   xd..",
+        "x             xxxxxxxx               xxxxxxxx                     xd.",
+        "x                                                                  xd",
         "x                                                                   x",
         "x                      x      xx                                    x",
         "x                      x        x          x x x x                  x",
         "x                      x      xx           x x x x                  x",
-        "x                       xxxxxx             xxxxxxx                  x",
+        "x                       xxxxxx             xxdxdxx                  x",
         "x                                          x x x x                  x",
-        "xx                                         x x x x                 xx",
-        ".xx                                                               xx.",
-        "..xx                                                             xx..",
-        "...xxx                                                         xxx...",
-        ".....xx                                                       xx.....",
-        "......xx               xxxxxxxxxxxxxxxxx                     xx......",
-        ".......xxx          xxx                 xx                  xx.......",
-        ".........xx        x                      x                xx........",
-        "..........xx      x                        x              xx.........",
-        "...........x      x                       x              xx..........",
-        "...........xx      xxxxxxxxx xxxxxxxxxxxxx              xx...........",
-        "............x                                          xx............",
-        "............xx                                         x.............",
-        ".............x                                        xx.............",
-        ".............xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..............",
+        "dx                                         x x x x                 xd",
+        ".dx                                                               xd.",
+        "..dx                                                             xd..",
+        "...dxx                                                         xxd...",
+        ".....dx                                                       xd.....",
+        "......dx               xxxxxxxxxxxxxxxxx                     xd......",
+        ".......dxx          xxx                 xx                  xd.......",
+        ".........dx        x                      x                xd........",
+        "..........dx      x                        x              xd.........",
+        "...........x      x                       x              xd..........",
+        "...........dx      xxxxxxxxx xxxxxxxxxxxxx              xd...........",
+        "............x                                          xd............",
+        "............dx                                         x.............",
+        ".............x                                        xd.............",
+        ".............dxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxd..............",
         "..............x        x         x                   x...............",
         "..............x        x         x       x           x...............",
         "..............x        x         x       x           x...............",
@@ -210,7 +210,7 @@ public class FloodFillTest {
         "..............x        x         x       x           x...............",
         "..............x        x         x       x           x...............",
         "..............x        x                 x           x...............",
-        "..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..............."
+        "..............dxxxxxxxxdxxxxxxxxxxxxxxxxxdxxxxxxxxxxxd..............."
     };
     @Test
     public void testMap4() {
