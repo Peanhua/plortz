@@ -43,6 +43,33 @@ public class FloodFill {
         return callback.isPositionIn(position);
     }
     
+    public List<Position> getBorders() {
+        List<Position> borders = new ArrayList<>();
+        for (int y = 0; y < this.length; y++) {
+            for (int x = 0; x < this.width; x++) {
+                if (this.filled.get(x, y)) {
+                    continue;
+                }
+                boolean done = false;
+                for (int dy = -1; !done && dy <= 1; dy++) {
+                    for (int dx = -1; !done && dx <= 1; dx++) {
+                        if (dx == 0 && dy == 0) {
+                            continue;
+                        }
+                        if (!this.filled.isValidPosition(x + dx, y + dy)) {
+                            continue;
+                        }
+                        if (this.filled.get(x + dx, y + dy)) {
+                            borders.add(new Position(x, y));
+                            done = true;
+                        }
+                    }
+                }
+            }
+        }
+        return borders;
+    }
+    
     /**
      * Flood fill area inside a 2d rectangle space.
      * <p>

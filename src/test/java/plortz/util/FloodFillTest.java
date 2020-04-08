@@ -105,6 +105,7 @@ public class FloodFillTest {
             }
         }
         int target_fill_count = 0;
+        int border_count = 0;
         for (int y = 0; y < map.getLength(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 boolean was_empty = map.get(x, y) == ' ';
@@ -115,18 +116,22 @@ public class FloodFillTest {
                 } else {
                     assertFalse(was_filled);
                 }
+                if (map.get(x, y) == 'x') {
+                    border_count++;
+                }
             }
         }
         assertEquals(target_fill_count, cb.filled.size());
+        assertEquals(border_count, ff.getBorders().size());
     }
 
     String[] map1 = {
         "01234",
-        "1####",
-        "2#  #",
-        "3#  #",
-        "4#  #",
-        "5####"
+        "1xxxx",
+        "2x  x",
+        "3x  x",
+        "4x  x",
+        "5xxxx"
     };
     @Test
     public void testMap1() {
@@ -135,11 +140,11 @@ public class FloodFillTest {
     
     String[] map2 = {
         "0123456789",
-        "1#########",
-        "2#       #",
-        "3#       #",
-        "4#       #",
-        "5#########"
+        "1xxxxxxxxx",
+        "2x       x",
+        "3x       x",
+        "4x       x",
+        "5xxxxxxxxx"
     };
     @Test
     public void testMap2() {
@@ -148,11 +153,11 @@ public class FloodFillTest {
 
     String[] map3 = {
         "0123456789",
-        "1#########",
-        "2#       #",
-        "3# #  ####",
-        "4# #     #",
-        "5#########"
+        "1xxxxxxxxx",
+        "2x       x",
+        "3x x  xxxx",
+        "4x x     x",
+        "5xxxxxxxxx"
     };
     @Test
     public void testMap3() {
@@ -161,42 +166,42 @@ public class FloodFillTest {
 
     String[] map4 = {
         ".....................................................................",
-        "....................xxxxxxxxxxxxxxxxxxxxx............................",
-        "................xxxx                     xxxx........................",
-        "............xxxx                             xxxxxxx.................",
-        ".........xxx                                        xxxx.............",
-        ".......xx                                               x............",
-        "......x                                                  x...........",
-        ".....x                                                    xx.........",
-        "....x                                                       x........",
-        "..xx           xxxxxx                xxxxxxxxx               x.......",
-        ".x            x......x              x.........x               x......",
-        ".x           x........x            x..........x                x.....",
-        ".x           x........x            x..........x                 x....",
-        ".x           x........x             x........x                   x...",
-        "x             xxxxxxxx               xxxxxxxx                     x..",
-        "x                                                                  x.",
+        "...................xxxxxxxxxxxxxxxxxxxxxxx...........................",
+        "...............xxxxx                     xxxxx.......................",
+        "...........xxxxx                             xxxxxxxx................",
+        "........xxxx                                        xxxxx............",
+        "......xxx                                               xx...........",
+        ".....xx                                                  xx..........",
+        "....xx                                                    xxx........",
+        "...xx                                                       xx.......",
+        ".xxx           xxxxxx                xxxxxxxxx               xx......",
+        ".x            xx....xx              xx.......xx               xx.....",
+        ".x           xx......xx            xx.........x                xx....",
+        ".x           x........x            xx........xx                 xx...",
+        "xx           xx......xx             xx......xx                   xx..",
+        "x             xxxxxxxx               xxxxxxxx                     xx.",
+        "x                                                                  xx",
         "x                                                                   x",
         "x                      x      xx                                    x",
         "x                      x        x          x x x x                  x",
         "x                      x      xx           x x x x                  x",
         "x                       xxxxxx             xxxxxxx                  x",
         "x                                          x x x x                  x",
-        ".x                                         x x x x                 x.",
-        "..x                                                               x..",
-        "...x                                                             x...",
-        "....xx                                                         xx....",
-        "......x                                                       x......",
-        ".......x               xxxxxxxxxxxxxxxxx                     x.......",
-        "........xx          xxx                 xx                  x........",
-        "..........x        x                      x                x.........",
-        "...........x      x                        x              x..........",
-        "...........x      x                       x              x...........",
-        "............x      xxxxxxxxx xxxxxxxxxxxxx              x............",
-        "............x                                          x.............",
-        ".............x                                         x.............",
-        ".............x                                        x..............",
-        "..............xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...............",
+        "xx                                         x x x x                 xx",
+        ".xx                                                               xx.",
+        "..xx                                                             xx..",
+        "...xxx                                                         xxx...",
+        ".....xx                                                       xx.....",
+        "......xx               xxxxxxxxxxxxxxxxx                     xx......",
+        ".......xxx          xxx                 xx                  xx.......",
+        ".........xx        x                      x                xx........",
+        "..........xx      x                        x              xx.........",
+        "...........x      x                       x              xx..........",
+        "...........xx      xxxxxxxxx xxxxxxxxxxxxx              xx...........",
+        "............x                                          xx............",
+        "............xx                                         x.............",
+        ".............x                                        xx.............",
+        ".............xxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..............",
         "..............x        x         x                   x...............",
         "..............x        x         x       x           x...............",
         "..............x        x         x       x           x...............",
