@@ -64,7 +64,6 @@ public class AddWater extends Tool {
     @Override
     public void apply(Terrain terrain) {
         this.addRiver(terrain, this.water_source_position, this.water_source_amount);
-        
         terrain.zeroBottomSoilLayer();
         terrain.changed();
     }
@@ -157,27 +156,34 @@ public class AddWater extends Tool {
         PathFinder pather = new BreadthFirstSearch();
         PathFinderHeuristic heuristic = new AddRiverPathFinderHeuristic(terrain);
         List<Position> path = pather.find(position, heuristic);
-        if (path == null) {
-            return;
-        }
-        // If the last tile in the path contains water, follow it:
-        Position lastpos = path.get(path.size() - 1);
-        boolean follow_river = terrain.getTile(lastpos).getWater() > 0.0;
-        // But first add water to the new river portion:
-        for (Position pos : path) {
-            Tile tile = terrain.getTile(pos);
-            if (tile.getWater() > 0.0) {
-                continue;
+        Position lastpos = null;
+        if (path != null) {
+            // If the last tile in the path contains water, follow it:
+            lastpos = path.get(path.size() - 1);
+            boolean follow_river = terrain.getTile(lastpos).getWater() > 0.0;
+            // But first add water to the new river portion:
+            for (Position pos : path) {
+                Tile tile = terrain.getTile(pos);
+                if (tile.getWater() > 0.0) {
+                    continue;
+                }
+                double altitude = tile.getAltitude(true);
+                terrain.getTile(pos).adjustWater(0.01);
+                this.carveTile(tile, altitude);
             }
-            double altitude = tile.getAltitude(true);
-            terrain.getTile(pos).adjustWater(0.01);
-            this.carveTile(tile, altitude);
-        }
-        if (follow_river) {
-            Position river_end = this.followExistingRiver(terrain, lastpos);
-            if (river_end != null) {
-                lastpos = river_end;
+            if (follow_river) {
+                Position river_end = this.followExistingRiver(terrain, lastpos);
+                if (river_end != null) {
+                    lastpos = river_end;
+                }
             }
+        } else {
+            // No path, this is most likely an empty map, try to expand water here.
+            Tile tile = terrain.getTile(position);
+            tile.adjustWater(0.01);
+            this.carveTile(tile, 0.01);
+            water_amount -= 0.01;
+            lastpos = position;
         }
         if (lastpos != null) {
             this.expandWater(terrain, lastpos, water_amount);
