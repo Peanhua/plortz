@@ -46,6 +46,18 @@ public class AddWater extends Tool {
         this.new_water = new ArrayList<>();
     }
     
+    
+    private void debugPrint(String str) {
+        if (false) {
+            System.out.print(str);
+        }
+    }
+    private void debugPrintLn(String str) {
+        if (false) {
+            System.out.println(str);
+        }
+    }
+    
     @Override
     public void apply(Terrain terrain) {
         // The Plan:
@@ -62,17 +74,16 @@ public class AddWater extends Tool {
         // Mark rivers and lakes/ponds?
         //   Could be used to quickly find the next pond/lake downstream from any point in a river.
         //   Could be used for erosion, to erode the rivers.
-        //System.out.println("water amount = " + this.water_source_amount);
+        //this.debugPrintLn("water amount = " + this.water_source_amount);
         this.addRiverOnDryLand(terrain, this.water_source_position, this.water_source_amount);
         terrain.zeroBottomSoilLayer();
         terrain.changed();
-        /*
-        System.out.println("New water:");
+        
+        this.debugPrintLn("New water:");
         for (Position pos : new_water) {
             Tile t = terrain.getTile(pos);
-            System.out.println("  " + pos + ": altitude=" + t.getAltitude(true) + ", water=" + t.getWater());
+            this.debugPrintLn("  " + pos + ": altitude=" + t.getAltitude(true) + ", water=" + t.getWater());
         }
-        */
     }
 
 
@@ -155,7 +166,7 @@ public class AddWater extends Tool {
         Heuristic heuristic = new AddRiverOnDryLandPathFinderHeuristic(terrain);
         List<Position> path = pather.find(position, heuristic);
         if (path == null) {
-            //System.out.println("no path");
+            this.debugPrintLn("no path");
             return;
         }
         // If the last tile in the path contains water, follow it:
@@ -168,20 +179,21 @@ public class AddWater extends Tool {
                 continue;
             }
             double altitude = tile.getAltitude(true);
+            this.debugPrint("new river at " + pos + ": altitude=" + tile.getAltitude(true) + ", water=" + tile.getWater());
             terrain.getTile(pos).adjustWater(0.01);
             this.carveTile(tile, altitude);
-            //System.out.println("new river at " + pos + " -> water depth = " + tile.getWater());
+            this.debugPrintLn(" -> altitude=" + tile.getAltitude(true) + ", water=" + tile.getWater());
             if (!new_water.contains(pos))
                 new_water.add(pos);
         }
-        //System.out.println("follow_river=" + follow_river);
+        this.debugPrintLn("follow_river=" + follow_river);
         if (follow_river) {
             Position river_end = this.followExistingRiver(terrain, lastpos);
             if (river_end != null) {
                 lastpos = river_end;
             }
         }
-        //System.out.println("lastpos=" + lastpos);
+        //this.debugPrintLn("lastpos=" + lastpos);
         if (lastpos != null) {
             this.expandWater(terrain, lastpos, water_amount);
         }
@@ -239,15 +251,14 @@ public class AddWater extends Tool {
         Heuristic heuristic = new FollowExistingRiverPathFinderHeuristic(terrain);
         List<Position> path = pather.find(start, heuristic);
         if (path == null) {
-            //System.out.println("no follow river path");
+            this.debugPrintLn("no follow river path");
             return null;
         }
-        /*
-        System.out.println("Followed river: ");
+        
+        this.debugPrintLn("Followed river: ");
         for (Position pos : path) {
-            System.out.println("  " + pos);
+            this.debugPrintLn("  " + pos);
         }
-*/
         
         return path.get(path.size() - 1);
     }
@@ -288,22 +299,26 @@ public class AddWater extends Tool {
         LakeFinder lakefinder = new LakeFinder(terrain, terrain.getTile(start).getAltitude(true));
         FloodFill ff = new FloodFill();
         ff.fill(terrain.getWidth(), terrain.getLength(), start, lakefinder);
-        //System.out.println("lake size=" + lakefinder.filled.size());
+        this.debugPrintLn("lake size=" + lakefinder.filled.size());
         for (Position pos : lakefinder.filled) {
-            //System.out.println(pos + " altitude=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
+            this.debugPrintLn(pos + " altitude=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
         }
 
         Position floodpos = null; // The location from where to start flooding out if there is extra water.
         for (Position pos : ff.getBorders()) {
-            if (floodpos == null || terrain.getTile(pos).getAltitude(false) < terrain.getTile(floodpos).getAltitude(false)) {
+            Tile tile = terrain.getTile(pos);
+            if (tile.getWater() > 0.0) {
+                continue;
+            }
+            if (floodpos == null || tile.getAltitude(false) < terrain.getTile(floodpos).getAltitude(false)) {
                 floodpos = pos;
             }
         }
-        /*
-        System.out.println("floodpos=" + floodpos + ", borders size=" + ff.getBorders().size());
+        
+        this.debugPrintLn("floodpos=" + floodpos + ", borders size=" + ff.getBorders().size());
         if (floodpos != null)
-            System.out.println("floodpos=" + floodpos + ", altitude=" + terrain.getTile(floodpos).getAltitude(true) + ", water=" + terrain.getTile(floodpos).getWater());
-*/
+            this.debugPrintLn("floodpos=" + floodpos + ", altitude=" + terrain.getTile(floodpos).getAltitude(true) + ", water=" + terrain.getTile(floodpos).getWater());
+
         double amount_per_tile = water_amount / (double) lakefinder.filled.size();
         if (floodpos != null) {
             double max_amount_per_tile = terrain.getTile(floodpos).getAltitude(true) - terrain.getTile(start).getAltitude(true);
@@ -311,27 +326,21 @@ public class AddWater extends Tool {
                 amount_per_tile = max_amount_per_tile;
             }
         }
-        //System.out.println("water amount per tile = " + amount_per_tile);
+        this.debugPrintLn("water amount per tile = " + amount_per_tile);
         double oldwater = water_amount;
         if (amount_per_tile > 0.0) {
             // Fill the lake:
             for (Position pos : lakefinder.filled) {
-                //System.out.print("fill " + pos + " alt=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
+                this.debugPrint("fill " + pos + " alt=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
                 terrain.getTile(pos).adjustWater(amount_per_tile);
-                //System.out.println(" -> altitude=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
+                this.debugPrintLn(" -> altitude=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
                 water_amount -= amount_per_tile;
             }
-        } else if (floodpos != null) {
-            // Fill the floodpos with water because it is lower than the lake:
-            double amount = -amount_per_tile;
-            terrain.getTile(floodpos).adjustWater(amount);
-            water_amount -= amount;
-            //System.out.println("filled floodpos: new altitude=" + terrain.getTile(floodpos).getAltitude(true) + ", water=" + terrain.getTile(floodpos).getWater());
         }
-        //System.out.println("used water: " + (oldwater - water_amount) + ", water left=" + water_amount);
+        this.debugPrintLn("used water: " + (oldwater - water_amount) + ", water left=" + water_amount);
         // If there is extra water, start a new river from the floodpos:
         if (water_amount > 0.0001 && floodpos != null) {
-            //System.out.println("start new river at " + floodpos + ", water_amount=" + water_amount);
+            this.debugPrintLn("start new river at " + floodpos + ", water_amount=" + water_amount);
             this.addRiverOnDryLand(terrain, floodpos, water_amount);
         }
     }
