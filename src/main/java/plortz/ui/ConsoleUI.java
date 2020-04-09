@@ -47,9 +47,6 @@ public class ConsoleUI extends UserInterface {
             Command cmd = this.command_factory.create(command);
             if (cmd != null) {
                 cmd.execute(this);
-            } else if (command != null && command.length() > 0) {
-                this.showMessage("Unknown command: " + command);
-                this.showMessage("Try \"help\".");
             }
         }
     }

@@ -62,6 +62,7 @@ public class CommandFactory {
         this.commands.put("info",          Info.class);
         this.commands.put("water",         AddWater.class);
         this.commands.put("run",           Run.class);
+        this.commands.put("#",             Comment.class);
     }
     
     public Command create(String string) {
@@ -69,12 +70,7 @@ public class CommandFactory {
         if (args == null || args.isEmpty()) {
             return null;
         }
-        
         Command cmd = this.getCommand(args.get(0));
-        if (cmd == null) {
-            return null;
-        }
-
         cmd.setArgs(args);
         return cmd;
     }
@@ -103,11 +99,11 @@ public class CommandFactory {
         return args;
     }
     
+    @SuppressWarnings("unchecked")
     private Command getCommand(String command_string) {
-        @SuppressWarnings("unchecked")
         Class<Command> c = this.commands.get(command_string); // unchecked conversion
         if (c == null) {
-            return null;
+            c = (Class) UnknownCommand.class; // unchecked conversion
         }
         
         try {

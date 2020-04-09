@@ -90,9 +90,6 @@ public class Console extends Widget {
         Command cmd = this.command_factory.create(input);
         if (cmd != null) {
             cmd.execute(this.user_interface);
-        } else if (input != null && input.length() > 0) {
-            this.user_interface.showMessage("Unknown command: " + input);
-            this.user_interface.showMessage("Try \"help\".");
         }
         this.user_interface.getCommandHistory().add(input);
         this.console_cmd.clear();

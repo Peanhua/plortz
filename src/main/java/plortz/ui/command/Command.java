@@ -76,8 +76,6 @@ public abstract class Command {
             Command cmd = cf.create(input);
             if (cmd != null) {
                 cmd.execute(ui);
-            } else if (input != null && input.length() > 0) {
-                ui.showMessage("Unknown command: " + input);
             }
         }
     }

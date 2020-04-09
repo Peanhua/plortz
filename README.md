@@ -59,6 +59,8 @@ Commands are read from the graphical console or stdin and produce no output on s
 * Set random seed: ```random_seed```
 * Add random patches of soil: ```random_soil```
 * Scale all the heights: ```scale```
+* Add water (rivers and lakes): ```water```
+* Execute a script from file: ```run```
 
 Example terrain generation:
 ```
