@@ -131,4 +131,48 @@ public class ListSetTest {
         }
         assertFalse(intlist.isEmpty());
     }
+    
+    @Test
+    public void iteratorListsAllTheElements() {
+        int max = 15;
+        for (int i = max; i >= 0; i--) {
+            intlist.add(i);
+        }
+        boolean[] found = new boolean[max + 1];
+        for (int i = 0; i <= max; i++) {
+            found[i] = false;
+        }
+        int count = 0;
+        for (int i : intlist) {
+            found[i] = true;
+            count++;
+        }
+        for (int i = 0; i <= max; i++) {
+            assertTrue(found[i]);
+        }
+        assertEquals(max + 1, count);
+    }
+    
+    @Test
+    public void removingNonexistingElementDoesNotChangeSize() {
+        int count = 43;
+        for (int i = 0; i < count; i++) {
+            intlist.add(i);
+        }
+        assertEquals(count, intlist.size());
+        intlist.remove(count * count);
+        assertEquals(count, intlist.size());
+    }
+    
+    @Test
+    public void addingNullThrowsException() {
+        boolean exception_thrown;
+        exception_thrown = false;
+        try {
+            intlist.add(null);
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
 }

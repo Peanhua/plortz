@@ -29,9 +29,9 @@ import plortz.terrain.Position;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class AStarTest {
+public class BreadthFirstSearchTest {
     
-    public AStarTest() {
+    public BreadthFirstSearchTest() {
     }
     
     @BeforeClass
@@ -66,8 +66,8 @@ public class AStarTest {
     @Test
     public void testScenariosProduceShortestPathsMap1() {
         PathFinderTestHeuristic h = new PathFinderTestHeuristic(map1, new Position(6, 7));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
+        PathFinder search = new BreadthFirstSearch();
+        List<Position> path = search.find(new Position(2, 2), h);
         assertNotNull(path);
         assertEquals(44, path.size());
     }
@@ -81,8 +81,8 @@ public class AStarTest {
     @Test
     public void testScenariosProduceShortestPathsMap2() {
         PathFinderTestHeuristic h = new PathFinderTestHeuristic(map2, new Position(3, 2));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
+        PathFinder search = new BreadthFirstSearch();
+        List<Position> path = search.find(new Position(2, 2), h);
         assertNotNull(path);
         assertEquals(2, path.size());
     }
@@ -98,13 +98,12 @@ public class AStarTest {
     @Test
     public void testScenariosProduceShortestPathsMap3() {
         PathFinderTestHeuristic h = new PathFinderTestHeuristic(map3, new Position(5, 3));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 3), h);
+        PathFinder search = new BreadthFirstSearch();
+        List<Position> path = search.find(new Position(2, 3), h);
         assertNotNull(path);
         assertEquals(4, path.size());
         assertEquals(new Position(2, 3), path.get(0));
-        assertEquals(new Position(3, 3), path.get(1));
-        assertEquals(new Position(4, 3), path.get(2));
         assertEquals(new Position(5, 3), path.get(3));
     }
+    
 }

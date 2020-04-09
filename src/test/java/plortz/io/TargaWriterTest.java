@@ -16,6 +16,7 @@
  */
 package plortz.io;
 
+import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +24,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
+import plortz.util.MersenneTwister;
 
 /**
  *
@@ -91,4 +94,19 @@ public class TargaWriterTest {
         assertTrue(writer.getBytes(constructed_terrain).length > rle_writer.getBytes(constructed_terrain).length);
     }
     
+    @Test
+    public void compressionDoesNotCrashWithRandomTerrain() {
+        Terrain terrain = new Terrain(100, 100);
+        Random random = new MersenneTwister(0);
+        for (Tile t : terrain) {
+            t.setTopSoilAmount(random.nextDouble());
+        }
+        assertTrue(rle_writer.getBytes(terrain).length > 0);
+    }
+    
+    @Test
+    public void colorImageBodyContainsMoreBytesThanGrayscale() {
+        Writer color_writer = new TargaWriter(false, true);
+        assertTrue(color_writer.getBytes(constructed_terrain).length > writer.getBytes(constructed_terrain).length);
+    }
 }

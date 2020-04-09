@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import plortz.util.Vector;
 
 /**
  *
@@ -30,6 +31,8 @@ import static org.junit.Assert.*;
 public class TerrainTest {
 
     private Terrain terrain;
+    private double  testdelta;
+    private boolean was_called;
     
     public TerrainTest() {
     }
@@ -45,6 +48,7 @@ public class TerrainTest {
     @Before
     public void setUp() {
         terrain = new Terrain(2, 5);
+        this.testdelta = 0.00001;
     }
     
     @After
@@ -178,5 +182,24 @@ public class TerrainTest {
             // paranoidly false test here so there is no need to test for equality with 0.0
             assertFalse(t.getBottomSoil().getAmount() < 0.0);
         }
+    }
+    
+    @Test
+    public void getAltitudeRangeReturnsCorrectValues() {
+        terrain.getTile(0, 0).setTopSoilAmount(0);
+        terrain.getTile(1, 1).setTopSoilAmount(100);
+        Vector v = terrain.getAltitudeRange();
+        assertEquals(0.0, v.getX(), testdelta);
+        assertEquals(100.0, v.getY(), testdelta);
+    }
+    
+    @Test
+    public void listenerIsCalledWhenChangedIsCalled() {
+        was_called = false;
+        terrain.listenOnChange(() -> {
+            was_called = true;
+        });
+        terrain.changed();
+        assertTrue(was_called);
     }
 }
