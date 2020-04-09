@@ -19,6 +19,7 @@ package plortz.io;
 import java.io.ByteArrayOutputStream;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
+import plortz.terrain.Tile;
 
 /**
  * Writes a Truevision TGA image file of the terrain.
@@ -30,10 +31,12 @@ import plortz.terrain.Terrain;
  */
 public class TargaWriter extends Writer {
     private final boolean compressed;
+    private final boolean colors;
     private Vector        minmax;
     
-    public TargaWriter(boolean compress) {
+    public TargaWriter(boolean compress, boolean colors) {
         this.compressed = compress;
+        this.colors     = colors;
         this.minmax     = new Vector(0, 1);
     }
     
@@ -66,7 +69,7 @@ public class TargaWriter extends Writer {
         byte[] header = new byte[18];
         header[0] = 0; // Image ID length
         header[1] = 0; // Color map type, 0 = no color map
-        header[2] = (byte) (this.compressed ? 11 : 3); // Image type, 3 = uncompressed grayscale image, 11 = compressed grayscale image
+        header[2] = (byte) ((this.colors ? 2 : 3) + (this.compressed ? 8 : 0)); // Image type, 2 = uncompressed rgb image, 3 = uncompressed grayscale image, 10 = compressed rgb image, 11 = compressed grayscale image
         header[8] = 0; // x-origin (2 bytes)
         header[9] = 0;
         header[10] = 0; // y-origin
@@ -75,17 +78,38 @@ public class TargaWriter extends Writer {
         header[13] = (byte) (terrain.getWidth() >> 8);
         header[14] = (byte) (terrain.getLength() & 0xff); // Image height
         header[15] = (byte) (terrain.getLength() >> 8);
-        header[16] = 8; // Pixel depth
+        header[16] = (byte) (this.colors ? 24 : 8); // Pixel depth
         header[17] = 0; // Image descriptor
         return header;
     }
 
     
-    private byte getImageByte(Terrain terrain, int x, int y) {
+    private double getAltitude(Terrain terrain, int x, int y) {
         double altitude = terrain.getTile(x, y).getAltitude(true);
         altitude -= this.minmax.getX();
         altitude /= (this.minmax.getY() - this.minmax.getX());
-        return (byte) (altitude * 255.0);
+        return altitude;
+    }
+        
+    
+    private byte getImageByte(Terrain terrain, int x, int y) {
+        return (byte) (this.getAltitude(terrain, x, y) * 255.0);
+    }
+    
+    private int getImageRGB(Terrain terrain, int x, int y) {
+        Vector rgb;
+        Tile tile = terrain.getTile(x, y);
+        if (tile.getWater() > 0.0) {
+            rgb = new Vector(0, 0, 1);
+        } else {
+            rgb = tile.getTopSoil().getRGB();
+        }
+        double altitude = this.getAltitude(terrain, x, y);
+        rgb = rgb.multiply(altitude * 255.0);
+        int r = (int) rgb.getX();
+        int g = (int) rgb.getY();
+        int b = (int) rgb.getZ();
+        return (r << 16) | (g << 8) | b;
     }
     
     
@@ -96,10 +120,17 @@ public class TargaWriter extends Writer {
      * @return
      */
     private byte[] getBody(Terrain terrain) {
-        byte[] image = new byte[terrain.getWidth() * terrain.getLength()];
+        byte[] image = new byte[terrain.getWidth() * terrain.getLength() * (this.colors ? 3 : 1)];
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                image[x + (terrain.getLength() - y - 1) * terrain.getWidth()] = this.getImageByte(terrain, x, y);
+                if (this.colors) {
+                    int color = this.getImageRGB(terrain, x, y);
+                    image[x * 3 + 0 + (terrain.getLength() - y - 1) * terrain.getWidth() * 3] = (byte) ((color >>  0) & 0xff); // blue
+                    image[x * 3 + 1 + (terrain.getLength() - y - 1) * terrain.getWidth() * 3] = (byte) ((color >>  8) & 0xff); // green
+                    image[x * 3 + 2 + (terrain.getLength() - y - 1) * terrain.getWidth() * 3] = (byte) ((color >> 16) & 0xff); // red
+                } else {
+                    image[x + (terrain.getLength() - y - 1) * terrain.getWidth()] = this.getImageByte(terrain, x, y);
+                }
             }
         }
         return image;

@@ -59,8 +59,8 @@ public class TargaWriterTest {
             this.constructed_terrain.getTile(1 + y, y).setTopSoilAmount(1.0);
             this.constructed_terrain.getTile(9 - y, y).setTopSoilAmount(1.0);
         }
-        writer = new TargaWriter(false);
-        rle_writer = new TargaWriter(true);
+        writer = new TargaWriter(false, false);
+        rle_writer = new TargaWriter(true, false);
     }
     
     @After
