@@ -20,10 +20,29 @@ import java.util.List;
 import plortz.terrain.Position;
 
 /**
- * Abstract base class for path finding algorithms.
- * 
+ *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public abstract class PathFinder {
-    public abstract List<Position> find(Position start, PathFinderHeuristic heuristic);
+public abstract class PathFinderHeuristic {
+    public abstract double  estimateCost(Position previous, Position current);
+
+    public abstract boolean isValidNextDestination(Position from, Position to);
+
+    public abstract boolean isAtDestination(Position position);
+
+    public List<Position> getNeighbors(Position current) {
+        List<Position> neighbors = new ArrayList<>();
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0) {
+                    continue;
+                }
+                Position pos = new Position(current, dx, dy);
+                if (this.isValidNextDestination(current, pos)) {
+                    neighbors.add(pos);
+                }
+            }
+        }
+        return neighbors;
+    }
 }

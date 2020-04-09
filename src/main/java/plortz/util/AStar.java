@@ -41,7 +41,7 @@ public class AStar extends PathFinder {
     private List<PathComponent> closed;
     
     @Override
-    public List<Position> find(Position start, Heuristic heuristic) {
+    public List<Position> find(Position start, PathFinderHeuristic heuristic) {
         this.open   = new ArrayList<>(); // todo: use priority queue
         this.closed = new ArrayList<>(); // todo: use a fast set (hashed)
         
@@ -64,47 +64,38 @@ public class AStar extends PathFinder {
                 break;
             }
             // Add neighboring positions:
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dx = -1; dx <= 1; dx++) {
-                    if (dy == 0 && dx == 0) {
-                        continue;
+            for (Position neighbor_pos : heuristic.getNeighbors(current.position)) {
+                // Search if this neighbor is already in one of the lists:
+                PathComponent existing = null;
+                boolean existing_is_closed = false;
+                for (int i = 0; existing == null && i < this.open.size(); i++) {
+                    if (this.open.get(i).position.equals(neighbor_pos)) {
+                        existing = this.open.get(i);
                     }
-                    Position neighbor_pos = new Position(current.position, dx,  dy);
-                    if (!heuristic.isValidNextDestination(current.position, neighbor_pos)) {
-                        continue;
+                }
+                for (int i = 0; existing == null && i < this.closed.size(); i++) {
+                    if (this.closed.get(i).position.equals(neighbor_pos)) {
+                        existing = this.closed.get(i);
+                        existing_is_closed = true;
                     }
-                    // Search if this neighbor is already in one of the lists:
-                    PathComponent existing = null;
-                    boolean existing_is_closed = false;
-                    for (int i = 0; existing == null && i < this.open.size(); i++) {
-                        if (this.open.get(i).position.equals(neighbor_pos)) {
-                            existing = this.open.get(i);
+                }
+                // Either update the existing or add a new path component:
+                double neighbor_cost = heuristic.estimateCost(current.position, neighbor_pos);
+                if (existing != null) {
+                    // Some path to the neighbor already exists.
+                    if (neighbor_cost < existing.cost) {
+                        // This current new path is faster, so use it instead:
+                        existing.source = current;
+                        existing.cost   = neighbor_cost;
+                        if (existing_is_closed) {
+                            // When dealing with non-consistent heuristic, the node needs to be re-added to the open list:
+                            this.closed.remove(existing);
+                            this.open.add(existing);
                         }
                     }
-                    for (int i = 0; existing == null && i < this.closed.size(); i++) {
-                        if (this.closed.get(i).position.equals(neighbor_pos)) {
-                            existing = this.closed.get(i);
-                            existing_is_closed = true;
-                        }
-                    }
-                    // Either update the existing or add a new path component:
-                    double neighbor_cost = heuristic.estimateCost(current.position, neighbor_pos);
-                    if (existing != null) {
-                        // Some path to the neighbor already exists.
-                        if (neighbor_cost < existing.cost) {
-                            // This current new path is faster, so use it instead:
-                            existing.source = current;
-                            existing.cost   = neighbor_cost;
-                            if (existing_is_closed) {
-                                // When dealing with non-consistent heuristic, the node needs to be re-added to the open list:
-                                this.closed.remove(existing);
-                                this.open.add(existing);
-                            }
-                        }
-                    } else {
-                        // No path exists to the neighbor, add it:
-                        this.open.add(new PathComponent(current, neighbor_pos, neighbor_cost));
-                    }
+                } else {
+                    // No path exists to the neighbor, add it:
+                    this.open.add(new PathComponent(current, neighbor_pos, neighbor_cost));
                 }
             }
         }

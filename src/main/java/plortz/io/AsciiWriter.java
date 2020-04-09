@@ -43,7 +43,7 @@ public class AsciiWriter extends Writer {
         
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                double altitude = terrain.getTile(x, y).getAltitude(false);
+                double altitude = terrain.getTile(x, y).getAltitude(true);
                 if (normalize) {
                     altitude -= minmax.getX();
                     altitude /= (minmax.getY() - minmax.getX());

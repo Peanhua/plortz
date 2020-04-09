@@ -22,9 +22,10 @@ import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.util.AStar;
 import plortz.util.ArrayList;
+import plortz.util.BreadthFirstSearch;
 import plortz.util.FloodFill;
 import plortz.util.PathFinder;
-import plortz.util.PathFinder.Heuristic;
+import plortz.util.PathFinderHeuristic;
 
 /**
  * Tool to add water to a location and carve river with the amount of water stored at the end in a pond/lake/sea.
@@ -75,7 +76,7 @@ public class AddWater extends Tool {
         //   Could be used to quickly find the next pond/lake downstream from any point in a river.
         //   Could be used for erosion, to erode the rivers.
         //this.debugPrintLn("water amount = " + this.water_source_amount);
-        this.addRiverOnDryLand(terrain, this.water_source_position, this.water_source_amount);
+        this.addRiver(terrain, this.water_source_position, this.water_source_amount);
         terrain.zeroBottomSoilLayer();
         terrain.changed();
         
@@ -87,18 +88,18 @@ public class AddWater extends Tool {
     }
 
 
-    private abstract class AddWaterPathFinderHeuristic implements Heuristic {
+    private abstract class AddWaterPathFinderHeuristic extends PathFinderHeuristic {
         
         protected final Terrain terrain;
         
         public AddWaterPathFinderHeuristic(Terrain terrain) {
             this.terrain = terrain;
         }
-        
+
         @Override
         public double estimateCost(Position previous, Position current) {
             // The lower the altitude, the better:
-            double cost = -this.terrain.getTile(current).getAltitude(false);
+            double cost = -this.terrain.getTile(current).getAltitude(true);
             if (previous != null) {
                 // Also favor shorter distance:
                 int dx = previous.getX() - current.getX();
@@ -120,13 +121,12 @@ public class AddWater extends Tool {
      * @param terrain
      * @param position
      * @param water_amount 
-     * @return             The last position of the river.
      */
-    private void addRiverOnDryLand(Terrain terrain, Position position, double water_amount) {
+    private void addRiver(Terrain terrain, Position position, double water_amount) {
         
-        class AddRiverOnDryLandPathFinderHeuristic extends AddWaterPathFinderHeuristic {
+        class AddRiverPathFinderHeuristic extends AddWaterPathFinderHeuristic {
 
-            public AddRiverOnDryLandPathFinderHeuristic(Terrain terrain) {
+            public AddRiverPathFinderHeuristic(Terrain terrain) {
                 super(terrain);
             }
             
@@ -135,9 +135,31 @@ public class AddWater extends Tool {
                 if (!terrain.isValidTilePosition(to)) {
                     return false;
                 }
+                if (from.getX() - to.getX() != 0 && from.getY() - to.getY() != 0) { // No diagonal movement
+                    return false;
+                }
                 return terrain.getTile(from).getAltitude(false) >= terrain.getTile(to).getAltitude(false);
             }
 
+            @Override
+            public List<Position> getNeighbors(Position current) {
+                Position lowest          = null;
+                double   lowest_altitude = 0.0;
+                for (Position pos : super.getNeighbors(current)) {
+                    Tile tile = this.terrain.getTile(pos);
+                    double altitude = tile.getAltitude(true);
+                    if (lowest == null || altitude < lowest_altitude) {
+                        lowest = pos;
+                        lowest_altitude = altitude;
+                    }
+                }
+                List<Position> neighbors = new ArrayList<>();
+                if (lowest != null) {
+                    neighbors.add(lowest);
+                }
+                return neighbors;
+            }
+            
             @Override
             public boolean isAtDestination(Position position) {
                 // Stop when existing water is reached:
@@ -146,24 +168,12 @@ public class AddWater extends Tool {
                     return true;
                 }
                 // Also stop if all the neighbors are higher:
-                double curalt = curtile.getAltitude(false);
-                for (int dy = -1; dy <= 1; dy++) {
-                    for (int dx = -1; dx <= 1; dx++) {
-                        if (dx == 0 && dy == 0) {
-                            continue;
-                        }
-                        Tile neighbor = terrain.getTile(new Position(position, dx, dy));
-                        if (neighbor != null && neighbor.getAltitude(false) < curalt) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
+                return this.getNeighbors(position).isEmpty();
             }
         }
         // Find path for the river:
-        PathFinder pather = new AStar();
-        Heuristic heuristic = new AddRiverOnDryLandPathFinderHeuristic(terrain);
+        PathFinder pather = new BreadthFirstSearch();
+        PathFinderHeuristic heuristic = new AddRiverPathFinderHeuristic(terrain);
         List<Position> path = pather.find(position, heuristic);
         if (path == null) {
             this.debugPrintLn("no path");
@@ -223,21 +233,21 @@ public class AddWater extends Tool {
                 if (totile.getWater() < 0.0) {
                     return false;
                 }
-                return terrain.getTile(from).getAltitude(false) >= totile.getAltitude(false);
+                return terrain.getTile(from).getAltitude(true) >= totile.getAltitude(true);
             }
 
             @Override
             public boolean isAtDestination(Position position) {
                 // Stop when there is no neighbor water at lower altitude:
                 Tile curtile = terrain.getTile(position);
-                double curalt = curtile.getAltitude(false);
+                double curalt = curtile.getAltitude(true);
                 for (int dy = -1; dy <= 1; dy++) {
                     for (int dx = -1; dx <= 1; dx++) {
                         if (dx == 0 && dy == 0) {
                             continue;
                         }
                         Tile neighbor = terrain.getTile(new Position(position, dx, dy));
-                        if (neighbor != null && neighbor.getAltitude(false) < curalt) {
+                        if (neighbor != null && neighbor.getAltitude(true) < curalt) {
                             return false;
                         }
                     }
@@ -248,7 +258,7 @@ public class AddWater extends Tool {
         
         // Follow the river:
         PathFinder pather = new AStar();
-        Heuristic heuristic = new FollowExistingRiverPathFinderHeuristic(terrain);
+        PathFinderHeuristic heuristic = new FollowExistingRiverPathFinderHeuristic(terrain);
         List<Position> path = pather.find(start, heuristic);
         if (path == null) {
             this.debugPrintLn("no follow river path");
@@ -287,7 +297,8 @@ public class AddWater extends Tool {
                 if (tile.getWater() < 0.0) {
                     return false;
                 }
-                return Math.abs(tile.getAltitude(true) - water_level) < 0.001;
+                //return Math.abs(tile.getAltitude(true) - water_level) < 0.001;
+                return tile.getAltitude(true) < water_level + 0.001;
             }
 
             @Override
@@ -307,18 +318,22 @@ public class AddWater extends Tool {
         Position floodpos = null; // The location from where to start flooding out if there is extra water.
         for (Position pos : ff.getBorders()) {
             Tile tile = terrain.getTile(pos);
+            /*
             if (tile.getWater() > 0.0) {
                 continue;
             }
-            if (floodpos == null || tile.getAltitude(false) < terrain.getTile(floodpos).getAltitude(false)) {
+            */
+            if (floodpos == null || tile.getAltitude(true) < terrain.getTile(floodpos).getAltitude(true)) {
                 floodpos = pos;
             }
         }
         
         this.debugPrintLn("floodpos=" + floodpos + ", borders size=" + ff.getBorders().size());
         if (floodpos != null)
-            this.debugPrintLn("floodpos=" + floodpos + ", altitude=" + terrain.getTile(floodpos).getAltitude(true) + ", water=" + terrain.getTile(floodpos).getWater());
-
+            this.debugPrintLn("  floodpos=" + floodpos + ", altitude=" + terrain.getTile(floodpos).getAltitude(true) + ", water=" + terrain.getTile(floodpos).getWater());
+        else
+            for (Position pos : ff.getBorders())
+                this.debugPrintLn("  border[]=" + pos + ", altitude=" + terrain.getTile(pos).getAltitude(true) + ", water=" + terrain.getTile(pos).getWater());
         double amount_per_tile = water_amount / (double) lakefinder.filled.size();
         if (floodpos != null) {
             double max_amount_per_tile = terrain.getTile(floodpos).getAltitude(true) - terrain.getTile(start).getAltitude(true);
@@ -341,7 +356,7 @@ public class AddWater extends Tool {
         // If there is extra water, start a new river from the floodpos:
         if (water_amount > 0.0001 && floodpos != null) {
             this.debugPrintLn("start new river at " + floodpos + ", water_amount=" + water_amount);
-            this.addRiverOnDryLand(terrain, floodpos, water_amount);
+            this.addRiver(terrain, floodpos, water_amount);
         }
     }
     
