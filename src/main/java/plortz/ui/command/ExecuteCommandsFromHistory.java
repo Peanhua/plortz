@@ -57,17 +57,12 @@ public class ExecuteCommandsFromHistory extends Command {
     }
     
     private void executeHistoryCommands(UserInterface ui, int start, int end) {
-        CommandFactory cf = CommandFactory.getInstance();
+        List<String> commands = new ArrayList<>();
         for (int i = start; i <= end; i++) {
             String input = ui.getCommandHistory().get().get(i);
-            ui.showMessage("> " + input);
-            Command cmd = cf.create(input);
-            if (cmd != null) {
-                cmd.execute(ui);
-            } else if (input != null && input.length() > 0) {
-                ui.showMessage("Unknown command: " + input);
-            }
+            commands.add(input);
         }
+        this.executeOtherCommands(ui, commands);
     }
 
     @Override

@@ -69,6 +69,18 @@ public abstract class Command {
         }
     }
         
+    protected void executeOtherCommands(UserInterface ui, List<String> commands) {
+        CommandFactory cf = CommandFactory.getInstance();
+        for (String input : commands) {
+            ui.showMessage("> " + input);
+            Command cmd = cf.create(input);
+            if (cmd != null) {
+                cmd.execute(ui);
+            } else if (input != null && input.length() > 0) {
+                ui.showMessage("Unknown command: " + input);
+            }
+        }
+    }
     
     public abstract void execute(UserInterface ui);
     public abstract String getShortDescription();

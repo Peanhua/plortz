@@ -61,6 +61,7 @@ public class CommandFactory {
         this.commands.put("scale",         ScaleHeights.class);
         this.commands.put("info",          Info.class);
         this.commands.put("water",         AddWater.class);
+        this.commands.put("run",           Run.class);
     }
     
     public Command create(String string) {
