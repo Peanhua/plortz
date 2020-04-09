@@ -104,7 +104,7 @@ public class TargaWriter extends Writer {
         } else {
             rgb = tile.getTopSoil().getRGB();
         }
-        double altitude = this.getAltitude(terrain, x, y);
+        double altitude = 0.1 + 0.9 * this.getAltitude(terrain, x, y);
         rgb = rgb.multiply(altitude * 255.0);
         int r = (int) rgb.getX();
         int g = (int) rgb.getY();

@@ -36,39 +36,62 @@ public class WriteToTargaFile extends Command {
             return;
         }
         
-        if (this.args.size() != 2) {
+        if (this.args.size() != 3) {
             ui.showMessage("Incorrect number of arguments.");
             this.showUsage(ui);
             return;
         }
         
-        RandomAccessFile fp;
-        try {
-            fp = new RandomAccessFile(this.args.get(1), "rw");
-            fp.setLength(0);
-        } catch (Exception e) {
-            ui.showMessage("Failed to create file '" + this.args.get(1) + "': " + e.getMessage());
+        String type = this.args.get(1);
+        if (!type.equals("heightmap") && !type.equals("color")) {
+            ui.showMessage("Incorrect argument #1 for <data>, expected 'heightmap' or 'color', but got '" + type + "'");
             return;
         }
+        boolean heightmap = true;
+        if (type.equals("color")) {
+            heightmap = false;
+        }
+        
+        String filename = this.args.get(2);
+        
+        RandomAccessFile fp;
+        try {
+            fp = new RandomAccessFile(filename, "rw");
+            fp.setLength(0);
+        } catch (Exception e) {
+            ui.showMessage("Failed to create file '" + filename + "': " + e.getMessage());
+            return;
+        }
+        
+        boolean compress;
+        boolean color;
+        if (heightmap) {
+            compress = true;
+            color = false;
+        } else {
+            compress = false;
+            color = true;
+        }
     
-        Writer writer = new TargaWriter(true, false);
+        Writer writer = new TargaWriter(compress, color);
         try {
             writer.write(ui.getTerrain(), fp);
             fp.close();
         } catch (Exception e) {
-            ui.showMessage("Failed to save to file '" + this.args.get(1) + "': " + e.getMessage());
+            ui.showMessage("Failed to save to file '" + filename + "': " + e.getMessage());
         }
     }
 
     @Override
     public String getShortDescription() {
-        return "Saves the current terrain as 8-bit grayscale image in Targa file format.";
+        return "Saves the current terrain as 8-bit grayscale or 24-bit color image in Targa file format.";
     }
 
     @Override
     public List<String> getUsage() {
         List<String> rv = new ArrayList<>();
-        rv.add("Usage: " + this.args.get(0) + " <filename>");
+        rv.add("Usage: " + this.args.get(0) + " <data> <filename>");
+        rv.add("Where <data> is one of: heightmap, color");
         return rv;
     }
 }
