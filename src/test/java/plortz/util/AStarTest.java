@@ -31,7 +31,7 @@ import plortz.terrain.Position;
  */
 public class AStarTest {
     
-    class TestHeuristic implements PathFinder.Heuristic {
+    class TestHeuristic extends PathFinderHeuristic {
 
         private String[] map;
         private Position destination;
