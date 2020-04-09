@@ -50,27 +50,32 @@ public class FloodFill {
                 if (this.filled.get(x, y)) {
                     continue;
                 }
-                boolean done = false;
-                for (int dy = -1; !done && dy <= 1; dy++) {
-                    for (int dx = -1; !done && dx <= 1; dx++) {
-                        if (dx == 0 && dy == 0) {
-                            continue;
-                        }
-                        if (dx != 0 && dy != 0) { // Skip diagonal
-                            continue;
-                        }
-                        if (!this.filled.isValidPosition(x + dx, y + dy)) {
-                            continue;
-                        }
-                        if (this.filled.get(x + dx, y + dy)) {
-                            borders.add(new Position(x, y));
-                            done = true;
-                        }
-                    }
+                if (this.isBorder(x, y)) {
+                    borders.add(new Position(x, y));
                 }
             }
         }
         return borders;
+    }
+    
+    private boolean isBorder(int x, int y) {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0) {
+                    continue;
+                }
+                if (dx != 0 && dy != 0) { // Skip diagonal
+                    continue;
+                }
+                if (!this.filled.isValidPosition(x + dx, y + dy)) {
+                    continue;
+                }
+                if (this.filled.get(x + dx, y + dy)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     /**
@@ -93,7 +98,7 @@ public class FloodFill {
         this.queue   = new ArrayList<>();
         
         this.queue.add(start);
-        while(!this.queue.isEmpty()) {
+        while (!this.queue.isEmpty()) {
             Position current = this.queue.get(this.queue.size() - 1);
             this.queue.remove(this.queue.size() - 1);
             // Fill this scanline to the left:

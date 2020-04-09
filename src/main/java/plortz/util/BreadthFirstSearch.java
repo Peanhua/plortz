@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.terrain.Position;
 
 /**
- *
+ * Breadth-first path finding algorithm.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class BreadthFirstSearch extends PathFinder {
@@ -63,7 +64,7 @@ public class BreadthFirstSearch extends PathFinder {
         List<Position> visited = new ArrayList<>();
         
         queue.add(new State(null, start));
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             State node = queue.remove(0);
             Position nodepos = node.getPosition();
             if (heuristic.isAtDestination(nodepos)) {
