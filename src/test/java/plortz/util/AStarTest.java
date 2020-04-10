@@ -107,4 +107,49 @@ public class AStarTest {
         assertEquals(new Position(4, 3), path.get(2));
         assertEquals(new Position(5, 3), path.get(3));
     }
+
+    private String[] map4 = {
+        " 123456",
+        "1######",
+        "2#    #",
+        "3######",
+        "4#    #",
+        "5######"
+    };
+    @Test
+    public void finderReturnsNullWhenThereIsNoPath() {
+        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map4, new Position(2, 4));
+        PathFinder astar = new AStar();
+        List<Position> path = astar.find(new Position(2, 2), h);
+        assertNull(path);
+    }
+
+    private String[] map5 = {
+        " 12345678901234567890",
+        "1####################",
+        "2#                  #",
+        "3# #                #",
+        "4# #                #",
+        "5# #                #",
+        "6# #                #",
+        "7# #                #",
+        "8# #                #",
+        "9#                  #",
+        "0#                  #",
+        "1#                  #",
+        "2#                  #",
+        "3#                  #",
+        "4#                  #",
+        "5#                  #",
+        "6#                  #",
+        "7####################"
+    };
+    @Test
+    public void testScenariosProduceShortestPathsMap5() {
+        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map5, new Position(9, 16));
+        PathFinder astar = new AStar();
+        List<Position> path = astar.find(new Position(2, 2), h);
+        assertNotNull(path);
+        assertEquals(15, path.size());
+    }
 }

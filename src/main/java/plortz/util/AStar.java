@@ -26,38 +26,42 @@ import plortz.terrain.Position;
  */
 public class AStar extends PathFinder {
 
-    private class PathComponent {
+    private class PathComponent implements Comparable<PathComponent> {
         public PathComponent source;
         public Position      position;
         public double        cost;
+        public boolean       open;
         
         public PathComponent(PathComponent source, Position position, double cost) {
-            this.source      = source;
-            this.position    = position;
-            this.cost        = cost;
+            this.source   = source;
+            this.position = position;
+            this.cost     = cost;
+            this.open     = true;
+        }
+
+        @Override
+        public int compareTo(PathComponent other) {
+            return Double.compare(this.cost, other.cost);
         }
     }
-    private List<PathComponent> open;
-    private List<PathComponent> closed;
+    private PriorityQueue<PathComponent> open;
+    private List<PathComponent>          all;
     
     @Override
     public List<Position> find(Position start, PathFinderHeuristic heuristic) {
-        this.open   = new ArrayList<>(); // todo: use priority queue
-        this.closed = new ArrayList<>(); // todo: use a fast set (hashed)
+        this.open = new PriorityQueue<>();
+        this.all  = new ArrayList<>();
         
-        this.open.add(new PathComponent(null, start, heuristic.estimateCost(null, start)));
+        PathComponent first = new PathComponent(null, start, heuristic.estimateCost(null, start));
+        this.open.add(first);
+        this.all.add(first);
+        
         PathComponent last = null;
         while (this.open.size() > 0) {
             // Find the one with shortest path to the destination:
-            PathComponent current = null;
-            for (PathComponent pc : this.open) {
-                if (current == null || pc.cost < current.cost) {
-                    current = pc;
-                }
-            }
+            PathComponent current = this.open.poll();
             // Mark current as closed:
-            this.open.remove(current);
-            this.closed.add(current);
+            current.open = false;
             // Check if the path was found:
             if (heuristic.isAtDestination(current.position)) {
                 last = current;
@@ -65,18 +69,13 @@ public class AStar extends PathFinder {
             }
             // Add neighboring positions:
             for (Position neighbor_pos : heuristic.getNeighbors(current.position)) {
-                // Search if this neighbor is already in one of the lists:
+                // Search if this neighbor already exists:
+                // todo: do this faster
                 PathComponent existing = null;
-                boolean existing_is_closed = false;
-                for (int i = 0; existing == null && i < this.open.size(); i++) {
-                    if (this.open.get(i).position.equals(neighbor_pos)) {
-                        existing = this.open.get(i);
-                    }
-                }
-                for (int i = 0; existing == null && i < this.closed.size(); i++) {
-                    if (this.closed.get(i).position.equals(neighbor_pos)) {
-                        existing = this.closed.get(i);
-                        existing_is_closed = true;
+                for (int i = 0; existing == null && i < this.all.size(); i++) {
+                    PathComponent pc = this.all.get(i);
+                    if (pc.position.equals(neighbor_pos)) {
+                        existing = pc;
                     }
                 }
                 // Either update the existing or add a new path component:
@@ -87,15 +86,17 @@ public class AStar extends PathFinder {
                         // This current new path is faster, so use it instead:
                         existing.source = current;
                         existing.cost   = neighbor_cost;
-                        if (existing_is_closed) {
+                        if (!existing.open) {
                             // When dealing with non-consistent heuristic, the node needs to be re-added to the open list:
-                            this.closed.remove(existing);
+                            existing.open = true;
                             this.open.add(existing);
                         }
                     }
                 } else {
                     // No path exists to the neighbor, add it:
-                    this.open.add(new PathComponent(current, neighbor_pos, neighbor_cost));
+                    PathComponent neighbor = new PathComponent(current, neighbor_pos, neighbor_cost);
+                    this.open.add(neighbor);
+                    this.all.add(neighbor);
                 }
             }
         }
