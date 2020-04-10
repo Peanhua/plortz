@@ -26,7 +26,8 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command to add randomly generated circular soil layers.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AddRandomSoilPatches extends Command {

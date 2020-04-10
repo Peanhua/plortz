@@ -23,11 +23,11 @@ import plortz.ui.UserInterface;
 import plortz.util.ArrayList;
 
 /**
- *
+ * Command to add water, forming rivers and lakes.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AddWater extends Command {
-
 
     @Override
     public void execute(UserInterface ui) {

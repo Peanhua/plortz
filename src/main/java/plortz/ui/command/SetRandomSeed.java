@@ -21,7 +21,8 @@ import plortz.util.ArrayList;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * A command to seed the random number generator.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SetRandomSeed extends Command {

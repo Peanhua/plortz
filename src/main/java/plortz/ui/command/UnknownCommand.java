@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * The command used to handle the case when an unknown command is executed.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class UnknownCommand extends Command {

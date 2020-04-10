@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.terrain.Position;
 
 /**
- *
+ * The callback object passed to the path finding algorithms.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class PathFinderHeuristic {

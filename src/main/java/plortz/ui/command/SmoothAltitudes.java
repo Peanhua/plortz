@@ -25,7 +25,8 @@ import plortz.tool.filters.Filter;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * A command to apply a smoothing filter over the terrain.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SmoothAltitudes extends Command {

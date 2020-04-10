@@ -37,7 +37,8 @@ import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * A widget showing the current terrain in 3d.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class TerrainView3d extends TerrainView {

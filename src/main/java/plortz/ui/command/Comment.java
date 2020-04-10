@@ -21,7 +21,8 @@ import plortz.ui.UserInterface;
 import plortz.util.ArrayList;
 
 /**
- *
+ * Command that does nothing, used for commenting script files.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Comment extends Command {

@@ -23,7 +23,8 @@ import plortz.terrain.Terrain;
 import plortz.ui.UserInterface;
 
 /**
- *
+ * Command that outputs some basic information about the terrain.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Info extends Command {
