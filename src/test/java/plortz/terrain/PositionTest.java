@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import plortz.util.HashMap;
 
 /**
  *
@@ -70,5 +71,22 @@ public class PositionTest {
         Position a = new Position(5, 3);
         Position b = new Position(5, 3);
         assertTrue(a.equals(b));
+    }
+    
+    @Test
+    public void hashCodeGivesDistinctValuesMostOfTheTime() {
+        HashMap<Integer, Integer> counts = new HashMap<>();
+        int count = 256;
+        for (int y = 0; y < count; y++) {
+            for (int x = 0; x < count; x++) {
+                Position pos = new Position(x, y);
+                int hc = pos.hashCode();
+                int c = counts.getOrDefault(hc, 0) + 1;
+                counts.put(hc, c);
+            }
+        }
+        for (Integer key : counts.keySet()) {
+            assertTrue(counts.get(key) < 10);
+        }
     }
 }

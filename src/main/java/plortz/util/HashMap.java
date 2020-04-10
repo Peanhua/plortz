@@ -104,7 +104,7 @@ public class HashMap<K, V> implements Map<K, V> {
     private final List<Bucket<K, V>> buckets;
 
     public HashMap() {
-        this.keys    = new ListSet<>();
+        this.keys    = new HashSet<>();
         this.buckets = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             this.buckets.add(new Bucket<>());
@@ -125,9 +125,9 @@ public class HashMap<K, V> implements Map<K, V> {
         return this.size() == 0;
     }
 
-    @SuppressWarnings({"unchecked"})
     @Override
     public boolean containsValue(Object o) {
+        @SuppressWarnings({"unchecked"})
         V c = (V) o; // unchecked cast
         for (Bucket<K, V> bucket : this.buckets) {
             if (bucket.containsValue(c)) {
@@ -156,12 +156,12 @@ public class HashMap<K, V> implements Map<K, V> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @SuppressWarnings({"unchecked"})
     @Override
     public V get(Object o) {
         if (o == null) {
             return null;
         }
+        @SuppressWarnings({"unchecked"})
         final K key = (K) o; // unchecked cast
         return this.buckets.get(this.getBucketIndex(key)).get(key);
     }
@@ -175,12 +175,12 @@ public class HashMap<K, V> implements Map<K, V> {
         return oldval;
     }
 
-    @SuppressWarnings({"unchecked"})
     @Override
     public V remove(Object o) {
         if (o == null) {
             return null;
         }
+        @SuppressWarnings({"unchecked"})
         final K key = (K) o; // unchecked cast
         if (!this.keys.contains(key)) {
             return null;
@@ -205,12 +205,12 @@ public class HashMap<K, V> implements Map<K, V> {
         this.keys.clear();
     }
 
-    @SuppressWarnings({"unchecked"})
     @Override
     public boolean containsKey(Object o) {
         if (o == null) {
             return false;
         }
+        @SuppressWarnings({"unchecked"})
         final K key = (K) o; // unchecked cast
         return this.buckets.get(this.getBucketIndex(key)).containsKey(key);
     }

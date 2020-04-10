@@ -44,17 +44,17 @@ public class AStar extends PathFinder {
             return Double.compare(this.cost, other.cost);
         }
     }
-    private PriorityQueue<PathComponent> open;
-    private List<PathComponent>          all;
+    private PriorityQueue<PathComponent>     open;
+    private HashMap<Position, PathComponent> all;
     
     @Override
     public List<Position> find(Position start, PathFinderHeuristic heuristic) {
         this.open = new PriorityQueue<>();
-        this.all  = new ArrayList<>();
+        this.all  = new HashMap<>();
         
         PathComponent first = new PathComponent(null, start, heuristic.estimateCost(null, start));
         this.open.add(first);
-        this.all.add(first);
+        this.all.put(first.position, first);
         
         PathComponent last = null;
         while (this.open.size() > 0) {
@@ -70,14 +70,7 @@ public class AStar extends PathFinder {
             // Add neighboring positions:
             for (Position neighbor_pos : heuristic.getNeighbors(current.position)) {
                 // Search if this neighbor already exists:
-                // todo: do this faster
-                PathComponent existing = null;
-                for (int i = 0; existing == null && i < this.all.size(); i++) {
-                    PathComponent pc = this.all.get(i);
-                    if (pc.position.equals(neighbor_pos)) {
-                        existing = pc;
-                    }
-                }
+                PathComponent existing = this.all.get(neighbor_pos);
                 // Either update the existing or add a new path component:
                 double neighbor_cost = heuristic.estimateCost(current.position, neighbor_pos);
                 if (existing != null) {
@@ -96,7 +89,7 @@ public class AStar extends PathFinder {
                     // No path exists to the neighbor, add it:
                     PathComponent neighbor = new PathComponent(current, neighbor_pos, neighbor_cost);
                     this.open.add(neighbor);
-                    this.all.add(neighbor);
+                    this.all.put(neighbor.position, neighbor);
                 }
             }
         }

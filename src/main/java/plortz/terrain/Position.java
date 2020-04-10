@@ -66,11 +66,15 @@ public class Position {
     
     @Override
     public boolean equals(Object obj) {
-        Position other = (Position) obj;
-        if (other == null) {
+        if (!(obj instanceof Position)) {
             return false;
         }
+        Position other = (Position) obj;
         return this.x == other.x && this.y == other.y;
     }
-    // Note, hashCode() is not implemented.
+
+    @Override
+    public int hashCode() {
+        return 73 * 73 * Integer.hashCode(this.x) + 73 * Integer.hashCode(this.y);
+    }
 }

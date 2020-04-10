@@ -28,11 +28,11 @@ import static org.junit.Assert.*;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class ListSetTest {
-    
+public class HashSetTest {
+
     private Set<Integer> intlist;
     
-    public ListSetTest() {
+    public HashSetTest() {
     }
     
     @BeforeClass
@@ -45,7 +45,7 @@ public class ListSetTest {
     
     @Before
     public void setUp() {
-        intlist = new ListSet<>();
+        intlist = new HashSet<>();
     }
     
     @After
@@ -152,7 +152,7 @@ public class ListSetTest {
         }
         assertEquals(max + 1, count);
     }
-    
+
     @Test
     public void removingNonexistingElementDoesNotChangeSize() {
         int count = 43;
@@ -175,10 +175,10 @@ public class ListSetTest {
         }
         assertTrue(exception_thrown);
     }
-
+    
     @Test
     public void addingToStringSetWorks() {
-        Set<String> sset = new ListSet<>();
+        Set<String> sset = new HashSet<>();
         sset.add("eka");
         sset.add("toka");
         sset.add("kolkko");
