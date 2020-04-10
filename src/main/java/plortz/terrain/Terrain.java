@@ -21,6 +21,7 @@ import java.util.Iterator;
 import plortz.util.Vector;
 import plortz.observer.Observer;
 import plortz.observer.Subject;
+import plortz.util.Static2dArray;
 
 
 /**
@@ -30,18 +31,14 @@ import plortz.observer.Subject;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Terrain implements Iterable<Tile> {
-    private final int     width;
-    private final int     length;
-    private final Tile[]  tiles;
-    private final Subject onChange;
+    private final Static2dArray<Tile> tiles;
+    private final Subject             onChange;
     
     public Terrain(int width, int length, SoilLayer.Type bottom_layer) {
-        this.width  = width;
-        this.length = length;
-        this.tiles  = new Tile[width * length];
+        this.tiles  = new Static2dArray<>(width, length);
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < width; x++) {
-                this.tiles[x + y * width] = new Tile(new Position(x, y), bottom_layer, 1.0);
+                this.tiles.set(x, y, new Tile(new Position(x, y), bottom_layer, 1.0));
             }
         }
         this.onChange = new Subject();
@@ -52,37 +49,16 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public Terrain(Terrain source) {
-        this.width  = source.width;
-        this.length = source.length;
-        this.tiles  = new Tile[width * length];
-        for (int i = 0; i < width * length; i++) {
-            this.tiles[i] = new Tile(source.tiles[i]);
+        this.tiles  = new Static2dArray<>(source.getWidth(), source.getLength());
+        for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
+            this.tiles.set(i, new Tile(source.tiles.get(i)));
         }
         this.onChange = new Subject();
     }
 
     @Override
     public Iterator<Tile> iterator() {
-        return new Iterator<Tile>() {
-            private int pos = 0;
-            
-            @Override
-            public boolean hasNext() {
-                return pos < width * length;
-            }
-            
-            @Override
-            public Tile next() {
-                Tile t = tiles[pos];
-                pos++;
-                return t;
-            }
-            
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("not supported");
-            }
-        };
+        return this.tiles.iterator();
     }
 
     /**
@@ -102,50 +78,42 @@ public class Terrain implements Iterable<Tile> {
     }
     
     public int getWidth() {
-        return this.width;
+        return this.tiles.getWidth();
     }
     
     public int getLength() {
-        return this.length;
+        return this.tiles.getLength();
     }
     
     public Tile getTile(int x, int y) {
-        if (!this.isValidTilePosition(x, y)) {
+        if (!this.tiles.isValidPosition(x, y)) {
             return null;
         }
-        int index = x + y * this.width;
-        return this.tiles[index];
+        return this.tiles.get(x, y);
     }
     
     public Tile getTile(Position position) {
-        if (position == null) {
+        if (!this.tiles.isValidPosition(position)) {
             return null;
         }
-        return this.getTile(position.getX(), position.getY());
+        return this.tiles.get(position);
     }
     
     public void setTile(Position position, Tile tile) {
-        if (position == null || tile == null || !this.isValidTilePosition(position)) {
+        if (tile == null || !this.tiles.isValidPosition(position)) {
             throw new InvalidParameterException();
         }
-        int index = position.getX() + position.getY() * this.width;
-        this.tiles[index] = tile;
+        this.tiles.set(position, tile);
         tile.setPosition(position);
         this.changed();
     }
 
     public boolean isValidTilePosition(Position position) {
-        if (position == null) {
-            return false;
-        }
-        return this.isValidTilePosition(position.getX(), position.getY());
+        return this.tiles.isValidPosition(position);
     }
     
     public boolean isValidTilePosition(int x, int y) {
-        if (x < 0 || y < 0 || x >= this.width || y >= this.length) {
-            return false;
-        }
-        return true;
+        return this.tiles.isValidPosition(x, y);
     }
 
     
@@ -155,11 +123,11 @@ public class Terrain implements Iterable<Tile> {
      * @return Vector whose X -component contains the minimum altitude, and Y contains the maximum.
      */
     public Vector getAltitudeRange() {
-        double min = this.tiles[0].getAltitude(false);
-        double max = this.tiles[0].getAltitude(false);
+        double min = this.tiles.get(0).getAltitude(false);
+        double max = this.tiles.get(0).getAltitude(false);
         
-        for (int i = 0; i < this.width * this.length; i++) {
-            double alt = this.tiles[i].getAltitude(false);
+        for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
+            double alt = this.tiles.get(i).getAltitude(false);
             if (alt < min) {
                 min = alt;
             }
@@ -178,23 +146,22 @@ public class Terrain implements Iterable<Tile> {
      * Certain tools require/assume that every soil layer has a positive amount,
      * but the changes made to the terrain will occasionally invalidate this.
      * 
-     * This method fixes the situation by adding to the bottom layer.
+     * This method fixes the situation by adding to the bottom layer of all tiles.
      * 
      * All tools that have the potential to adjust the soil amounts with a negative amount must call this afterwards.
      */
     public void zeroBottomSoilLayer() {
         double minamount = 0.0;
-        for (int i = 0; i < this.width * this.length; i++) {
-            double amt = this.tiles[i].getBottomSoil().getAmount();
+        for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
+            double amt = this.tiles.get(i).getBottomSoil().getAmount();
             if (amt < minamount) {
                 minamount = amt;
             }
         }
-        
         if (minamount < 0.0) {
             minamount = -minamount;
-            for (int i = 0; i < this.width * this.length; i++) {
-                this.tiles[i].getBottomSoil().adjustAmount(minamount);
+            for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
+                this.tiles.get(i).getBottomSoil().adjustAmount(minamount);
             }
         }
     }
