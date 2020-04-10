@@ -47,10 +47,7 @@ public class WriteToTargaFile extends Command {
             ui.showMessage("Incorrect argument #1 for <data>, expected 'heightmap' or 'color', but got '" + type + "'");
             return;
         }
-        boolean heightmap = true;
-        if (type.equals("color")) {
-            heightmap = false;
-        }
+        boolean color = type.equals("color");
         
         String filename = this.args.get(2);
         
@@ -63,17 +60,7 @@ public class WriteToTargaFile extends Command {
             return;
         }
         
-        boolean compress;
-        boolean color;
-        if (heightmap) {
-            compress = true;
-            color = false;
-        } else {
-            compress = false;
-            color = true;
-        }
-    
-        Writer writer = new TargaWriter(compress, color);
+        Writer writer = new TargaWriter(true, color);
         try {
             writer.write(ui.getTerrain(), fp);
             fp.close();

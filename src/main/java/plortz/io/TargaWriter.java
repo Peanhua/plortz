@@ -146,7 +146,7 @@ public class TargaWriter extends Writer {
      * @return 
      */
     private byte[] getCompressedBody(Terrain terrain) {
-        byte[] tmp = new byte[terrain.getWidth() * terrain.getLength() * 2]; // Workspace, reserve some extra in case compression yields very bad result
+        byte[] tmp = new byte[terrain.getWidth() * terrain.getLength() * (this.colors ? 3 : 1) * 2]; // Workspace, reserve some extra in case compression yields very bad result
         int pos = 0;
         for (int y = 0; y < terrain.getLength(); y++) {
             int x = 0;
@@ -154,13 +154,27 @@ public class TargaWriter extends Writer {
                 int count = this.countNextRlePacketSizeOfSameBytes(terrain, x, y);
                 if (count > 1) { // RLE encoded
                     tmp[pos++] = (byte) (128 + (count - 1));
-                    tmp[pos++] = this.getImageByte(terrain, x, y);
+                    if (this.colors) {
+                        int color = this.getImageRGB(terrain, x, y);
+                        tmp[pos++] = (byte) ((color >>  0) & 0xff); // blue
+                        tmp[pos++] = (byte) ((color >>  8) & 0xff); // green
+                        tmp[pos++] = (byte) ((color >> 16) & 0xff); // red
+                    } else {
+                        tmp[pos++] = this.getImageByte(terrain, x, y);
+                    }
                     x += count;
                 } else { // Raw
                     count = this.countNextRlePacketSizeOfDifferentBytes(terrain, x, y);
                     tmp[pos++] = (byte) (count - 1);
                     for (int i = 0; i < count; i++) {
-                        tmp[pos++] = this.getImageByte(terrain, x, y);
+                        if (this.colors) {
+                        int color = this.getImageRGB(terrain, x, y);
+                            tmp[pos++] = (byte) ((color >>  0) & 0xff); // blue
+                            tmp[pos++] = (byte) ((color >>  8) & 0xff); // green
+                            tmp[pos++] = (byte) ((color >> 16) & 0xff); // red
+                        } else {
+                            tmp[pos++] = this.getImageByte(terrain, x, y);
+                        }
                         x++;
                     }
                 }
@@ -178,7 +192,10 @@ public class TargaWriter extends Writer {
     private int countNextRlePacketSizeOfSameBytes(Terrain terrain, int start_x, int y) {
         final byte b = this.getImageByte(terrain, start_x, y);
         int count = 1;
-        for (int x = start_x + 1; x < terrain.getWidth() && this.getImageByte(terrain, x, y) == b && count < 128; x++) {
+        for (int x = start_x + 1; x < terrain.getWidth() && count < 128; x++) {
+            if (this.getImageByte(terrain, x, y) != b) {
+                break;
+            }
             count++;
         }
         return count;
@@ -187,7 +204,10 @@ public class TargaWriter extends Writer {
     private int countNextRlePacketSizeOfDifferentBytes(Terrain terrain, int start_x, int y) {
         byte b = this.getImageByte(terrain, start_x, y);
         int count = 1;
-        for (int x = start_x + 1; x < terrain.getWidth() && this.getImageByte(terrain, x, y) != b && count < 128; x++) {
+        for (int x = start_x + 1; x < terrain.getWidth() && count < 128; x++) {
+            if (this.getImageByte(terrain, x, y) == b) {
+                break;
+            }
             count++;
             b = this.getImageByte(terrain, x, y);
         }
