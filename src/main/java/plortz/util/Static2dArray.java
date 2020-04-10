@@ -54,9 +54,9 @@ public class Static2dArray<E> implements Iterable<E> {
                 return pos < width * length;
             }
             
-            @SuppressWarnings({"unchecked"})
             @Override
             public E next() {
+                @SuppressWarnings({"unchecked"})
                 E t = (E) array[pos]; // unchecked cast
                 pos++;
                 return t;
@@ -81,18 +81,21 @@ public class Static2dArray<E> implements Iterable<E> {
     }
 
     
-    @SuppressWarnings({"unchecked"})
+    
     public E get(int x, int y) {
-        return (E) this.array[x + y * this.width]; // unchecked cast
+        @SuppressWarnings({"unchecked"})
+        E e = (E) this.array[x + y * this.width]; // unchecked cast
+        return e;
     }
 
     public E get(Position position) {
         return this.get(position.getX(), position.getY());
     }
     
-    @SuppressWarnings({"unchecked"})
     public E get(int index) {
-        return (E) this.array[index]; // unchecked cast
+        @SuppressWarnings({"unchecked"})
+        E e = (E) this.array[index]; // unchecked cast
+        return e;
     }
     
     

@@ -99,13 +99,16 @@ public class CommandFactory {
         return args;
     }
     
-    @SuppressWarnings("unchecked")
+    
     private Command getCommand(String command_string) {
+        @SuppressWarnings("unchecked")
         Class<Command> c = this.commands.get(command_string); // unchecked conversion
         if (c == null) {
-            c = (Class) UnknownCommand.class; // unchecked conversion
+            @SuppressWarnings("unchecked")
+            Class<Command> tmp = (Class) UnknownCommand.class; // unchecked conversion
+            c = tmp;
         }
-        
+
         try {
             Constructor<Command> cons = c.getConstructor();
             Command cmd = cons.newInstance();

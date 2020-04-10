@@ -98,13 +98,14 @@ public class ArrayList<E> implements List<E> {
         this.used_size = 0;
     }
 
-    @SuppressWarnings({"unchecked"})
     @Override
     public E get(int i) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        return (E) this.array[i]; // unchecked cast
+        @SuppressWarnings({"unchecked"})
+        E e = (E) this.array[i]; // unchecked cast
+        return e; 
     }
 
     @Override
@@ -112,15 +113,15 @@ public class ArrayList<E> implements List<E> {
         return this.used_size == 0;
     }
     
-    @SuppressWarnings({"unchecked"})
     @Override
     public E set(int i, E e) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        Object previous = this.array[i];
+        @SuppressWarnings({"unchecked"})
+        E previous = (E) this.array[i]; // unchecked cast
         this.array[i] = e;
-        return (E) previous; // unchecked cast
+        return previous;
     }
 
     @Override
@@ -128,18 +129,18 @@ public class ArrayList<E> implements List<E> {
         return new Iterator<>(this);
     }
     
-    @SuppressWarnings({"unchecked"})
     @Override
     public E remove(int i) {
         if (i < 0 || i >= this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        Object removed = this.array[i];
+        @SuppressWarnings({"unchecked"})
+        E removed = (E) this.array[i]; // unchecked cast
         for (int j = i; j < this.used_size - 1; j++) {
             this.array[j] = this.array[j + 1];
         }
         this.used_size--;
-        return (E) removed; // unchecked cast
+        return removed; 
     }
 
     @Override

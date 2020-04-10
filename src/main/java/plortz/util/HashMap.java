@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A map between command names and the classes implementing commands.
- * <p>
- * Operates like a hash map, but is not generic.
+ * A map using hash table.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
+ * @param <K> The element type for keys.
+ * @param <V> The element type for values.
  */
 public class HashMap<K, V> implements Map<K, V> {
     
