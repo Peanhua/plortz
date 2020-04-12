@@ -31,20 +31,30 @@ import plortz.util.PathFinderHeuristic;
  * Tool to add water to a location and carve river with the amount of water stored at the end in a pond/lake/sea.
  * <p>
  * The Plan:
- *   First add water as a river while there is dry land.
- *   For the dry land turned into water, keep the total altitude the same: decrease dry land as much as water is added.
- *   If another water is hit before the water is exhausted, follow the existing water as long as it goes downhill.
- *   Once the bottom is reached, start expanding the water:
- *     Find the area covered with the current altitude (water included) and find the location where the water expands next (= where the altitude is lowest around the water).
- *     Add water until at the same level as the expand location or until the given water amount is exhausted.
- *       If there is water remaining to be spread, start the process over from the expand location.
- * Postprocess:
- *   Decrease the dry land portion for all tiles that were previously dry, but now have water.
- *   Also decrease the land portion of all water tiles and their neighbors to make the water sink more into the ground? Or should this be separate tool?
- *   Go through from start and make sure the altitude with water never goes up by decreasing altitude of the later tiles?
- * Mark rivers and lakes/ponds?
- *   Could be used to quickly find the next pond/lake downstream from any point in a river.
- *   Could be used for erosion, to erode the rivers.
+ * <ul>
+ *   <li>First add water as a river while there is dry land.
+ *   <li>For the dry land turned into water, keep the total altitude the same: decrease dry land as much as water is added.
+ *   <li>If another water is hit before the water is exhausted, follow the existing water as long as it goes downhill.
+ *   <li>Once the bottom is reached, start expanding the water:
+ *   <ul>
+ *       <li>Find the area covered with the current altitude (water included) and find the location where the water expands next (= where the altitude is lowest around the water).
+ *       <li>Add water until at the same level as the expand location or until the given water amount is exhausted.
+ *       <ul>
+ *           <li>If there is water remaining to be spread, start the process over from the expand location.
+ *       </ul>
+ *   </ul>
+ *   <li>Postprocess:
+ *   <ul>
+ *       <li>Decrease the dry land portion for all tiles that were previously dry, but now have water.
+ *       <li>Also decrease the land portion of all water tiles and their neighbors to make the water sink more into the ground? Or should this be separate tool?
+ *       <li>Go through from start and make sure the altitude with water never goes up by decreasing altitude of the later tiles?
+ *   </ul>
+ *   <li>Mark rivers and lakes/ponds?
+ *   <ul>
+ *       <li>Could be used to quickly find the next pond/lake downstream from any point in a river.
+ *       <li>Could be used for erosion, to erode the rivers.
+ *   </ul>
+ * </ul>
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

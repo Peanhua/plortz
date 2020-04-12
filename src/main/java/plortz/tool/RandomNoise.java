@@ -22,7 +22,7 @@ import plortz.terrain.Tile;
 
 /**
  * Adjust altitudes with random values.
- * 
+ * <p>
  * Altitude changes are in the range [-scale, +scale].
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}

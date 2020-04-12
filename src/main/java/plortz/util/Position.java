@@ -17,7 +17,7 @@
 package plortz.util;
 
 /**
- * Simple class to wrap x and y location into an object for code readability.
+ * Simple class to wrap x and y coordinates as a location object for code readability.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -25,16 +25,35 @@ public class Position {
     private int x;
     private int y;
 
+    /**
+     * Construct a new position with the given location.
+     * 
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     */
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    
+ 
+    /**
+     * Copy constructor.
+     * 
+     * @param source The source position to copy from.
+     */
     public Position(Position source) {
         this.x = source.x;
         this.y = source.y;
     }
     
+    /**
+     * Copy constructor with delta.
+     * Copies the given source position and adds the delta values to the result.
+     * 
+     * @param source  The source position to copy from.
+     * @param delta_x The delta x coordinate.
+     * @param delta_y The delta y coordinate.
+     */
     public Position(Position source, int delta_x, int delta_y) {
         this(source);
         this.x += delta_x;

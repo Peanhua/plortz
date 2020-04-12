@@ -30,12 +30,25 @@ public class Static2dArray<E> implements Iterable<E> {
     private final int      width;
     private final int      length;
     
+    /**
+     * Constructor.
+     * 
+     * @param width  The width of the 2d array.
+     * @param length The length of the 2d array.
+     */
     public Static2dArray(int width, int length) {
         this.width  = width;
         this.length = length;
         this.array  = new Object[width * length];
     }
 
+    /**
+     * Constructor with default value.
+     * 
+     * @param width         The width of the 2d array.
+     * @param length        The length of the 2d array.
+     * @param default_value The default value, used to initialize the array.
+     */
     public Static2dArray(int width, int length, E default_value) {
         this(width, length);
         for (int i = 0; i < width * length; i++) {
@@ -68,10 +81,23 @@ public class Static2dArray<E> implements Iterable<E> {
         };
     }
 
+    /**
+     * Check if the given position is valid for this array.
+     * 
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     * @return  True if the given position is valid.
+     */
     public boolean isValidPosition(int x, int y) {
         return x >= 0 && x < this.width && y >= 0 && y < this.length;
     }
 
+    /**
+     * Check if the given position is valid for this array.
+     * 
+     * @param position The position to check.
+     * @return  True if the given position is valid.
+     */
     public boolean isValidPosition(Position position) {
         if (position == null) {
             return false;
@@ -80,17 +106,35 @@ public class Static2dArray<E> implements Iterable<E> {
     }
 
     
-    
+    /**
+     * Return the element at the given position.
+     * 
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     * @return  The element.
+     */
     public E get(int x, int y) {
         @SuppressWarnings({"unchecked"})
         E e = (E) this.array[x + y * this.width]; // unchecked cast
         return e;
     }
 
+    /**
+     * Return the element at the given position.
+     * 
+     * @param position The position.
+     * @return         The element.
+     */
     public E get(Position position) {
         return this.get(position.getX(), position.getY());
     }
     
+    /**
+     * Return the element at the given index, does not check the validity of the index.
+     * 
+     * @param index The element index.
+     * @return      The element.
+     */
     public E get(int index) {
         @SuppressWarnings({"unchecked"})
         E e = (E) this.array[index]; // unchecked cast
@@ -106,7 +150,13 @@ public class Static2dArray<E> implements Iterable<E> {
         return this.length;
     }
 
-    
+    /**
+     * Set the element for the given position.
+     * 
+     * @param x     The x coordinate.
+     * @param y     The y coordinate.
+     * @param value The new element for the position.
+     */
     public void set(int x, int y, E value) {
         if (!this.isValidPosition(x, y)) {
             throw new IndexOutOfBoundsException();
@@ -114,10 +164,22 @@ public class Static2dArray<E> implements Iterable<E> {
         this.array[x + y * this.width] = value;
     }
 
+    /**
+     * Set the element for the given position.
+     * 
+     * @param position The position of the element.
+     * @param value    The new element for the position.
+     */
     public void set(Position position, E value) {
         this.set(position.getX(), position.getY(), value);
     }
     
+    /**
+     * Set the element for the given index, does not check the validity of the index.
+     * 
+     * @param index The index of the element.
+     * @param value The new element.
+     */
     public void set(int index, E value) {
         this.array[index] = value;
     }

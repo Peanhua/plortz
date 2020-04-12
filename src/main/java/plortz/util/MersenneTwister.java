@@ -23,9 +23,11 @@ import java.util.stream.LongStream;
 
 /**
  * Mersenne Twister based random number generator.
- * 
- * Follows the pseudocode from https://en.wikipedia.org/wiki/Mersenne_Twister
- * Variant MT19937
+ * <p>
+ * Follows the pseudocode from <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">https://en.wikipedia.org/wiki/Mersenne_Twister</a>.
+ * The parameters used are for MT19937 (32 bit).
+ * <p>
+ * Implements only the methods required by this application.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

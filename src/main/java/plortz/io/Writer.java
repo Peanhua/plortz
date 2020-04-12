@@ -27,13 +27,33 @@ import plortz.terrain.Terrain;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class Writer {
-    public void write(Terrain terrain, OutputStream output) throws IOException {
+    /**
+     * Write the terrain to the output stream.
+     * 
+     * @param terrain      The input terrain.
+     * @param output       The output stream.
+     * @throws IOException Exception thrown during the output.write() call.
+     */
+    public final void write(Terrain terrain, OutputStream output) throws IOException {
         output.write(this.getBytes(terrain));
     }
     
-    public void write(Terrain terrain, RandomAccessFile file) throws IOException {
+    /**
+     * Write the terrain to the file.
+     * 
+     * @param terrain      The input terrain.
+     * @param file         The output file.
+     * @throws IOException Exception thrown during the file.write() call.
+     */
+    public final void write(Terrain terrain, RandomAccessFile file) throws IOException {
         file.write(this.getBytes(terrain));
     }
-
+    
+    /**
+     * Return all the bytes that needs to be written to the output.
+     * 
+     * @param terrain The input terrain.
+     * @return        Array of bytes to be written to the output.
+     */
     protected abstract byte[] getBytes(Terrain terrain);
 }

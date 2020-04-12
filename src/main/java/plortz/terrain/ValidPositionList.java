@@ -42,6 +42,10 @@ public class ValidPositionList implements Iterable<Position> {
         return this.positions.size();
     }
     
+    /**
+     * Adds the given position to the list, if the position is not valid for the terrain, it is silently discarded.
+     * @param position The position to add.
+     */
     public void add(Position position) {
         if (position == null) {
             return;
@@ -51,6 +55,11 @@ public class ValidPositionList implements Iterable<Position> {
         }
     }
     
+    /**
+     * Adds the given position to the list, if the position is not valid for the terrain, it is silently discarded.
+     * @param x The coordinate in x-axis of the position to add.
+     * @param y The coordinate in y-axis of the position to add.
+     */
     public void add(int x, int y) {
         this.add(new Position(x, y));
     }

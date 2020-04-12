@@ -24,5 +24,12 @@ import java.util.List;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class PathFinder {
+    /**
+     * Search for a path from the given start position using the callbacks provided.
+     * 
+     * @param start     The start position.
+     * @param heuristic The callback object.
+     * @return          The resulting path, or null if no path was found.
+     */
     public abstract List<Position> find(Position start, PathFinderHeuristic heuristic);
 }

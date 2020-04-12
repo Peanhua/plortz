@@ -24,7 +24,7 @@ import plortz.ui.UserInterface;
 
 /**
  * The abstract base class for all the commands.
- * 
+ * <p>
  * Commands are created by the user interfaces to perform some action.
  * The action is often an operation performed by one or more tools.
  * 
@@ -34,14 +34,31 @@ public abstract class Command {
     protected List<String> args;
     private Instant        start_time;
     
+    /**
+     * Set the arguments for this command.
+     * <p>
+     * The first argument is the name of the command.
+     * 
+     * @param args The arguments.
+     */
     public void setArgs(List<String> args) {
         this.args = args;
     }
     
-    public void showUsage(UserInterface ui) {
+    /**
+     * Show the usage instructions to the user.
+     * @param ui The user interface to send the instructions to.
+     */
+    public final void showUsage(UserInterface ui) {
         this.getUsage().forEach(s -> ui.showMessage(s));
     }
     
+    /**
+     * Checks whether the user interface has a valid terrain associated to it, and shows generic error if not.
+     * 
+     * @param ui The user interface.
+     * @return   True if the user interface has a valid terrain associated to it.
+     */
     protected boolean requireTerrain(UserInterface ui) {
         if (ui.getTerrain() == null) {
             ui.showMessage("Error: No terrain.");
@@ -51,16 +68,28 @@ public abstract class Command {
         return true;
     }
     
+    /**
+     * Apply a single tool to the user interfaces terrain.
+     * @param ui   The user interface.
+     * @param tool The tool to apply.
+     */
     protected void applyTool(UserInterface ui, Tool tool) {
         this.startApplyingTools();
         tool.apply(ui.getTerrain());
         this.endApplyingTools(ui);
     }
     
+    /**
+     * Start applying multiple tools.
+     */
     protected void startApplyingTools() {
         this.start_time = Instant.now();
     }
     
+    /**
+     * End applying multiple tools.
+     * @param ui The user interface.
+     */
     protected void endApplyingTools(UserInterface ui) {
         if (ui.getOutputTiming()) {
             Instant end_time = Instant.now();
@@ -68,7 +97,15 @@ public abstract class Command {
             ui.showMessage("Execution time: " + duration);
         }
     }
-        
+
+    /**
+     * Execute a list of commands.
+     * <p>
+     * Each given command string contains the arguments for that command.
+     * 
+     * @param ui       The user interface.
+     * @param commands The commands and their arguments.
+     */
     protected void executeOtherCommands(UserInterface ui, List<String> commands) {
         CommandFactory cf = CommandFactory.getInstance();
         for (String input : commands) {
@@ -80,7 +117,24 @@ public abstract class Command {
         }
     }
     
+    /**
+     * Execute this command.
+     * @param ui The user interface.
+     */
     public abstract void execute(UserInterface ui);
+    
+    /**
+     * Return a short, one line, description of this command.
+     * @return The short description.
+     */
     public abstract String getShortDescription();
+    
+    /**
+     * Return the usage of this command as multiple lines.
+     * <p>
+     * The usage contains information about the required and optional parameters for this command.
+     * 
+     * @return List of lines.
+     */
     public abstract List<String> getUsage();
 }

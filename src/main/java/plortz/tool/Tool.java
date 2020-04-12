@@ -20,11 +20,20 @@ import plortz.terrain.Terrain;
 
 /**
  * The abstract base class for all the tools.
- * 
+ * <p>
  * A tool is an operation performed over the terrain to adjust properties of the terrain tiles.
+ * <p>
+ * The actual tool classes should set their parameters using their constructor(s).
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class Tool {
+    /**
+     * Apply this tool over the given terrain.
+     * <p>
+     * Parameters are set using the constructor of the tool.
+     * 
+     * @param terrain The terrain to apply this tool over.
+     */
     public abstract void apply(Terrain terrain);
 }

@@ -23,6 +23,8 @@ import java.util.Set;
 
 /**
  * A simple arraylist based Set.
+ * <p>
+ * Implements only the methods required by this application.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The element type.

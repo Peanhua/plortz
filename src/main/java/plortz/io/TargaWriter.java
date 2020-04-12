@@ -24,9 +24,8 @@ import plortz.terrain.Tile;
 /**
  * Writes a Truevision TGA image file of the terrain.
  * 
- * https://en.wikipedia.org/wiki/Truevision_TGA
- * http://www.paulbourke.net/dataformats/tga/
- * 
+ * @see <a href="https://en.wikipedia.org/wiki/Truevision_TGA">https://en.wikipedia.org/wiki/Truevision_TGA</a>
+ * @see <a href="http://www.paulbourke.net/dataformats/tga/">http://www.paulbourke.net/dataformats/tga/</a>
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class TargaWriter extends Writer {
@@ -34,6 +33,13 @@ public class TargaWriter extends Writer {
     private final boolean colors;
     private Vector        minmax;
     
+    /**
+     * Constructor.
+     * 
+     * @param compress If true, the Targa file will be compressed.
+     * @param colors   If true, the bits per pixel is 24, and each pixel is the altitude colored by the top-most soil type.
+     *                 If false, the bits per pixel is 8, and each pixel is the altitude.
+     */
     public TargaWriter(boolean compress, boolean colors) {
         this.compressed = compress;
         this.colors     = colors;

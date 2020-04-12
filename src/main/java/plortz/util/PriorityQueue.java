@@ -23,6 +23,8 @@ import java.util.Iterator;
  * Priority queue implemented using binary heap.
  * <p>
  * Element at index 0 is not used, the root is at the index 1.
+ * <p>
+ * Implements only the methods required by this application.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The element type.

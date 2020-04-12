@@ -21,7 +21,7 @@ import plortz.terrain.Tile;
 import plortz.tool.filters.Filter;
 
 /**
- * Tool to apply a filter over the terrain the terrain to adjust top soil amounts.
+ * Tool to apply a filter over the terrain to adjust the top soil amounts.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

@@ -32,6 +32,12 @@ public class ConsoleUI extends UserInterface {
     private final PrintStream output;
     private final CommandFactory command_factory;
 
+    /**
+     * Construct a new console user interface.
+     * 
+     * @param input  The stream to read commands from.
+     * @param output The stream to output user messages.
+     */
     public ConsoleUI(InputStream input, PrintStream output) {
         super();
         this.input           = new Scanner(input);

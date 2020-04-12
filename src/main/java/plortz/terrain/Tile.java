@@ -31,6 +31,12 @@ public class Tile {
     private double                water_height; // The depth of the water in this tile, the surface of the water is at surface_level + water_height.
     private final Position        position;
     
+    /**
+     * Constructor.
+     * @param position The position of the tile.
+     * @param type     The soil type of the initial bottom layer of the tile.
+     * @param amount   The amount of soil in the initial bottom layer.
+     */
     public Tile(Position position, SoilLayer.Type type, double amount) {
         this.soil_layers  = new ArrayList<>();
         this.soil_layers.add(new SoilLayer(type, amount));
@@ -38,6 +44,10 @@ public class Tile {
         this.position     = new Position(position);
     }
     
+    /**
+     * Copy constructor.
+     * @param source The source tile to copy from.
+     */
     public Tile(Tile source) {
         this.soil_layers = new ArrayList<>();
         for (SoilLayer layer : source.soil_layers) {
@@ -52,26 +62,47 @@ public class Tile {
         return "Tile[position=" + this.position + "]";
     }
     
-    
+    /**
+     * Get the top-most soil layer.
+     * @return The top-most soil layer.
+     */
     public SoilLayer getTopSoil() {
         return this.soil_layers.get(this.soil_layers.size() - 1);
     }
     
+    /**
+     * Get the bottom soil layer.
+     * @return The bottom soil layer.
+     */
     public SoilLayer getBottomSoil() {
         return this.soil_layers.get(0);
     }
     
-    
+    /**
+     * Return the position in the terrain this tile is in.
+     * @return The position in the terrain.
+     */
     public Position getPosition() {
         return this.position;
     }
     
-    
+    /**
+     * Set the position, does not change the terrain.
+     * <p>
+     * Because the tile has no link to the terrain where it is located,
+     * this method does not update the terrain object,
+     * and should be called only together when adjusting the terrain simultaneously.
+     * @param position The new position of this tile.
+     */
     public void setPosition(Position position) {
         this.position.set(position);
     }
     
-    
+    /**
+     * Calculate the total altitude of this tile.
+     * @param with_water If true, the water is included.
+     * @return           The total altitude of this tile.
+     */
     public double getAltitude(boolean with_water) {
         double alt = 0.0;
         for (SoilLayer layer : this.soil_layers) {
@@ -83,6 +114,14 @@ public class Tile {
         return alt;
     }
     
+    /**
+     * Set the amount of soil in the top-most soil layer.
+     * <p>
+     * If the amount is negative, the top-most soil layer is removed.
+     * If the amount is negative and the top-most soil layer is also the bottom-most,
+     * then the amount of the soil layer will be negative.
+     * @param amount The new soil amount.
+     */
     public void setTopSoilAmount(double amount) {
         if (amount > 0.0) {
             this.getTopSoil().setAmount(amount);
@@ -95,6 +134,10 @@ public class Tile {
         }
     }
     
+    /**
+     * Adjusts the amount of soil in the top-most soil layer, uses setTopSoilAmount().
+     * @param change How much to change.
+     */
     public void adjustTopSoilAmount(double change) {
         this.setTopSoilAmount(this.getTopSoil().getAmount() + change);
     }
@@ -149,6 +192,10 @@ public class Tile {
         }
     }
     
+    /**
+     * Multiply the soil amount in all soil layers by the given factor.
+     * @param factor The factor to multiply with.
+     */
     public void scaleSoilLayers(double factor) {
         if (factor <= 0) {
             throw new IllegalArgumentException();
@@ -160,7 +207,11 @@ public class Tile {
 
     /**
      * Set the water height of this tile.
+     * <p>
      * The water height describes how much water is in this tile on top of the surface_level.
+     * <p>
+     * Zero or negative amounts define a "no water" situation.
+     * If the tile contains water, the amount is always greater than 0.0.
      * 
      * @param water_height The new water height.
      */

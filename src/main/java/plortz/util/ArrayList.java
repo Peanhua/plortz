@@ -21,7 +21,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * ArrayList replacement.
+ * Resizable-array implementation of the List interface. 
+ * <p>
+ * Used in place of standard ArrayList.
+ * Implements only the methods required by this application.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The type of the element.

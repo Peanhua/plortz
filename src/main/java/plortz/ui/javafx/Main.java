@@ -39,6 +39,11 @@ public class Main extends Application {
     private static UserInterface my_ui = null;
     private boolean is2d;
     
+    /**
+     * Called by JavaFX, the starting point of the applications user interface code.
+     * 
+     * @param stage The stage.
+     */
     @Override
     public void start(Stage stage) {
         if (my_ui == null) {
@@ -94,6 +99,14 @@ public class Main extends Application {
         my_ui.showMessage("Type \"help\" to get started.");
     }
     
+    /**
+     * A wrapper function to setup the static variables required by this user interface.
+     * <p>
+     * The use of static variables are needed because JavaFX calls a static method,
+     * but the user interface object is already created when the JavaFX portion is initialized in this application.
+     * 
+     * @param my_ui The user interface instance to use.
+     */
     public static void run(UserInterface my_ui) {
         Main.my_ui = my_ui;
         launch();

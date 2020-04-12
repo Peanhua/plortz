@@ -27,6 +27,7 @@ import plortz.util.Static2dArray;
 
 /**
  * Container of the terrain data.
+ * <p>
  * The terrain is a 2d grid of Tiles.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
@@ -35,6 +36,12 @@ public class Terrain implements Iterable<Tile> {
     private final Static2dArray<Tile> tiles;
     private final Subject             onChange;
     
+    /**
+     * Construct a new terrain with the bottom layers soil type given.
+     * @param width        Width (x-axis).
+     * @param length       Length (y-axis).
+     * @param bottom_layer The soil type of the bottom layer.
+     */
     public Terrain(int width, int length, SoilLayer.Type bottom_layer) {
         this.tiles  = new Static2dArray<>(width, length);
         for (int y = 0; y < length; y++) {
@@ -45,10 +52,19 @@ public class Terrain implements Iterable<Tile> {
         this.onChange = new Subject();
     }
     
+    /**
+     * Construct a new terrain.
+     * @param width  Width (x-axis).
+     * @param length Length (y-axis).
+     */
     public Terrain(int width, int length) {
         this(width, length, SoilLayer.Type.CLIFF);
     }
     
+    /**
+     * Copy constructor.
+     * @param source The source terrain to copy from.
+     */
     public Terrain(Terrain source) {
         this.tiles  = new Static2dArray<>(source.getWidth(), source.getLength());
         for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
@@ -57,6 +73,10 @@ public class Terrain implements Iterable<Tile> {
         this.onChange = new Subject();
     }
 
+    /**
+     * Return an iterator that iterates over all the tiles in the terrain.
+     * @return The iterator.
+     */
     @Override
     public Iterator<Tile> iterator() {
         return this.tiles.iterator();
@@ -100,6 +120,11 @@ public class Terrain implements Iterable<Tile> {
         return this.tiles.get(position);
     }
     
+    /**
+     * Replace the tile at the given position.
+     * @param position The position of the tile.
+     * @param tile     The new tile for the given position.
+     */
     public void setTile(Position position, Tile tile) {
         if (tile == null || !this.tiles.isValidPosition(position)) {
             throw new InvalidParameterException();
@@ -109,10 +134,21 @@ public class Terrain implements Iterable<Tile> {
         this.changed();
     }
 
+    /**
+     * Checks whether the given position is valid for this terrain.
+     * @param position The position to check.
+     * @return         True if the position is valid for this terrain.
+     */
     public boolean isValidTilePosition(Position position) {
         return this.tiles.isValidPosition(position);
     }
     
+    /**
+     * Checks whether the given position is valid for this terrain.
+     * @param x The x-axis of the position.
+     * @param y The y-axis of the position.
+     * @return  True if the position is valid for this terrain.
+     */
     public boolean isValidTilePosition(int x, int y) {
         return this.tiles.isValidPosition(x, y);
     }

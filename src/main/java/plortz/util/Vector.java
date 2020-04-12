@@ -18,12 +18,21 @@ package plortz.util;
 
 /**
  * A generic vector class.
+ * <p>
+ * Can handle arbitrary number of dimensions.
+ * The dimensions are named (in order): x, y, z, w.
+ * For more than 4 dimensions, the remaining dimensions are not named.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Vector {
     private final double[] coords;
     
+    /**
+     * Construct a vector from arbitrary number of dimensions.
+     * 
+     * @param coords The coordinates for each dimension.
+     */
     public Vector(double[] coords) {
         this.coords = new double[coords.length];
         for (int i = 0; i < this.coords.length; i++) {
@@ -31,23 +40,46 @@ public class Vector {
         }
     }
     
+    /**
+     * Construct a vector from a Position.
+     * 
+     * @param position The source position.
+     */
     public Vector(Position position) {
         this(position.getX(), position.getY());
     }
 
+    /**
+     * Constructor for 2d vector.
+     * 
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     */
     public Vector(double x, double y) {
         this.coords = new double[2];
         this.coords[0] = x;
         this.coords[1] = y;
     }
     
+    /**
+     * Constructor for 3d vector.
+     * 
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     * @param z The z coordinate.
+     */
     public Vector(double x, double y, double z) {
         this.coords = new double[3];
         this.coords[0] = x;
         this.coords[1] = y;
         this.coords[2] = z;
     }
-    
+
+    /**
+     * Copy constructor.
+     * 
+     * @param source The vector to copy from.
+     */
     public Vector(Vector source) {
         this.coords = new double[source.coords.length];
         for (int i = 0; i < this.coords.length; i++) {
@@ -87,11 +119,21 @@ public class Vector {
         return this.coords[dimension];
     }
     
+    /**
+     * Returns the number of dimensions this vector has.
+     * 
+     * @return The number of dimensions.
+     */
     public int getDimensions() {
         return this.coords.length;
     }
     
-    
+    /**
+     * Sets his vector using another vector.
+     * The number of dimensions in the source must be equal to this vector.
+     * 
+     * @param source The vector to copy from.
+     */
     public void set(Vector source) {
         if (this.coords.length != source.coords.length) {
             throw new IllegalArgumentException();

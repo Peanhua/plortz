@@ -25,7 +25,11 @@ import plortz.util.ArrayList;
 
 /**
  * Rolls loose land mass downhill.
+ * <p>
+ * Performs sheet erosion on the top-most soil using the angle of repose.
  * 
+ * @see <a href="https://en.wikipedia.org/wiki/Sheet_erosion">https://en.wikipedia.org/wiki/Sheet_erosion</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Angle_of_repose">https://en.wikipedia.org/wiki/Angle_of_repose</a>
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SheetErosion extends Tool {

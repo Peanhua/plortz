@@ -22,9 +22,10 @@ import plortz.util.Vector;
 
 /**
  * Adjusts the altitudes using perlin noise.
- * 
+ * <p>
  * Altitude changes are in range [-scale, scale].
  * 
+ * @see <a href="https://en.wikipedia.org/wiki/Perlin_noise">https://en.wikipedia.org/wiki/Perlin_noise</a>
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class PerlinNoise extends Tool {

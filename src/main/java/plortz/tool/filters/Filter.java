@@ -21,13 +21,17 @@ import plortz.terrain.Terrain;
 /**
  * Abstract base class for filters.
  * <p>
- * Smoothing filters are used to smooth the terrain altitudes.
+ * Filters are used to adjust the terrain altitudes.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class Filter {
     protected final int half_window_size;
 
+    /**
+     * The size of the window to operate on, must be a non-even number.
+     * @param window_size The size of the window.
+     */
     public Filter(int window_size) {
         if (window_size % 2 == 0) {
             throw new IllegalArgumentException();

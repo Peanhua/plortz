@@ -23,6 +23,8 @@ import java.util.Set;
 
 /**
  * A map using hash table.
+ * <p>
+ * Implements only the methods required by this application.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <K> The element type for keys.

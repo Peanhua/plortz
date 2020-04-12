@@ -24,11 +24,10 @@ import plortz.terrain.ValidPositionList;
 
 /**
  * Adjusts the altitudes using the diamond-square algorithm.
- * 
+ * <p>
  * Altitude changes are in the range [-scale, +scale].
- *
- * https://en.wikipedia.org/wiki/Diamond-square_algorithm
  * 
+ * @see <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">https://en.wikipedia.org/wiki/Diamond-square_algorithm</a>
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class DiamondSquare extends Tool {

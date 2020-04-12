@@ -38,20 +38,38 @@ public class CommandHistory {
         this.cursor  = 0;
     }
     
+    /**
+     * Add a command to the end of the history, updates the current position in history to the end.
+     * 
+     * @param command The command to add.
+     */
     public void add(String command) {
         this.history.add(command);
         this.cursor = this.history.size();
     }
     
+    /**
+     * Return the full history.
+     * 
+     * @return All the commands from the history.
+     */
     public List<String> get() {
         return this.history;
     }
     
+    /**
+     * Clear the history, removing all commands from it.
+     */
     public void clear() {
         this.history.clear();
         this.cursor = 0;
     }
 
+    /**
+     * Return the previous command, updates the current position in the history.
+     * 
+     * @return Previous command, or null if the beginning of history is reached.
+     */
     public String previous() {
         if (this.cursor == 0) {
             return null;
@@ -60,6 +78,11 @@ public class CommandHistory {
         return this.history.get(this.cursor);
     }
     
+    /**
+     * Returns the next command, updates the current position in the history.
+     * 
+     * @return Next command, or null if the end of the history is reached.
+     */
     public String next() {
         if (this.cursor >= this.history.size() - 1) {
             this.cursor = this.history.size();
@@ -70,6 +93,14 @@ public class CommandHistory {
         return rv;
     }
     
+    /**
+     * Save the history to a file.
+     * <p>
+     * Destroys the current contents of the file (does not append).
+     * 
+     * @param filename     The name of the file to write to.
+     * @throws IOException Exception thrown on failure.
+     */
     public void save(String filename) throws IOException {
         PrintStream file = new PrintStream(filename);
         this.history.forEach((line) -> {
@@ -77,6 +108,14 @@ public class CommandHistory {
         });
     }
     
+    /**
+     * Add entries from the file to the history.
+     * <p>
+     * The entries are appended to the end of the history.
+     * 
+     * @param filename               The name of the file to read from.
+     * @throws FileNotFoundException Exception thrown on failure.
+     */
     public void load(String filename) throws FileNotFoundException {
         Scanner s = new Scanner(new File(filename));
         while (s.hasNextLine()) {

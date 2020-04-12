@@ -28,12 +28,38 @@ import plortz.util.Vector;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class TerrainView extends Widget {
-    protected UserInterface   user_interface;
-    protected BorderPane      container;
-    protected int             width;
-    protected int             height;
-    protected boolean         active;
+    /**
+     * The user interface this widget is part of.
+     */
+    protected UserInterface user_interface;
     
+    /**
+     * The container node for this terrain view.
+     */
+    protected BorderPane container;
+    
+    /**
+     * The width of the container.
+     */
+    protected int width;
+    
+    /**
+     * The height of the container.
+     */
+    protected int height;
+    
+    /**
+     * True if this terrain view is active.
+     * <p>
+     * The refresh() should use this to determine whether to actually update the contents or not.
+     */
+    protected boolean active;
+    
+    /**
+     * Construct a new terrain view object, creates the container.
+     * 
+     * @param ui The user interface this terrain view is part of.
+     */
     public TerrainView(UserInterface ui) {
         this.user_interface   = ui;
         this.container        = null;
@@ -65,11 +91,21 @@ public abstract class TerrainView extends Widget {
         return this.container;
     }
 
+    /**
+     * Called when the containing node is resized.
+     */
     protected void onResized() {
         this.width  = (int) this.container.getWidth();
         this.height = (int) this.container.getHeight();
     }
 
+    /**
+     * Return the color of the given tile.
+     * 
+     * @param tile     The tile.
+     * @param altitude Normalized altitude of the tile, in range [0, 1].
+     * @return         The ARGB value.
+     */
     protected int getTileARGB(Tile tile, double altitude) {
         Vector rgb;
         if (tile.getWater() > 0.0) {
@@ -84,9 +120,17 @@ public abstract class TerrainView extends Widget {
         return argb;
     }
     
+    /**
+     * Sets whether this view is active or not.
+     * <p>
+     * Calls refresh() when setting to active.
+     * 
+     * @param active True if this view is active.
+     */
     public void setActive(boolean active) {
+        boolean previously = this.active;
         this.active = active;
-        if (active) {
+        if (!previously && active) {
             this.refresh();
         }
     }

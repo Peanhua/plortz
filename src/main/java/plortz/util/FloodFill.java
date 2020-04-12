@@ -20,14 +20,32 @@ import java.util.List;
 
 /**
  * Performs a flood fill discovering the filled area and the borders around it.
+ * <p>
+ * Does not fill diagonal positions, but the resulting borders do include diagonal positions.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class FloodFill {
     
+    /**
+     * Callback functions used with FloodFill.
+     */
     public interface FloodFillCallback {
+        /**
+         * Check whether the given position should be filled.
+         * 
+         * @param position The position to check.
+         * @return         True if the given position should be filled.
+         */
         public boolean isPositionIn(Position position);
-        public void    fill(Position position);
+        
+        /**
+         * Called when a position is filled.
+         * <p>
+         * This will be called at most one time per position.
+         * @param position The position to fill.
+         */
+        public void fill(Position position);
     }
     
     private Static2dArray<Boolean> filled;
@@ -42,6 +60,23 @@ public class FloodFill {
         return callback.isPositionIn(position);
     }
     
+    /**
+     * Return a list of positions that are considered as borders for the filled area.
+     * <p>
+     * Contains diagonal positions, for example:
+     * <pre>
+     *  #####
+     *  #bbb#
+     *  #bfb#
+     *  #bbb#
+     *  #####
+     * </pre>
+     * The "b"'s are returned,
+     * the "f"'s are the filled positions,
+     * and the "#"'s are the not filled positions.
+     * 
+     * @return The positions of the border elements.
+     */
     public List<Position> getBorders() {
         List<Position> borders = new ArrayList<>();
         for (int y = 0; y < this.length; y++) {
@@ -78,13 +113,17 @@ public class FloodFill {
     }
     
     /**
-     * Flood fill area inside a 2d rectangle space.
+     * Flood fill area inside a 2d rectangle space, does not extend in diagonal directions.
      * <p>
-     * Uses scanline fill: https://en.wikipedia.org/wiki/Flood_fill#Scanline_fill
-     * Uses a queue to find the next scanline to scan.
-     * When processing a scanline, lines above and below are checked if they can be filled.
-     * The newly found fillable areas are then added to the queue.
+     * Implementation details:
+     * <ul>
+     * <li>Uses scanline fill.
+     * <li>Uses a queue to find the next scanline to scan.
+     * <li>When processing a scanline, lines above and below are checked if they can be filled.
+     * <li>The newly found fillable areas are then added to the queue.
+     * </ul>
      * 
+     * @see <a href="https://en.wikipedia.org/wiki/Flood_fill#Scanline_fill">https://en.wikipedia.org/wiki/Flood_fill#Scanline_fill</a>
      * @param width    Width of the area.
      * @param length   Length of the area.
      * @param start    The starting position.

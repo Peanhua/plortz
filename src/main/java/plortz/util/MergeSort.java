@@ -26,7 +26,19 @@ import java.util.List;
  */
 public class MergeSort<E> {
     
+    /**
+     * Compare function used when sorting with MergeSort.
+     * 
+     * @param <E> The type of the compared objects.
+     */
     public interface Comparer<E> {
+        /**
+         * Compare if object a is less than object b.
+         * 
+         * @param a The first object.
+         * @param b The second object.
+         * @return  True if the first object is less than the second object.
+         */
         public boolean compare(E a, E b);
     }
     

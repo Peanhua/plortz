@@ -29,6 +29,11 @@ public class AsciiWriter extends Writer {
 
     private boolean normalize;
     
+    /**
+     * Constructor.
+     * 
+     * @param normalize If true, the altitudes will be normalized to range [0, 1].
+     */
     public AsciiWriter(boolean normalize) {
         this.normalize = normalize;
     }

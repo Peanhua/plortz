@@ -25,8 +25,8 @@ import plortz.terrain.Terrain;
 
 /**
  * The abstract base class for the user interface implementations.
- * 
- * Each user interface is tied to a terrain object.
+ * <p>
+ * Each user interface is associated to a terrain object.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
@@ -58,12 +58,22 @@ public abstract class UserInterface {
         }
     }
     
+    /**
+     * Return true if this user interface is active.
+     * @return True if this user interface is active.
+     */
     public boolean isRunning() {
         return this.running;
     }
     
+    /**
+     * Start the execution of this user interface.
+     */
     public abstract void run();
     
+    /**
+     * Stop this user interface.
+     */
     public void stop() {
         this.running = false;
         try {
@@ -73,10 +83,18 @@ public abstract class UserInterface {
         }
     }
     
+    /**
+     * Return the terrain object associated with this user interface.
+     * @return The terrain object.
+     */
     public final Terrain getTerrain() {
         return this.terrain;
     }
     
+    /**
+     * Set the terrain object associated with this user interface.
+     * @param terrain The terrain object.
+     */
     public final void setTerrain(Terrain terrain) {
         this.terrain = terrain;
         this.on_terrain_change.notifyObservers();
@@ -84,6 +102,8 @@ public abstract class UserInterface {
     
     /**
      * Register an observer to be called whenever the terrain reference is changed.
+     * <p>
+     * Note that this is different than listening on changes on the terrain itself.
      * 
      * @param observer The observer object to be called upon change.
      */
@@ -91,31 +111,59 @@ public abstract class UserInterface {
         this.on_terrain_change.addObserver(observer);
     }
     
+    /**
+     * Register an observer to be called whenever a message for the user is sent.
+     * @param observer The observer object to be called upon a new message.
+     */
     public final void listenOnMessage(Observer observer) {
         this.on_message.addObserver(observer);
     }
 
+    /**
+     * Send a message for the user to see.
+     * @param message The message.
+     */
     public final void showMessage(String message) {
         this.message = message;
         this.on_message.notifyObservers();
     }
     
+    /**
+     * Return the current/last message sent to the user.
+     * @return The message.
+     */
     public final String getMessage() {
         return this.message;
     }
     
+    /**
+     * Return the command history object for this user interface.
+     * @return The command history object.
+     */
     public CommandHistory getCommandHistory() {
         return this.command_history;
     }
     
+    /**
+     * Return a random generator associated with this user interface.
+     * @return The random generator object.
+     */
     public Random getRandom() {
         return this.random_generator;
     }
     
+    /**
+     * Enable/disable timing the command execution.
+     * @param enabled True to enable.
+     */
     public void setOutputTiming(boolean enabled) {
         this.output_timing = enabled;
     }
     
+    /**
+     * Return whether the timing of command execution is enabled or not.
+     * @return True if the timing is enabled.
+     */
     public boolean getOutputTiming() {
         return this.output_timing;
     }

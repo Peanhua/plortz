@@ -21,9 +21,9 @@ import plortz.terrain.Tile;
 
 /**
  * Elevates terrain to create a mountain/hill.
- * 
+ * <p>
  * For each tile within range, calculate the change in altitude based on distance to the center using Gaussian distribution.
- * 
+ * <p>
  * Altitude changes are in the range [0, vertical_scale].
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
