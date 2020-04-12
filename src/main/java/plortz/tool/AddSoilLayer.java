@@ -16,7 +16,7 @@
  */
 package plortz.tool;
 
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;

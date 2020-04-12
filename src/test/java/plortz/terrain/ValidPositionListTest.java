@@ -16,7 +16,7 @@
  */
 package plortz.terrain;
 
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.terrain.ValidPositionList;
 import plortz.terrain.Terrain;
 import org.junit.After;

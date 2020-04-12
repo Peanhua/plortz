@@ -168,7 +168,7 @@ public class TargaWriter extends Writer {
                     tmp[pos++] = (byte) (count - 1);
                     for (int i = 0; i < count; i++) {
                         if (this.colors) {
-                        int color = this.getImageRGB(terrain, x, y);
+                            int color = this.getImageRGB(terrain, x, y);
                             tmp[pos++] = (byte) ((color >>  0) & 0xff); // blue
                             tmp[pos++] = (byte) ((color >>  8) & 0xff); // green
                             tmp[pos++] = (byte) ((color >> 16) & 0xff); // red

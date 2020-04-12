@@ -16,8 +16,6 @@
  */
 package plortz.util;
 
-import plortz.terrain.Position;
-
 /**
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}

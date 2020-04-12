@@ -25,7 +25,7 @@ import java.util.Set;
  * A set implementation using hashing.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
- * @param <E>
+ * @param <E> The element type.
  */
 public class HashSet<E> implements Set<E> {
     

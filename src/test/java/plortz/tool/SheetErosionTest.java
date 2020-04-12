@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 

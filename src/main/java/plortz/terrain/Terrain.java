@@ -16,6 +16,7 @@
  */
 package plortz.terrain;
 
+import plortz.util.Position;
 import java.security.InvalidParameterException;
 import java.util.Iterator;
 import plortz.util.Vector;

@@ -17,7 +17,6 @@
 package plortz.util;
 
 import java.util.List;
-import plortz.terrain.Position;
 
 /**
  * The callback object passed to the path finding algorithms.

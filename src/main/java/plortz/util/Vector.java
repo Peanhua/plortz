@@ -16,8 +16,6 @@
  */
 package plortz.util;
 
-import plortz.terrain.Position;
-
 /**
  * A generic vector class.
  * 

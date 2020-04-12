@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import plortz.util.MersenneTwister;
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.terrain.Terrain;
 
 /**

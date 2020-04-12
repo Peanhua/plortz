@@ -17,7 +17,6 @@
 package plortz.util;
 
 import java.util.List;
-import plortz.terrain.Position;
 
 /**
  * Abstract base class for path finding algorithms.

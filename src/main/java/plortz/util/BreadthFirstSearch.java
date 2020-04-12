@@ -17,7 +17,6 @@
 package plortz.util;
 
 import java.util.List;
-import plortz.terrain.Position;
 
 /**
  * Breadth-first path finding algorithm.

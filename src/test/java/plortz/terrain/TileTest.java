@@ -16,6 +16,7 @@
  */
 package plortz.terrain;
 
+import plortz.util.Position;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

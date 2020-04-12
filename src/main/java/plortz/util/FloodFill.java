@@ -17,7 +17,6 @@
 package plortz.util;
 
 import java.util.List;
-import plortz.terrain.Position;
 
 /**
  * Performs a flood fill discovering the filled area and the borders around it.

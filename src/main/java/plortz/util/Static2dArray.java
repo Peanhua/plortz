@@ -17,7 +17,6 @@
 package plortz.util;
 
 import java.util.Iterator;
-import plortz.terrain.Position;
 
 /**
  * Statically allocated 2d array.

@@ -17,7 +17,7 @@
 package plortz.ui.command;
 
 import java.util.List;
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 import plortz.util.ArrayList;

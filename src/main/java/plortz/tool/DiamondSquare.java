@@ -18,7 +18,7 @@ package plortz.tool;
 
 import java.security.InvalidParameterException;
 import java.util.Random;
-import plortz.terrain.Position;
+import plortz.util.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.ValidPositionList;
 

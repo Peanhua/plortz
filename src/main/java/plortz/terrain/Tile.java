@@ -16,6 +16,7 @@
  */
 package plortz.terrain;
 
+import plortz.util.Position;
 import java.util.List;
 import plortz.util.Vector;
 import plortz.util.ArrayList;
