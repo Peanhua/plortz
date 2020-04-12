@@ -16,10 +16,13 @@
  */
 package plortz.tool;
 
+import java.util.List;
 import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
+import plortz.util.ArrayList;
+import plortz.util.Circle;
 
 /**
  * Tool to add new layers of soil on top of existing.
@@ -37,8 +40,6 @@ public class AddSoilLayer extends Tool {
     private final Position center;
     private final int      width;
     private final int      length;
-    private boolean[]      processed;      // Holds true for each tile already processed, used to avoid processing same tile multiple times.
-    private int            processed_size; // The number of elements in processed array is processed_size * processed_size.
     protected final SoilLayer.Type soil_type;
     protected final double         amount;
     
@@ -47,15 +48,15 @@ public class AddSoilLayer extends Tool {
      * 
      * @param soil_type The type of the soil to add.
      * @param amount    The amount (vertical).
-     * @param center    Center of the rectangle.
+     * @param topleft   The top-left coordinates of the rectangle.
      * @param width     Width of the rectangle.
      * @param length    Length of the rectangle.
      */
-    public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position center, int width, int length) {
+    public AddSoilLayer(SoilLayer.Type soil_type, double amount, Position topleft, int width, int length) {
         this.soil_type = soil_type;
         this.amount    = amount;
         this.area_type = AreaType.Rectangle;
-        this.center    = new Position(center);
+        this.center    = new Position(topleft);
         this.width     = width;
         this.length    = length;
     }
@@ -79,58 +80,29 @@ public class AddSoilLayer extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
+        List<Position> positions = null;
         switch (this.area_type) {
             case Rectangle:
-                this.addRectangleLayer(terrain);
+                positions = new ArrayList<>();
+                for (int dy = 0; dy < this.length; dy++) {
+                    for (int dx = 0; dx < this.width; dx++) {
+                        positions.add(new Position(this.center, dx, dy));
+                    }
+                }
                 break;
             case Circle:
-                this.addCircleLayer(terrain);
+                Circle circle = new Circle(this.center, this.width);
+                positions = circle.getPositions();
                 break;
+        }
+        for (Position pos : positions) {
+            this.processTile(terrain, pos);
         }
         terrain.changed();
     }
     
-    private void addCircleLayer(Terrain terrain) {
-        int radius = this.width;
-        this.processed_size = 2 * radius + 1; // +1 for the center
-        this.processed      = new boolean[this.processed_size * this.processed_size];
-        for (int dy = 0; dy <= radius; dy++) {
-            for (int dx = dy; dx <= radius; dx++) {
-                if ((dx * dx) + (dy * dy) <= (radius * radius)) {
-                    this.circlePlot(terrain, +dx, +dy);
-                    this.circlePlot(terrain, +dx, -dy);
-                    this.circlePlot(terrain, -dx, +dy);
-                    this.circlePlot(terrain, -dx, -dy);
-                    this.circlePlot(terrain, +dy, +dx);
-                    this.circlePlot(terrain, +dy, -dx);
-                    this.circlePlot(terrain, -dy, +dx);
-                    this.circlePlot(terrain, -dy, -dx);
-                }
-            }
-        }
-    }
-    
-    private void circlePlot(Terrain terrain, int dx, int dy) {
-        int radius = this.width;
-        int pos = (radius + dx) + (radius + dy) * processed_size;
-        if (this.processed[pos]) {
-            return;
-        }
-        this.processed[pos] = true;
-        this.processTile(terrain, this.center.getX() + dx, this.center.getY() + dy);
-    }
-    
-    private void addRectangleLayer(Terrain terrain) {
-        for (int dy = 0; dy < this.length; dy++) {
-            int y = this.center.getY() + dy - this.length / 2;
-            for (int dx = 0; dx < this.width; dx++) {
-                this.processTile(terrain, this.center.getX() + dx - this.width / 2, y);
-            }
-        }
-    }
-    
-    protected void processTile(Terrain terrain, int x, int y) {
-        Tile t = terrain.getTile(x, y);
+    protected void processTile(Terrain terrain, Position position) {
+        Tile t = terrain.getTile(position);
         if (t != null) {
             t.addSoil(this.soil_type, this.amount);
         }

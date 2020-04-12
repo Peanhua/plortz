@@ -60,8 +60,8 @@ public class InsertSoilLayer extends AddSoilLayer {
     }
     
     @Override
-    protected void processTile(Terrain terrain, int x, int y) {
-        Tile t = terrain.getTile(x, y);
+    protected void processTile(Terrain terrain, Position position) {
+        Tile t = terrain.getTile(position);
         if (t != null) {
             t.insertSoil(this.layer, this.soil_type, this.amount);
         }
