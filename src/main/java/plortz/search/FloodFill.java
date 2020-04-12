@@ -14,9 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.util;
+package plortz.search;
 
 import java.util.List;
+import plortz.util.ArrayList;
+import plortz.util.Position;
+import plortz.util.Static2dArray;
 
 /**
  * Performs a flood fill discovering the filled area and the borders around it.

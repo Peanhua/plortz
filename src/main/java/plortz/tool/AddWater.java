@@ -20,12 +20,12 @@ import java.util.List;
 import plortz.util.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.util.AStar;
+import plortz.search.AStar;
 import plortz.util.ArrayList;
-import plortz.util.BreadthFirstSearch;
-import plortz.util.FloodFill;
-import plortz.util.PathFinder;
-import plortz.util.PathFinderHeuristic;
+import plortz.search.BreadthFirstSearch;
+import plortz.search.FloodFill;
+import plortz.search.PathFinder;
+import plortz.search.PathFinderHeuristic;
 
 /**
  * Tool to add water to a location and carve river with the amount of water stored at the end in a pond/lake/sea.

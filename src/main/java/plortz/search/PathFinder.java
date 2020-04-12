@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.util;
+package plortz.search;
 
 import java.util.List;
+import plortz.util.Position;
 
 /**
  * Abstract base class for path finding algorithms.

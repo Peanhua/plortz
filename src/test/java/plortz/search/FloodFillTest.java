@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.util;
+package plortz.search;
 
 import java.util.List;
 import org.junit.After;
@@ -22,6 +22,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import plortz.util.ArrayList;
+import plortz.util.Position;
+import plortz.util.Static2dArray;
 import static org.junit.Assert.*;
 
 /**
