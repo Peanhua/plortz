@@ -16,14 +16,8 @@
  */
 package plortz.search;
 
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import plortz.util.Position;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -32,6 +26,7 @@ import static org.junit.Assert.*;
 public class BreadthFirstSearchTest extends AStarTest {
     
     @Before
+    @Override
     public void setUp() {
         super.setUp();
         this.path_finder = new BreadthFirstSearch();
