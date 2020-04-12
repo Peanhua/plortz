@@ -26,7 +26,6 @@ import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.util.Vector;
 
 /**
  *
@@ -67,7 +66,7 @@ public class InsertSoilLayerTest {
             originals[t.getPosition().getX() + t.getPosition().getY() * terrain.getWidth()] = t.getAltitude(true);
         }
         double amount = 2.0;
-        Tool tool = new InsertSoilLayer(0, SoilLayer.Type.DIRT, amount, center, terrain.getWidth(), terrain.getLength());
+        Tool tool = new InsertSoilLayer(0, SoilLayer.Type.DIRT, amount, new Position(0, 0), terrain.getWidth(), terrain.getLength());
         tool.apply(terrain);
         for (Tile t : terrain) {
             assertEquals(amount + originals[t.getPosition().getX() + t.getPosition().getY() * terrain.getWidth()], t.getAltitude(true), testdelta);
@@ -77,7 +76,7 @@ public class InsertSoilLayerTest {
     @Test
     public void rectInsertAtBottomChangesBottom() {
         for (SoilLayer.Type type : SoilLayer.Type.values()) {
-            Tool tool = new InsertSoilLayer(0, type, 1.0, center, terrain.getWidth(), terrain.getLength());
+            Tool tool = new InsertSoilLayer(0, type, 1.0, new Position(0, 0), terrain.getWidth(), terrain.getLength());
             tool.apply(terrain);
             assertEquals(type, terrain.getTile(0, 0).getBottomSoil().getType());
         }

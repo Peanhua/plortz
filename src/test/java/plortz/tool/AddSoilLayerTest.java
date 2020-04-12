@@ -58,7 +58,7 @@ public class AddSoilLayerTest {
             }
         }
         circletool = new AddSoilLayer(SoilLayer.Type.SAND, 1.0, new Position(50, 50), 50);
-        rectangletool = new AddSoilLayer(SoilLayer.Type.SAND, 1.0, new Position(50, 50), 50, 50);
+        rectangletool = new AddSoilLayer(SoilLayer.Type.SAND, 1.0, new Position(25, 25), 50, 50);
     }
     
     @After
@@ -70,7 +70,7 @@ public class AddSoilLayerTest {
         rectangletool.apply(terrain);
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
-                if (x >= 50 - 25 && x < 50 + 25 && y >= 50 - 25 && y < 50 + 25) {
+                if (x >= 25 && x < 25 + 50 && y >= 25 && y < 25 + 50) {
                     assertEquals(SoilLayer.Type.SAND, terrain.getTile(x, y).getTopSoil().getType());
                 } else {
                     assertEquals(SoilLayer.Type.CLIFF, terrain.getTile(x, y).getTopSoil().getType());
