@@ -31,6 +31,9 @@ import static org.junit.Assert.*;
  */
 public class AStarTest {
     
+    protected SearchMaps maps;
+    protected PathFinder path_finder;
+    
     public AStarTest() {
     }
     
@@ -44,112 +47,36 @@ public class AStarTest {
     
     @Before
     public void setUp() {
+        this.maps = new SearchMaps();
+        this.path_finder = new AStar();
     }
     
     @After
     public void tearDown() {
     }
 
-    private String[] map1 = {
-        " 12345678901234567890",
-        "1####################",
-        "2#  ###      ##     #",
-        "3##   # #### #  ### #",
-        "4#### # #      ## # #",
-        "5###  # # #### ## # #",
-        "6### ## # ####    # #",
-        "7### #  #      ## # #",
-        "8### ############## #",
-        "9###                #",
-        "0####################"
-    };
     @Test
-    public void testScenariosProduceShortestPathsMap1() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map1, new Position(6, 7));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
-        assertNotNull(path);
-        assertEquals(44, path.size());
-    }
-    
-    private String[] map2 = {
-        " 1234",
-        "1####",
-        "2#  #",
-        "3####"
-    };
-    @Test
-    public void testScenariosProduceShortestPathsMap2() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map2, new Position(3, 2));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
-        assertNotNull(path);
-        assertEquals(2, path.size());
+    public void testScenariosProduceShortestPaths() {
+        for (SearchMaps.Map map : maps.maps) {
+            PathFinderTestHeuristic h = new PathFinderTestHeuristic(map.map, map.end);
+            List<Position> path = path_finder.find(map.start, h);
+            if (map.path_length > 0) {
+                assertNotNull(path);
+                assertEquals(map.path_length, path.size());
+            } else {
+                assertNull(path);
+            }
+        }
     }
 
-    private String[] map3 = {
-        " 123456",
-        "1######",
-        "2#    #",
-        "3#    #",
-        "4#    #",
-        "5######"
-    };
     @Test
-    public void testScenariosProduceShortestPathsMap3() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map3, new Position(5, 3));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 3), h);
-        assertNotNull(path);
-        assertEquals(4, path.size());
+    public void map3PathIsStraightLine() {
+        SearchMaps.Map map = maps.maps.get(2);
+        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map.map, map.end);
+        List<Position> path = path_finder.find(map.start, h);
         assertEquals(new Position(2, 3), path.get(0));
         assertEquals(new Position(3, 3), path.get(1));
         assertEquals(new Position(4, 3), path.get(2));
         assertEquals(new Position(5, 3), path.get(3));
-    }
-
-    private String[] map4 = {
-        " 123456",
-        "1######",
-        "2#    #",
-        "3######",
-        "4#    #",
-        "5######"
-    };
-    @Test
-    public void finderReturnsNullWhenThereIsNoPath() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map4, new Position(2, 4));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
-        assertNull(path);
-    }
-
-    private String[] map5 = {
-        " 12345678901234567890",
-        "1####################",
-        "2#                  #",
-        "3# #                #",
-        "4# #                #",
-        "5# #                #",
-        "6# #                #",
-        "7# #                #",
-        "8# #                #",
-        "9#                  #",
-        "0#                  #",
-        "1#                  #",
-        "2#                  #",
-        "3#                  #",
-        "4#                  #",
-        "5#                  #",
-        "6#                  #",
-        "7####################"
-    };
-    @Test
-    public void testScenariosProduceShortestPathsMap5() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map5, new Position(9, 16));
-        PathFinder astar = new AStar();
-        List<Position> path = astar.find(new Position(2, 2), h);
-        assertNotNull(path);
-        assertEquals(15, path.size());
     }
 }

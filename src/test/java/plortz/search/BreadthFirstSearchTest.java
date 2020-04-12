@@ -29,81 +29,17 @@ import static org.junit.Assert.*;
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class BreadthFirstSearchTest {
-    
-    public BreadthFirstSearchTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
+public class BreadthFirstSearchTest extends AStarTest {
     
     @Before
     public void setUp() {
+        super.setUp();
+        this.path_finder = new BreadthFirstSearch();
     }
     
-    @After
-    public void tearDown() {
-    }
-
-    private String[] map1 = {
-        " 12345678901234567890",
-        "1####################",
-        "2#  ###      ##     #",
-        "3##   # #### #  ### #",
-        "4#### # #      ## # #",
-        "5###  # # #### ## # #",
-        "6### ## # ####    # #",
-        "7### #  #      ## # #",
-        "8### ############## #",
-        "9###                #",
-        "0####################"
-    };
     @Test
-    public void testScenariosProduceShortestPathsMap1() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map1, new Position(6, 7));
-        PathFinder search = new BreadthFirstSearch();
-        List<Position> path = search.find(new Position(2, 2), h);
-        assertNotNull(path);
-        assertEquals(44, path.size());
-    }
-    
-    private String[] map2 = {
-        " 1234",
-        "1####",
-        "2#  #",
-        "3####"
-    };
-    @Test
-    public void testScenariosProduceShortestPathsMap2() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map2, new Position(3, 2));
-        PathFinder search = new BreadthFirstSearch();
-        List<Position> path = search.find(new Position(2, 2), h);
-        assertNotNull(path);
-        assertEquals(2, path.size());
-    }
-
-    private String[] map3 = {
-        " 123456",
-        "1######",
-        "2#    #",
-        "3#    #",
-        "4#    #",
-        "5######"
-    };
-    @Test
-    public void testScenariosProduceShortestPathsMap3() {
-        PathFinderTestHeuristic h = new PathFinderTestHeuristic(map3, new Position(5, 3));
-        PathFinder search = new BreadthFirstSearch();
-        List<Position> path = search.find(new Position(2, 3), h);
-        assertNotNull(path);
-        assertEquals(4, path.size());
-        assertEquals(new Position(2, 3), path.get(0));
-        assertEquals(new Position(5, 3), path.get(3));
-    }
-    
+    @Override
+    public void map3PathIsStraightLine() {
+        // This test does not apply to BFS.
+    }    
 }
