@@ -61,6 +61,9 @@ Commands are read from the graphical console or stdin and produce no output on s
 * Scale all the heights: ```scale```
 * Add water (rivers and lakes): ```water```
 * Execute a script from file: ```run```
+* Comment (mainly for script files): ```#```
+* Show information about the terrain: ```info```
+* Remove water: ```remove_water```
 
 Example terrain generation:
 ```
