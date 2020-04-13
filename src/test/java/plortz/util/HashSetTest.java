@@ -30,7 +30,8 @@ import static org.junit.Assert.*;
  */
 public class HashSetTest {
 
-    private Set<Integer> intlist;
+    protected Set<Integer> intlist;
+    protected Set<String>  stringlist;
     
     public HashSetTest() {
     }
@@ -46,6 +47,7 @@ public class HashSetTest {
     @Before
     public void setUp() {
         intlist = new HashSet<>();
+        stringlist = new HashSet<>();
     }
     
     @After
@@ -178,9 +180,8 @@ public class HashSetTest {
     
     @Test
     public void addingToStringSetWorks() {
-        Set<String> sset = new HashSet<>();
-        sset.add("eka");
-        sset.add("toka");
-        sset.add("kolkko");
+        stringlist.add("eka");
+        stringlist.add("toka");
+        stringlist.add("kolkko");
     }
 }
