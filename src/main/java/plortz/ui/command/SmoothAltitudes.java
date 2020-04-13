@@ -20,6 +20,7 @@ import java.util.List;
 import plortz.util.ArrayList;
 import plortz.tool.Tool;
 import plortz.tool.filters.AverageSmoothingFilter;
+import plortz.tool.filters.EdgeDetectingSmoothingFilter;
 import plortz.tool.filters.MedianSmoothingFilter;
 import plortz.tool.filters.Filter;
 import plortz.ui.UserInterface;
@@ -54,6 +55,8 @@ public class SmoothAltitudes extends Command {
                 filter = new MedianSmoothingFilter(window_size);
             } else if (this.args.get(1).equals("average")) {
                 filter = new AverageSmoothingFilter(window_size);
+            } else if (this.args.get(1).equals("edgy")) {
+                filter = new EdgeDetectingSmoothingFilter(window_size);
             } else {
                 ui.showMessage("Unknown filter type: " + this.args.get(1));
                 return;
@@ -72,7 +75,7 @@ public class SmoothAltitudes extends Command {
     public List<String> getUsage() {
         List<String> rv = new ArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " [filter window_size] ");
-        rv.add("Where [filter] is one of: median, average");
+        rv.add("Where [filter] is one of: median, average, edgy");
         rv.add("And [window_size] is an uneven integer number, minimum 3.");
         rv.add("Defaults: filter=median, window_size=3");
         return rv;

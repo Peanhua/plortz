@@ -25,11 +25,9 @@ import plortz.terrain.Tile;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AverageSmoothingFilter extends Filter {
-    private final double[] window;
 
     public AverageSmoothingFilter(int window_size) {
         super(window_size);
-        this.window = new double[window_size * window_size];
     }
 
     @Override

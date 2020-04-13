@@ -27,6 +27,7 @@ import plortz.terrain.Terrain;
  */
 public abstract class Filter {
     protected final int half_window_size;
+    private boolean     prefilter;
 
     /**
      * The size of the window to operate on, must be a non-even number.
@@ -37,7 +38,46 @@ public abstract class Filter {
             throw new IllegalArgumentException();
         }
         this.half_window_size = window_size / 2;
+        this.prefilter        = false;
+    }
+    
+    /**
+     * Enable/disable prefiltering process.
+     * @param enabled True to enable prefiltering process.
+     */
+    protected final void setPrefiltering(boolean enabled) {
+        this.prefilter = enabled;
+    }
+    
+    /**
+     * Return whether the pre-filtering is enabled or not.
+     * 
+     * @return True if the pre-filtering is enabled.
+     */
+    public boolean isPrefiltering() {
+        return this.prefilter;
+    }
+    
+    /**
+     * Perform the pre-filtering operation.
+     * <p>
+     * Pre-filtering is performed before the actual filtering,
+     * no changes to the terrain are made in pre-filtering process.
+     * 
+     * @param terrain The terrain.
+     * @param x       The x-coordinate of the current position.
+     * @param y       The y-coordinate of the current position.
+     */
+    public void preFilter(Terrain terrain, int x, int y) {
     }
 
+    /**
+     * Perform the filtering operation.
+     * 
+     * @param terrain The terrain.
+     * @param x       The x-coordinate of the current position.
+     * @param y       The y-coordinate of the current position.
+     * @return        The new altitude value.
+     */
     public abstract double filter(Terrain terrain, int x, int y);
 }
