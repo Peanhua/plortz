@@ -16,6 +16,7 @@
  */
 package plortz.tool.filters;
 
+import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -26,6 +27,7 @@ import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.tool.TestTile;
+import plortz.util.MersenneTwister;
 
 /**
  *
@@ -33,9 +35,10 @@ import plortz.tool.TestTile;
  */
 public class AverageSmoothingFilterTest {
     
-    private double  testdelta;
-    private Terrain terrain;
-    private Filter  filter;
+    private   double  testdelta;
+    private   Terrain terrain;
+    private   Terrain rough_terrain;
+    protected Filter  filter;
     
     public AverageSmoothingFilterTest() {
     }
@@ -64,6 +67,14 @@ public class AverageSmoothingFilterTest {
                 terrain.setTile(new Position(x, y), new TestTile(terrain.getTile(x, y)));
             }
         }
+        rough_terrain = new Terrain(100, 100, SoilLayer.Type.SAND);
+        Random r = new MersenneTwister(0);
+        for (int y = 0; y < rough_terrain.getLength(); y++) {
+            for (int x = 0; x < rough_terrain.getWidth(); x++) {
+                rough_terrain.setTile(new Position(x, y), new TestTile(rough_terrain.getTile(x, y)));
+                rough_terrain.getTile(x, y).adjustTopSoilAmount(r.nextDouble() * 10.0);
+            }
+        }
     }
     
     @After
@@ -72,6 +83,13 @@ public class AverageSmoothingFilterTest {
 
     @Test
     public void differentValueIsReturned() {
+        if (filter.isPrefiltering()) {
+            for (int y = 0; y < terrain.getLength(); y++) {
+                for (int x = 0; x < terrain.getWidth(); x++) {
+                    filter.preFilter(terrain, x, y);
+                }
+            }
+        }
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 double original = terrain.getTile(x, y).getAltitude(false);
@@ -79,6 +97,29 @@ public class AverageSmoothingFilterTest {
                 assertNotEquals(original, result, testdelta);
             }
         }
+    }
+    
+    @Test
+    public void differentValuesForRoughTerrain() {
+        int diffcount = 0;
+        if (filter.isPrefiltering()) {
+            for (int y = 0; y < rough_terrain.getLength(); y++) {
+                for (int x = 0; x < rough_terrain.getWidth(); x++) {
+                    filter.preFilter(rough_terrain, x, y);
+                }
+            }
+        }
+        for (int y = 0; y < rough_terrain.getLength(); y++) {
+            for (int x = 0; x < rough_terrain.getWidth(); x++) {
+                double original = rough_terrain.getTile(x, y).getAltitude(false);
+                double result = filter.filter(rough_terrain, x, y);
+                if (Math.abs(original - result) > testdelta) {
+                    diffcount++;
+                }
+            }
+        }
+        // At least 50% must come out different.
+        assertTrue(diffcount > rough_terrain.getWidth() * rough_terrain.getLength() / 2);
     }
     
     private double calcSum() {
@@ -93,8 +134,19 @@ public class AverageSmoothingFilterTest {
     
     @Test
     public void tilesAreNotAdjusted() {
+        if (filter.isPrefiltering()) {
+            for (int y = 0; y < terrain.getLength(); y++) {
+                for (int x = 0; x < terrain.getWidth(); x++) {
+                    filter.preFilter(terrain, x, y);
+                }
+            }
+        }
         double original = calcSum();
-        filter.filter(terrain, 10, 10);
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                filter.filter(terrain, x, y);
+            }
+        }
         double afterfilter = calcSum();
         assertEquals(original, afterfilter, testdelta);
     }

@@ -17,24 +17,17 @@
 package plortz.tool.filters;
 
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class MedianSmoothingFilterTest extends AverageSmoothingFilterTest {
+public class EdgeDetectingSmoothingFilterTest extends AverageSmoothingFilterTest {
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
-        filter = new MedianSmoothingFilter(3);
-    }
-
-    @Override
-    @Test
-    public void differentValueIsReturned() {
-        // N/A
+        filter = new EdgeDetectingSmoothingFilter(3);
     }
 }
