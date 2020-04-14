@@ -24,12 +24,25 @@ import javafx.scene.Node;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public abstract class Widget {
+    private Node root;
+    
+    public Widget() {
+        this.root = null;
+    }
+    
+    public final Node getRootNode() {
+        if (this.root == null) {
+            this.root = this.createUserInterface();
+        }
+        return this.root;
+    }
+    
     /**
      * Create the user interface nodes to represent this widget.
      * 
      * @return A node containing all the nodes of this widget
      */
-    public abstract Node createUserInterface();
+    protected abstract Node createUserInterface();
     
     /**
      * Refresh any dynamic content of this widget.

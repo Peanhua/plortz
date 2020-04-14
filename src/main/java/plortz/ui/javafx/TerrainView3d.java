@@ -19,18 +19,16 @@ package plortz.ui.javafx;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
@@ -48,11 +46,12 @@ public class TerrainView3d extends TerrainView {
     private int           terrain_mesh_width;
     private int           terrain_mesh_length;
     private WritableImage terrain_mesh_texture;
-    
-    private final Vector  mouse_oldpos;
-    private final Rotate  rotate_x;
-    private final Rotate  rotate_y;
-    private double        mouse_rotate_speed;
+    // Camera controls:
+    private boolean         camera_controls;
+    private final Vector    mouse_oldpos;
+    private double          mouse_rotate_speed;
+    private double          camera_movement_speed;
+    private ControlledPerspectiveCamera camera;
     
     public TerrainView3d(UserInterface ui) {
         super(ui);
@@ -61,14 +60,14 @@ public class TerrainView3d extends TerrainView {
         this.terrain_mesh_width   = 0;
         this.terrain_mesh_length  = 0;
         this.terrain_mesh_texture = null;
+        this.camera_controls      = false;
         this.mouse_oldpos         = new Vector(0, 0);
-        this.rotate_x             = new Rotate(-30, Rotate.X_AXIS);
-        this.rotate_y             = new Rotate(0, Rotate.Y_AXIS);
         this.mouse_rotate_speed   = 0.2;
+        this.camera_movement_speed = 10.0;
     }
     
     @Override
-    public Node createUserInterface() {
+    protected Node createUserInterface() {
         super.createUserInterface();
         
         this.terrain_mesh = new MeshView();
@@ -84,10 +83,11 @@ public class TerrainView3d extends TerrainView {
         this.terrain_mesh.setMaterial(m);
         //light.getScope().add(this.terrain_mesh);
         
-        PerspectiveCamera camera = new PerspectiveCamera(true);
+        camera = new ControlledPerspectiveCamera();
+        camera.setPosition(new Vector(0, -20, -100));
+        // camera.rotateVertically(-30);
         camera.setFarClip(500);
-        camera.getTransforms().addAll(this.rotate_x, this.rotate_y, new Translate(0, -20, -100));
-
+        
         Group root3D = new Group(camera, box, this.terrain_mesh);
         scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.DISABLED);
         scene3d.setFill(Color.BLACK);
@@ -96,13 +96,17 @@ public class TerrainView3d extends TerrainView {
         this.container.setCenter(scene3d);
 
         scene3d.setOnMousePressed((e) -> {
+            this.camera_controls = true;
             this.mouse_oldpos.setX(e.getSceneX());
             this.mouse_oldpos.setY(e.getSceneY());
         });
+        scene3d.setOnMouseReleased((e) -> {
+            this.camera_controls = false;
+        });
         scene3d.setOnMouseDragged((e) -> {
             Vector mouse_pos = new Vector(e.getSceneX(), e.getSceneY());
-            rotate_x.setAngle(rotate_x.getAngle() - this.mouse_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
-            rotate_y.setAngle(rotate_y.getAngle() + this.mouse_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
+           // camera.rotateVertically(-this.mouse_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
+            camera.rotateHorizontally(this.mouse_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
             this.mouse_oldpos.set(mouse_pos);
         });
         return this.container;
@@ -135,6 +139,11 @@ public class TerrainView3d extends TerrainView {
         } else {
             this.updateMesh(terrain);
         }
+
+        Vector pos = camera.getPosition();
+        Vector minmax = this.user_interface.getTerrain().getAltitudeRange();
+        pos.setY(-(minmax.getY() + 1.0));
+        camera.setPosition(pos);
     }
     
     
@@ -209,5 +218,33 @@ public class TerrainView3d extends TerrainView {
             }
         }
         return image;
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+        if (!this.camera_controls) {
+            return;
+        }
+        switch (event.getCode()) {
+            case W:
+                this.camera.moveForward(this.camera_movement_speed);
+                break;
+            case A:
+                this.camera.moveRight(-this.camera_movement_speed);
+                break;
+            case S:
+                this.camera.moveForward(-this.camera_movement_speed);
+                break;
+            case D:
+                this.camera.moveRight(this.camera_movement_speed);
+                break;
+        }
+    }
+
+    @Override
+    public void onKeyReleased(KeyEvent event) {
+        if (!this.camera_controls) {
+            return;
+        }
     }
 }

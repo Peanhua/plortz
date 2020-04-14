@@ -45,7 +45,7 @@ public class TerrainView2d extends TerrainView {
     }
     
     @Override
-    public Node createUserInterface() {
+    protected Node createUserInterface() {
         this.canvas           = null;
         this.graphics_context = null;
         return super.createUserInterface();

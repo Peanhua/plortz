@@ -41,13 +41,14 @@ public class Console extends Widget {
     VBox                         console_messages;
 
     public Console(UserInterface user_interface) {
+        super();
         this.user_interface  = user_interface;
         this.command_factory = CommandFactory.getInstance();
         this.user_interface.listenOnMessage(() -> this.onMessage());
     }
     
     @Override
-    public Node createUserInterface() {
+    protected Node createUserInterface() {
         Pane pane = new VBox();
         
         ScrollPane console_message_pane = new ScrollPane();

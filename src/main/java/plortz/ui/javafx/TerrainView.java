@@ -17,6 +17,7 @@
 package plortz.ui.javafx;
 
 import javafx.scene.Node;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
@@ -61,6 +62,7 @@ public abstract class TerrainView extends Widget {
      * @param ui The user interface this terrain view is part of.
      */
     public TerrainView(UserInterface ui) {
+        super();
         this.user_interface   = ui;
         this.container        = null;
         this.width            = 0;
@@ -75,7 +77,7 @@ public abstract class TerrainView extends Widget {
     }
 
     @Override
-    public Node createUserInterface() {
+    protected Node createUserInterface() {
         this.container = new BorderPane();
         this.container.setMinWidth(0);
         this.container.setMinHeight(0);
@@ -133,5 +135,11 @@ public abstract class TerrainView extends Widget {
         if (!previously && active) {
             this.refresh();
         }
+    }
+    
+    public void onKeyPressed(KeyEvent event) {
+    }
+
+    public void onKeyReleased(KeyEvent event) {
     }
 }
