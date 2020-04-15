@@ -183,4 +183,16 @@ public class Static2dArray<E> implements Iterable<E> {
     public void set(int index, E value) {
         this.array[index] = value;
     }
+    
+    @Override
+    public String toString() {
+        String rv = "";
+        for (int y = 0; y < this.length; y++) {
+            for (int x = 0; x < this.width; x++) {
+                rv += this.array[x + y * this.width] + ", ";
+            }
+            rv += "\n";
+        }
+        return rv;
+    }
 }

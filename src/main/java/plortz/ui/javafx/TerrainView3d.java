@@ -17,6 +17,7 @@
 package plortz.ui.javafx;
 
 import javafx.scene.AmbientLight;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SceneAntialiasing;
@@ -49,8 +50,8 @@ public class TerrainView3d extends TerrainView {
     // Camera controls:
     private boolean         camera_controls;
     private final Vector    mouse_oldpos;
-    private double          mouse_rotate_speed;
-    private double          camera_movement_speed;
+    private double          camera_rotate_speed;
+    private int             camera_movement_speed;
     private ControlledPerspectiveCamera camera;
     
     public TerrainView3d(UserInterface ui) {
@@ -62,8 +63,8 @@ public class TerrainView3d extends TerrainView {
         this.terrain_mesh_texture = null;
         this.camera_controls      = false;
         this.mouse_oldpos         = new Vector(0, 0);
-        this.mouse_rotate_speed   = 0.2;
-        this.camera_movement_speed = 10.0;
+        this.camera_rotate_speed   = 0.15;
+        this.camera_movement_speed = 3;
     }
     
     @Override
@@ -83,15 +84,15 @@ public class TerrainView3d extends TerrainView {
         this.terrain_mesh.setMaterial(m);
         //light.getScope().add(this.terrain_mesh);
         
-        camera = new ControlledPerspectiveCamera();
-        camera.setPosition(new Vector(0, -20, -100));
-        // camera.rotateVertically(-30);
-        camera.setFarClip(500);
+        this.camera = new ControlledPerspectiveCamera();
+        this.camera.setPosition(new Vector(0, -20, -100));
+        this.camera.rotatePitch(-30);
+        this.camera.setFarClip(500);
         
-        Group root3D = new Group(camera, box, this.terrain_mesh);
+        Group root3D = new Group(this.camera, box, this.terrain_mesh);
         scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.DISABLED);
         scene3d.setFill(Color.BLACK);
-        scene3d.setCamera(camera);
+        scene3d.setCamera(this.camera);
         
         this.container.setCenter(scene3d);
 
@@ -99,15 +100,38 @@ public class TerrainView3d extends TerrainView {
             this.camera_controls = true;
             this.mouse_oldpos.setX(e.getSceneX());
             this.mouse_oldpos.setY(e.getSceneY());
+            scene3d.setCursor(Cursor.NONE);
         });
         scene3d.setOnMouseReleased((e) -> {
             this.camera_controls = false;
+            scene3d.setCursor(Cursor.DEFAULT);
         });
         scene3d.setOnMouseDragged((e) -> {
             Vector mouse_pos = new Vector(e.getSceneX(), e.getSceneY());
-           // camera.rotateVertically(-this.mouse_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
-            camera.rotateHorizontally(this.mouse_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
+            this.camera.rotatePitch(-this.camera_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
+            this.camera.rotateYaw(this.camera_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
             this.mouse_oldpos.set(mouse_pos);
+        });
+        scene3d.setOnScroll((e) -> {
+            boolean changed = false;
+            if (e.getDeltaY() < 0.0) {
+                this.camera_movement_speed--;
+                if (this.camera_movement_speed < 1) {
+                    this.camera_movement_speed = 1;
+                } else {
+                    changed = true;
+                }
+            } else if (e.getDeltaY() > 0.0) {
+                this.camera_movement_speed++;
+                if (this.camera_movement_speed > 10) {
+                    this.camera_movement_speed = 10;
+                } else {
+                    changed = true;
+                }
+            }
+            if (changed) {
+                this.user_interface.showMessage("Movement speed: " + this.camera_movement_speed);
+            }
         });
         return this.container;
     }
@@ -140,10 +164,10 @@ public class TerrainView3d extends TerrainView {
             this.updateMesh(terrain);
         }
 
-        Vector pos = camera.getPosition();
+        Vector pos = this.camera.getPosition();
         Vector minmax = this.user_interface.getTerrain().getAltitudeRange();
         pos.setY(-(minmax.getY() + 1.0));
-        camera.setPosition(pos);
+        this.camera.setPosition(pos);
     }
     
     
@@ -225,26 +249,20 @@ public class TerrainView3d extends TerrainView {
         if (!this.camera_controls) {
             return;
         }
+        double factor = (double) this.camera_movement_speed / 5.0;
         switch (event.getCode()) {
             case W:
-                this.camera.moveForward(this.camera_movement_speed);
+                this.camera.moveForward(3.0 * factor);
                 break;
             case A:
-                this.camera.moveRight(-this.camera_movement_speed);
+                this.camera.moveRight(-1.0 * factor);
                 break;
             case S:
-                this.camera.moveForward(-this.camera_movement_speed);
+                this.camera.moveForward(-3.0 * factor);
                 break;
             case D:
-                this.camera.moveRight(this.camera_movement_speed);
+                this.camera.moveRight(1.0 * factor);
                 break;
-        }
-    }
-
-    @Override
-    public void onKeyReleased(KeyEvent event) {
-        if (!this.camera_controls) {
-            return;
         }
     }
 }
