@@ -68,4 +68,8 @@ The most important bit is the first line ```PULSE: 1 [0ms:276ms]```, it means th
 ## Algorithm complexities
 
 ### Smoothing filters
-There are three different smoothing filters: average, median, and edge preserving. Average and median filters time complexity is ```O(nk^2)``` where ```n``` is the size of the terrain and ```k``` is the window size. The edge preserving filter has two passes, where the first pass uses a static window size of 3, and the second pass is average filter, thus the time complexity is ```O(9n+nk^2)```.
+There are three different smoothing filters: average, median, and edge preserving. Average and median filters time complexity is ```O(nk^2)``` where ```n``` is the size of the terrain and ```k``` is the window size. The edge preserving filter has two passes, where the first pass uses a static window size of 3, and the second pass is the average filter, time complexity for the first pass is ```O(n)```.
+
+### Other algorithms
+MersenneTwister is ```O(n)``` where ```n``` is the degree of recurrence, with the chosen MT19937 parameters ```n=624```, while the amortized time is O(1).
+
