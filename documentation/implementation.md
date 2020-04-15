@@ -66,9 +66,23 @@ The most important bit is the first line ```PULSE: 1 [0ms:276ms]```, it means th
 
 
 ## Algorithm complexities
+Below are some of the time and space complexities of the used algorithms.
 
 ### Smoothing filters
 There are three different smoothing filters: average, median, and edge preserving. Average and median filters time complexity is ```O(nk^2)``` where ```n``` is the size of the terrain and ```k``` is the window size. The edge preserving filter has two passes, where the first pass uses a static window size of 3, and the second pass is the average filter, time complexity for the first pass is ```O(n)```.
+
+### Containers
+PriorityQueue operations ```size()```, ```clear()```, and ```peek()``` are ```O(1)```, operations ```offer()``` and ```poll()``` are ```O(log n)```.
+
+Merge sort time complexity is ```O(n log n)```, but it has a space complexity of ```O(n)```.
+
+ListSet operations ```size()```, and ```clear()``` are ```O(1)```, operations ```add()```, ```remove()```, and ```contains()``` are ```O(n)```.
+
+HashSet operations ```size()``` and ```isEmpty()``` are ```O(1)```, operations ```add()```, ```remove()```, and ```contains()``` are ```O(n)```.
+
+HashMap operations ```size()``` and ```isEmpty()``` are ```O(1)```, operations ```put()```, ```get()```, ```remove()```, ```containsKey()```, and ```containsValue()``` are ```O(n)```.
+
+ArrayList operations ```size()```, ```add(e)```, ```clear()```, ```get()```, and ```set()``` are ```O(1)```, operations ```add(i, e)```, ```remove()```, and ```indexOf()``` are ```O(n)```.
 
 ### Other algorithms
 MersenneTwister is ```O(n)``` where ```n``` is the degree of recurrence, with the chosen MT19937 parameters ```n=624```, while the amortized time is O(1).
