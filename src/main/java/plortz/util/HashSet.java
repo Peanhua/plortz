@@ -161,7 +161,7 @@ public class HashSet<E> implements Set<E> {
     }
     
     private Bucket<E> getBucket(E e) {
-        int hashcode = Math.abs(e.hashCode());
+        int hashcode = Meth.abs(e.hashCode());
         return this.buckets.get(hashcode % this.buckets.size());
     }
 

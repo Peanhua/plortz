@@ -18,6 +18,7 @@ package plortz.tool;
 
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
+import plortz.util.Meth;
 
 /**
  * Elevates terrain to create a mountain/hill.
@@ -84,7 +85,7 @@ public class GaussianDistribution extends Tool {
     }
     
     private double getAltitudeChangeForDistance(double distance) {
-        return this.gauss_factor * Math.exp((-0.5) * Math.pow(distance / this.variance, 2.0));
+        return this.gauss_factor * Math.exp((-0.5) * Meth.pow(distance / this.variance, 2));
     }
 
 
