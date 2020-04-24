@@ -17,7 +17,7 @@
 package plortz.search;
 
 import java.util.List;
-import plortz.util.ArrayList;
+import plortz.util.FastInsertAppendList;
 import plortz.util.HashMap;
 import plortz.util.Position;
 import plortz.util.PriorityQueue;
@@ -103,12 +103,11 @@ public class AStar extends PathFinder {
         }
         
         // Return list of positions from start to end:
-        List<Position> path = new ArrayList<>();
+        List<Position> path = new FastInsertAppendList<>();
         while (last != null) {
             path.add(0, last.position);
             last = last.source;
         }
-        // todo: reverse the path smarter or create a variation of ArrayList where inserting at the beginning is fast
         return path;
     }
 }

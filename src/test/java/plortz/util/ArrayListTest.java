@@ -16,6 +16,7 @@
  */
 package plortz.util;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,8 +30,8 @@ import static org.junit.Assert.*;
  */
 public class ArrayListTest {
     
-    private ArrayList<String>  string_list;
-    private ArrayList<Integer> int_list;
+    protected List<String>  string_list;
+    protected List<Integer> int_list;
     
     public ArrayListTest() {
     }
@@ -365,5 +366,46 @@ public class ArrayListTest {
         string_list.add(c);
         assertTrue(string_list.indexOf("nelkku") < 0);
     }
-        
+
+    @Test
+    public void removingFirstElementWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        string_list.remove(0);
+        assertEquals(b, string_list.get(0));
+        string_list.remove(0);
+        assertEquals(c, string_list.get(0));
+        string_list.remove(0);
+        assertTrue(string_list.isEmpty());
+    }
+
+    @Test
+    public void removingLastElementWorks() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(c);
+        string_list.remove(2);
+        string_list.remove(1);
+        string_list.remove(0);
+        assertTrue(string_list.isEmpty());
+    }
+    
+    @Test
+    public void indexOfNullFindsNullElement() {
+        String a = "eka";
+        String b = "toka";
+        String c = "kolkko";
+        string_list.add(a);
+        string_list.add(b);
+        string_list.add(null);
+        string_list.add(c);
+        assertEquals(2, string_list.indexOf(null));
+    }
 }
