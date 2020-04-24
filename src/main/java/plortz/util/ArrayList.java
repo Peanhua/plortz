@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Resizable-array implementation of the List interface. 
+ * Re-sizable array implementation of the List interface. 
  * <p>
  * Used in place of standard ArrayList.
  * Implements only the methods required by this application.
@@ -33,7 +33,7 @@ public class ArrayList<E> implements List<E> {
     
     public class Iterator<E> implements java.util.Iterator<E> {
         private final ArrayList<E> list;
-        private int                  pos;
+        private int                pos;
         
         public Iterator(ArrayList<E> list) {
             this.list = list;
@@ -60,11 +60,9 @@ public class ArrayList<E> implements List<E> {
     
 
     private Object[] array;
-    private int      allocated_size;
     private int      used_size;
     
     public ArrayList() {
-        this.allocated_size = 0;
         this.used_size      = 0;
         this.allocate(16);
     }
@@ -72,7 +70,6 @@ public class ArrayList<E> implements List<E> {
     private void allocate(int amount) {
         Object[] old = this.array;
         this.array = new Object[amount];
-        this.allocated_size = amount;
         for (int i = 0; i < this.used_size; i++) {
             this.array[i] = old[i];
         }
@@ -85,9 +82,9 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E e) {
-        if (this.used_size >= this.allocated_size) {
-            this.allocate(this.allocated_size * 2);
-            if (this.used_size >= this.allocated_size) {
+        if (this.used_size >= this.array.length) {
+            this.allocate(this.array.length * 2);
+            if (this.used_size >= this.array.length) {
                 throw new OutOfMemoryError();
             }
         }
@@ -163,9 +160,9 @@ public class ArrayList<E> implements List<E> {
         if (i < 0 || i > this.used_size) {
             throw new IndexOutOfBoundsException();
         }
-        if (this.used_size >= this.allocated_size) {
-            this.allocate(this.allocated_size * 2);
-            if (this.used_size >= this.allocated_size) {
+        if (this.used_size >= this.array.length) {
+            this.allocate(this.array.length * 2);
+            if (this.used_size >= this.array.length) {
                 throw new OutOfMemoryError();
             }
         }
