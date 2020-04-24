@@ -29,9 +29,25 @@ public class SoilLayer {
      * Enum listing all the possible soil types.
      */
     public enum Type {
-        DIRT,
-        SAND,
-        CLIFF;
+        DIRT( 40, new Vector(0.495, 0.325, 0.080)),
+        SAND( 34, new Vector(1.000, 0.795, 0.291)),
+        CLIFF(91, new Vector(0.600, 0.600, 0.600));
+        
+        private final double angle_of_repose;
+        private final Vector color;
+        
+        Type(double angle_of_repose, Vector color) {
+            this.angle_of_repose = angle_of_repose;
+            this.color           = color;
+        }
+        
+        public double getAngleOfRepose() {
+            return this.angle_of_repose;
+        }
+        
+        public Vector getRGB() {
+            return this.color;
+        }
     };
     
     private final Type type;
@@ -77,18 +93,7 @@ public class SoilLayer {
      * @return        The angle of repose, in degrees.
      */
     public double getAngleOfRepose(boolean kinetic) {
-        double aor = 0.0;
-        switch (this.type) {
-            case DIRT:
-                aor = 40;
-                break;
-            case SAND:
-                aor = 34;
-                break;
-            case CLIFF:
-                aor = 91;
-                break;
-        }
+        double aor = this.type.getAngleOfRepose();
         if (kinetic && this.type != Type.CLIFF) {
             aor *= 0.75;
         }
@@ -101,11 +106,6 @@ public class SoilLayer {
      * @return A vector containing the red, green, and blue values in [0, 1].
      */
     public Vector getRGB() {
-        switch (this.type) {
-            case DIRT:  return new Vector(0.495, 0.325, 0.080);
-            case SAND:  return new Vector(1.000, 0.795, 0.291);
-            case CLIFF: return new Vector(0.600, 0.600, 0.600);
-            default:    return new Vector(1.000, 1.000, 1.000);
-        }
+        return this.type.getRGB();
     }
 }

@@ -85,4 +85,11 @@ public class SoilLayerTest {
             }
         }
     }
+    
+    @Test
+    public void allTypesHaveValidAngleOfReposes() {
+        for (var type : SoilLayer.Type.values()) {
+            assertTrue(type.getAngleOfRepose() >= 0.0);
+        }
+    }
 }
