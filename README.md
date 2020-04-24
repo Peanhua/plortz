@@ -14,6 +14,7 @@ This project is made for a course named "tiralabra", one of the requirements in 
   * [Week 3](weekly_reports/week3.md)
   * [Week 4](weekly_reports/week4.md)
   * [Week 5](weekly_reports/week5.md)
+  * [Week 6](weekly_reports/week6.md)
 
 
 ## Maven goals:
