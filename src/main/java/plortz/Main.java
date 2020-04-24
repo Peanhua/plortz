@@ -16,6 +16,7 @@
  */
 package plortz;
 
+import plortz.benchmark.Benchmark;
 import plortz.ui.ConsoleUI;
 import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
@@ -35,6 +36,9 @@ public class Main {
                 use_gui = false;
             } else if (arg.equals("--timing")) {
                 output_timing = true;
+            } else if (arg.equals("--benchmark")) {
+                runBenchmarks();
+                return;
             } else {
                 System.out.println("Unknown argument '" + arg + "'");
                 return;
@@ -49,5 +53,15 @@ public class Main {
         }
         ui.setOutputTiming(output_timing);
         ui.run();
+    }
+    
+    public static void runBenchmarks() {
+        var tests = Benchmark.getAllTests();
+        for (var test : tests) {
+            System.out.print(test.getName() + ": ");
+            System.out.flush();
+            var t = test.run(20, 20);
+            System.out.println(t);
+        }
     }
 }

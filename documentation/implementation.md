@@ -85,5 +85,15 @@ HashMap operations ```size()``` and ```isEmpty()``` are ```O(1)```, operations `
 ArrayList operations ```size()```, ```add(e)```, ```clear()```, ```get()```, and ```set()``` are ```O(1)```, operations ```add(i, e)```, ```remove()```, and ```indexOf()``` are ```O(n)```.
 
 ### Other algorithms
-MersenneTwister is ```O(n)``` where ```n``` is the degree of recurrence, with the chosen MT19937 parameters ```n=624```, while the amortized time is O(1).
+MersenneTwister is ```O(n)``` where ```n``` is the degree of recurrence, with the chosen MT19937 parameters ```n=624```, while the amortized time is ```O(1)```.
 
+
+## Comparing the performance of similar classes
+This project has some classes that implement the same interface, and thus can be used interchangeably. Some of these classes are made with some specific use case(s) in mind in order to optimize the performance. Simple benchmarking system was added to the project and some of these classes are benchmarked using it. The table below lists the results:
+<table>
+  <tr><th>Interface</th><th>Test</th>           <th>Class</th>               <th>Time (ns)</th>  </tr>
+  <tr><td>List</td>     <td>Append at end</td>  <td>ArrayList</td>           <td>1137512</td>    </tr>
+  <tr><td></td>         <td></td>               <td>FastInsertAppendList</td><td>1637319</td>    </tr>
+  <tr><td></td>         <td>Insert at start</td><td>ArrayList</td>           <td>17463111181</td></tr>
+  <tr><td></td>         <td></td>               <td>FastInsertAppendList</td><td>1331947</td>    </tr>
+</table>
