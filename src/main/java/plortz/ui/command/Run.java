@@ -49,7 +49,9 @@ public class Run extends Command {
             String line = s.nextLine();
             commands.add(line);
         }
+        this.startApplyingTools();
         this.executeOtherCommands(ui, commands);
+        this.endApplyingTools(ui);
     }
     
 
