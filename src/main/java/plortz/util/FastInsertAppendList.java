@@ -61,6 +61,9 @@ public class FastInsertAppendList<E> implements List<E> {
      * @param target_size The new amount of space.
      */
     private void allocate(int target_size) {
+        if (target_size < 0) {
+            throw new OutOfMemoryError("current_size=" + this.data.length + ", target_size=" + target_size);
+        }
         Object[] old = this.data;
         this.data = new Object[target_size];
         final int new_first = target_size / 2 - this.size();
