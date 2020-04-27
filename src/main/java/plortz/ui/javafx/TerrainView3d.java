@@ -160,14 +160,13 @@ public class TerrainView3d extends TerrainView {
             this.terrain_mesh_texture = this.getImage(this.user_interface.getTerrain());
             m.setDiffuseMap(this.terrain_mesh_texture);
             this.terrain_mesh.setMaterial(m);
+            Vector pos = this.camera.getPosition();
+            Vector minmax = this.user_interface.getTerrain().getAltitudeRange();
+            pos.setY(-(minmax.getY() + 1.0));
+            this.camera.setPosition(pos);
         } else {
             this.updateMesh(terrain);
         }
-
-        Vector pos = this.camera.getPosition();
-        Vector minmax = this.user_interface.getTerrain().getAltitudeRange();
-        pos.setY(-(minmax.getY() + 1.0));
-        this.camera.setPosition(pos);
     }
     
     
