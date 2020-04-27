@@ -98,7 +98,7 @@ public class AddWater extends Tool {
         @Override
         public double estimateCost(Position previous, Position current) {
             // The lower the altitude, the better:
-            double cost = -this.terrain.getTile(current).getAltitude(true);
+            double cost = this.terrain.getTile(current).getAltitude(true);
             if (previous != null) {
                 // Also favor shorter distance:
                 int dx = previous.getX() - current.getX();
