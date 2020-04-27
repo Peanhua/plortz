@@ -60,6 +60,8 @@ The used scriptfile can be found from [scripts/perf-large.txt](../scripts/perf-l
 echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
 ```
 <table>
+<tr>
+<td><table>
   <tr><th>Operation</th>                        <th>Time</th></tr>
   <tr><td>add random soil</td>                  <td>0.070387s</td></tr>
   <tr><td>add soil - circle</td>                <td>0.023363s</td></tr>
@@ -77,8 +79,10 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>smooth - average</td>                 <td>0.123293s</td></tr>
   <tr><td>smooth - edgy</td>                    <td>0.363429s</td></tr>
   <tr><td>smooth - median</td>                  <td>0.712419s</td></tr>
+</table></td>
+<td>![Time taken by operations, logarithmic scale](perf-large.png)</td>
+</tr>
 </table>
-
 
 ### Secondary goal: real-time terrain generation in games
 
