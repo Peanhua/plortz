@@ -82,11 +82,6 @@ public class AStar extends PathFinder {
                         // This current new path is faster, so use it instead:
                         existing.source = current;
                         existing.cost   = neighbor_cost;
-                        if (!existing.open) {
-                            // When dealing with non-consistent heuristic, the node needs to be re-added to the open list:
-                            existing.open = true;
-                            this.open.add(existing);
-                        }
                     }
                 } else {
                     // No path exists to the neighbor, add it:
@@ -104,7 +99,7 @@ public class AStar extends PathFinder {
         
         // Return list of positions from start to end:
         List<Position> path = new FastInsertAppendList<>();
-        while (last != null) {
+            while (last != null) {
             path.add(0, last.position);
             last = last.source;
         }
