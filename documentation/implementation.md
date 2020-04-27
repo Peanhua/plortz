@@ -19,7 +19,7 @@ The main goal of the project is to be able to pre-generate terrains to be used i
 
 
 ### The main goal: produce terrains
-The terrains can be generated via scripting, but to script, one has to know good parameters and tool combinations to use. Thus the users are going to use the interactive user interface and its operating speed is important, user should not need to wait for minutes or hours for an operation to complete. Instead the operations should be near real-time. According to Nielsen, the operations should take less than 1 second, but a maximum of 10 seconds is tolerable: [Response Times: The 3 Important Limits by Jakob Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/).
+The terrains can be generated via scripting, but to script, one has to know good parameters and tool combinations to use. Thus the users are going to use the graphical interactive user interface and its operating speed is important, user should not need to wait for minutes or hours for an operation to complete. Instead the operations should be near real-time. According to Nielsen, the operations should take less than 1 second, but a maximum of 10 seconds is tolerable: [Response Times: The 3 Important Limits by Jakob Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/).
 
 The size of the terrain has a large impact because most tools operate on the whole terrain. The game in question greatly affects how large terrain is required, affecting factors include what kind of world the game depicts, how the world is viewed, and what kind of rendering techniques are used. Some games might have one large terrain spanning several square kilometers, with lot's of detail. Some games might have streaming and/or level system so that the size of a single terrain remains small, tens of square meters. If the terrain is viewed from the ground level, more detail is required than when viewing from higher altitudes. Some kind of middle ground is taken here, reference terrain size shall be 1024x1024 tiles.
 
@@ -38,6 +38,51 @@ Usually in systems like this, the size of a single patch is considerably smaller
 The duration of executing the tools by commands are calculated using [java.time.Instant.now()](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Instant.html#now()), which uses system clock. System clock can go backwards and the resolution is not guaranteed, in practice the resolution on this computer and Java implementation is fine enough for the measuring purposes here. The possibility of clock going backwards is also ignored.
 
 JavaFX rendering runs in a separate thread and can not be directly counted for, special tactics are used to obtain the JavaFX rendering times, see [Measuring JavaFX rendering times](measuring_javafx.md) for more information.
+
+
+### Results
+
+Testing was performed on a desktop computer with i7-7700 CPU, 64GiB memory, and [GTX750ti](https://en.wikipedia.org/wiki/GeForce_700_series) GPU with 2 GiB memory.
+
+### The main goal: produce terrains
+Testing is done in two phases, first is measured the user interface, and then the operations.
+
+#### User interface
+Updating the 3d view for 1024x1024 terrain takes approximately 2 seconds.
+
+Rotating and moving in the 3d view is not smooth, and the size of the window affects it. Rotating and moving in the 3d view only updates the camera transformation. According to glxinfo the program uses approximately 200 MiB of GPU memory. Using one fourth size (512x512) the rotating and moving is still sluggish, and has noticeable hiccups. Going further down to 256x256 the rotating and moving is smooth.
+
+Because only portion of the available GPU memory is used, and there are noticeable hiccups, it seems that JavaFX is doing some additional work behind the scenes when updating the camera. Intuitively this is barely usable.
+
+#### Operations
+The used scriptfile can be found from [scripts/perf-large.txt](../scripts/perf-large.txt), it was executed using the following command:
+```
+echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
+```
+<table>
+  <tr><th>Operation</th>                        <th>Time</th></tr>
+  <tr><td>add random soil</td>                  <td>0.070387s</td></tr>
+  <tr><td>add soil - circle</td>                <td>0.023363s</td></tr>
+  <tr><td>add soil - rectangle</td>             <td>0.120971s</td></tr>
+  <tr><td>add water</td>                        <td>26.747692s</td></tr>
+  <tr><td>diamond-square</td>                   <td>0.126948s</td></tr>
+  <tr><td>gaussian hill</td>                    <td>0.064253s</td></tr>
+  <tr><td>insert soil at bottom - circle</td>   <td>0.025869s</td></tr>
+  <tr><td>insert soil at bottom - rectangle</td><td>0.122741s</td></tr>
+  <tr><td>new terrain</td>                      <td>0.040948s</td></tr>
+  <tr><td>random noise</td>                     <td>0.047644s</td></tr>
+  <tr><td>remove water</td>                     <td>0.0219s</td></tr>
+  <tr><td>scale heights</td>                    <td>0.187417s</td></tr>
+  <tr><td>sheet erosion</td>                    <td>0.686428s</td></tr>
+  <tr><td>smooth - average</td>                 <td>0.123293s</td></tr>
+  <tr><td>smooth - edgy</td>                    <td>0.363429s</td></tr>
+  <tr><td>smooth - median</td>                  <td>0.712419s</td></tr>
+</table>
+
+
+### Secondary goal: real-time terrain generation in games
+
+
 
 ## Algorithm complexities
 Below are some of the time and space complexities of some of the used algorithms.

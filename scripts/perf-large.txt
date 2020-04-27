@@ -1,0 +1,87 @@
+# Performance testing for large terrain.
+
+# add random soil
+random_seed 0
+new 1025 1025
+random_soil 100 30 1
+
+# add soil - circle
+random_seed 0
+new 1025 1025
+add_soil sand 1 circle 500 500 200
+
+# add soil - rectangle
+random_seed 0
+new 1025 1025
+add_soil sand 1 rect 300 300 700 700
+
+# add water
+random_seed 0
+new 1025 1025
+ds 13
+water 500 500 100
+
+# diamond-square
+random_seed 0
+new 1025 1025
+ds 13
+
+# gaussian hill
+random_seed 0
+new 1025 1025
+gauss 500 500 0.5 200 10
+
+# insert soil at bottom - circle
+random_seed 0
+new 1025 1025
+insert_soil sand 1 circle 500 500 200
+
+# insert soil at bottom - rectangle
+random_seed 0
+new 1025 1025
+insert_soil sand 1 rect 300 300 700 700
+
+# new terrain
+random_seed 0
+new 1025 1025
+
+# random noise
+random_seed 0
+new 1025 1025
+random 1
+
+# remove water
+random_seed 0
+new 1025 1025
+remove_water all
+
+# scale heights
+random_seed 0
+new 1025 1025
+scale 2
+
+# sheet erosion
+random_seed 0
+new 1025 1025
+add_soil cliff 10 circle 200 500 100
+add_soil sand 10 circle 400 500 100
+add_soil dirt 10 circle 600 500 100
+sheet_erosion
+
+# smooth - average
+random_seed 0
+new 1025 1025
+random 1
+smooth average 3
+
+# smooth - edgy
+random_seed 0
+new 1025 1025
+random 1
+smooth edgy 3
+
+# smooth - median
+random_seed 0
+new 1025 1025
+random 1
+smooth median 3
