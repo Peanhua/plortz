@@ -45,6 +45,11 @@ insert_soil sand 1 rect 300 300 700 700
 random_seed 0
 new 1025 1025
 
+# perlin noise
+random_seed 0
+new 1025 1025
+perlin
+
 # random noise
 random_seed 0
 new 1025 1025

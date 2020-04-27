@@ -1,0 +1,15 @@
+# General landscape with perlin noise
+random_seed 0
+new 513 513
+add_soil dirt 20 rect 0 0 513 513
+random_soil 100 30 0.01
+perlin 10 0.0125
+perlin 5 0.025
+perlin 2.5 0.05
+perlin 1.25 0.1
+perlin 0.625 0.2
+scale 10
+sheet_erosion
+sheet_erosion
+sheet_erosion
+scale 0.1

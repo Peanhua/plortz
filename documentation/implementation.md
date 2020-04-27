@@ -15,16 +15,16 @@ There are two different user interface modes, a graphical user interface using J
 ## Performance
 The important action happens inside the different tools. There are couple different ways to produce similar results, but there are no real overlapping of the tools created. Thus the performance testing does not try to achieve identical end products, but instead "usable" end products via different methods. A usable end product is something that would work as a terrain for some game.
 
-The main goal of the project is to be able to pre-generate terrains to be used in games, secondary goal is to have the system operate fast enough for generating the terrains in real-time in the games.
+The primary goal of the project is to be able to pre-generate terrains to be used in games, secondary goal is to have the system operate fast enough for generating the terrains in real-time in the games.
 
 
-### The main goal: produce terrains
+### The primary goal: produce terrains
 The terrains can be generated via scripting, but to script, one has to know good parameters and tool combinations to use. Thus the users are going to use the graphical interactive user interface and its operating speed is important, user should not need to wait for minutes or hours for an operation to complete. Instead the operations should be near real-time. According to Nielsen, the operations should take less than 1 second, but a maximum of 10 seconds is tolerable: [Response Times: The 3 Important Limits by Jakob Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/).
 
 The size of the terrain has a large impact because most tools operate on the whole terrain. The game in question greatly affects how large terrain is required, affecting factors include what kind of world the game depicts, how the world is viewed, and what kind of rendering techniques are used. Some games might have one large terrain spanning several square kilometers, with lot's of detail. Some games might have streaming and/or level system so that the size of a single terrain remains small, tens of square meters. If the terrain is viewed from the ground level, more detail is required than when viewing from higher altitudes. Some kind of middle ground is taken here, reference terrain size shall be 1024x1024 tiles.
 
 
-### Secondary goal: real-time terrain generation in games
+### The secondary goal: real-time terrain generation in games
 Practically all computer systems nowadays contains processors with multiple cores, so it is assumed that one CPU core can be used for terrain generation in real-time game. Games generating terrain in real-time do it in patches, and the performance requirement is based on how fast the player can move from one patch to another. Pre-generating patches in advance can give some room for performance stalls if the player is not constantly moving at maximum speed. The direction player is moving can be easily known in advance, or it might be somewhat random. When the system can not in advance know what is the next patch the player is going to, it needs to generate multiple patches at same time. Consider the following image of 5x5 patches, where player is in the green patch at the middle:
 
 ![Player in grid](player_in_grid.png)
@@ -72,6 +72,7 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>insert soil at bottom - circle</td>   <td>0.025869s</td></tr>
   <tr><td>insert soil at bottom - rectangle</td><td>0.122741s</td></tr>
   <tr><td>new terrain</td>                      <td>0.040948s</td></tr>
+  <tr><td>perlin noise</td>                     <td>0.177125</td></tr>
   <tr><td>random noise</td>                     <td>0.047644s</td></tr>
   <tr><td>remove water</td>                     <td>0.0219s</td></tr>
   <tr><td>scale heights</td>                    <td>0.187417s</td></tr>
@@ -83,9 +84,23 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
 <td><img alt="Time taken by operations, logarithmic scale" src="perf-large.png">Time taken by operations, logarithmic scale</td>
 </tr>
 </table>
+Apart from the water adding operation, all operations finish in less than 1 second.
 
 ### Secondary goal: real-time terrain generation in games
-
+The used scriptfile can be found from [scripts/perf-large.txt](../scripts/perf-large.txt), it was executed using the following command:
+```
+echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
+```
+<table>
+  <tr><th>Description</th><th>Time</th></tr>
+  <tr><td>General landscape with perlin noise</td> <td>1.554698s</td></tr>
+  <tr><td>General landscape with diamond-square</td> <td>0.500796s</td></tr>
+  <tr><td>Couple hills with perlin noise base</td> <td>1.389787s</td></tr>
+  <tr><td>Couple hills with diamond-square base</td> <td>0.45171s</td></tr>
+  <tr><td>Couple hills and water with perlin noise base</td> <td>43.961907s</td></tr>
+  <tr><td>Couple hills and water with diamond-square base</td> <td>50.062579s</td></tr>
+</table>
+![Time taken, logarithmic scale](perf-small.png)
 
 
 ## Algorithm complexities

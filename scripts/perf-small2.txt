@@ -1,0 +1,9 @@
+# General landscape with diamond-square
+random_seed 0
+new 513 513
+add_soil dirt 50 rect 0 0 513 513
+random_soil 100 30 0.1
+ds 40
+scale 10
+sheet_erosion
+scale 0.1

@@ -1,0 +1,6 @@
+run scripts/perf-small1.txt
+run scripts/perf-small2.txt
+run scripts/perf-small3.txt
+run scripts/perf-small4.txt
+run scripts/perf-small5.txt
+run scripts/perf-small6.txt
