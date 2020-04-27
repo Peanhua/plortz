@@ -100,6 +100,7 @@ echo "run scripts/perf-small.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>Couple hills and water with perlin noise base</td> <td>43.961907s</td></tr>
   <tr><td>Couple hills and water with diamond-square base</td> <td>50.062579s</td></tr>
 </table>
+
 ![Time taken, logarithmic scale](perf-small.png)
 
 
