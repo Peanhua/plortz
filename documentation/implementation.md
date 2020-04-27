@@ -87,7 +87,7 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
 Apart from the water adding operation, all operations finish in less than 1 second.
 
 ### Secondary goal: real-time terrain generation in games
-The used scriptfile can be found from [scripts/perf-large.txt](../scripts/perf-large.txt), it was executed using the following command:
+The used scriptfile can be found from [scripts/perf-small.txt](../scripts/perf-small.txt), it was executed using the following command:
 ```
 echo "run scripts/perf-small.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
 ```
