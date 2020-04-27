@@ -99,7 +99,7 @@ public class AStar extends PathFinder {
         
         // Return list of positions from start to end:
         List<Position> path = new FastInsertAppendList<>();
-            while (last != null) {
+        while (last != null) {
             path.add(0, last.position);
             last = last.source;
         }
