@@ -60,20 +60,28 @@ import plortz.search.PathFinderHeuristic;
  */
 public class AddWater extends Tool {
 
-    private final Position water_source_position;
-    private final double   water_source_amount;
+    private final Position initial_water_source_position;
+    private final double   initial_water_source_amount;
+    // "runtime" parameters:
+    private Position water_position;
+    private double   water_amount;
+    
     
     public AddWater(Position position, double amount) {
         if (amount <= 0.0) {
             throw new IllegalArgumentException();
         }
-        this.water_source_position = position;
-        this.water_source_amount   = amount;
+        this.initial_water_source_position = position;
+        this.initial_water_source_amount   = amount;
     }
     
     @Override
     public void apply(Terrain terrain) {
-        this.addRiver(terrain, this.water_source_position, this.water_source_amount);
+        this.water_position = this.initial_water_source_position;
+        this.water_amount   = this.initial_water_source_amount;
+        while (this.water_position != null && this.water_amount > 0) {
+            this.addRiver(terrain);
+        }
         terrain.zeroBottomSoilLayer();
         terrain.changed();
     }
@@ -110,10 +118,8 @@ public class AddWater extends Tool {
      * Add water as river while there is dry land.
      * 
      * @param terrain
-     * @param position
-     * @param water_amount 
      */
-    private void addRiver(Terrain terrain, Position position, double water_amount) {
+    private void addRiver(Terrain terrain) {
         
         class AddRiverPathFinderHeuristic extends AddWaterPathFinderHeuristic {
 
@@ -165,7 +171,7 @@ public class AddWater extends Tool {
         // Find path for the river:
         PathFinder pather = new BreadthFirstSearch();
         PathFinderHeuristic heuristic = new AddRiverPathFinderHeuristic(terrain);
-        List<Position> path = pather.find(position, heuristic);
+        List<Position> path = pather.find(this.water_position, heuristic);
         Position lastpos = null;
         if (path != null) {
             // If the last tile in the path contains water, follow it:
@@ -189,14 +195,15 @@ public class AddWater extends Tool {
             }
         } else {
             // No path, this is most likely an empty map, try to expand water here.
-            Tile tile = terrain.getTile(position);
+            Tile tile = terrain.getTile(this.water_position);
             tile.adjustWater(0.01);
             this.carveTile(tile, 0.01);
-            water_amount -= 0.01;
-            lastpos = position;
+            this.water_amount -= 0.01;
+            lastpos = this.water_position;
         }
-        if (lastpos != null) {
-            this.expandWater(terrain, lastpos, water_amount);
+        this.water_position = lastpos;
+        if (this.water_position != null) {
+            this.fillLake(terrain);
         }
     }
     
@@ -258,7 +265,12 @@ public class AddWater extends Tool {
     }
 
 
-    private void expandWater(Terrain terrain, Position start, double water_amount) {
+    /**
+     * Fill lake with water until water runs out or the lake would spill over.
+     * 
+     * @param terrain 
+     */
+    private void fillLake(Terrain terrain) {
 
         class LakeFinder implements FloodFill.FloodFillCallback {
 
@@ -291,9 +303,9 @@ public class AddWater extends Tool {
             }
         }
         // Find all positions belonging to the lake:
-        LakeFinder lakefinder = new LakeFinder(terrain, terrain.getTile(start).getAltitude(true));
+        LakeFinder lakefinder = new LakeFinder(terrain, terrain.getTile(this.water_position).getAltitude(true));
         FloodFill ff = new FloodFill();
-        ff.fill(terrain.getWidth(), terrain.getLength(), start, lakefinder);
+        ff.fill(terrain.getWidth(), terrain.getLength(), this.water_position, lakefinder);
 
         // Find the location from where to start flooding out if there is extra water:
         Position floodpos = null;
@@ -305,9 +317,9 @@ public class AddWater extends Tool {
         }
         
         // Calculate the amount of water per tile to add to the tiles belonging to the lake:
-        double amount_per_tile = water_amount / (double) lakefinder.filled.size();
+        double amount_per_tile = this.water_amount / (double) lakefinder.filled.size();
         if (floodpos != null) {
-            double max_amount_per_tile = terrain.getTile(floodpos).getAltitude(true) - terrain.getTile(start).getAltitude(true);
+            double max_amount_per_tile = terrain.getTile(floodpos).getAltitude(true) - terrain.getTile(this.water_position).getAltitude(true);
             if (amount_per_tile > max_amount_per_tile) {
                 amount_per_tile = max_amount_per_tile;
             }
@@ -316,14 +328,12 @@ public class AddWater extends Tool {
         if (amount_per_tile > 0.0) {
             for (Position pos : lakefinder.filled) {
                 terrain.getTile(pos).adjustWater(amount_per_tile);
-                water_amount -= amount_per_tile;
+                this.water_amount -= amount_per_tile;
             }
         }
         
         // If there is extra water, start a new river from the floodpos:
-        if (water_amount > 0.0001 && floodpos != null) {
-            this.addRiver(terrain, floodpos, water_amount);
-        }
+        this.water_position = floodpos;
     }
     
     private void carveTile(Tile tile, double target_water_altitude) {
