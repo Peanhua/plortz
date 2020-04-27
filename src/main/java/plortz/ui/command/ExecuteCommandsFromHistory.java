@@ -34,10 +34,16 @@ public class ExecuteCommandsFromHistory extends Command {
             return;
         }
         
-        int start = Integer.parseInt(this.args.get(1));
-        int end = start;
-        if (this.args.size() == 3) {
-            end = Integer.parseInt(this.args.get(2));
+        int start, end;
+        try {
+            start = Integer.parseInt(this.args.get(1));
+            end = start;
+            if (this.args.size() == 3) {
+                end = Integer.parseInt(this.args.get(2));
+            }
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
         }
         
         start--;

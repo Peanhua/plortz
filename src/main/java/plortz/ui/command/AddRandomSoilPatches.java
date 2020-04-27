@@ -40,9 +40,16 @@ public class AddRandomSoilPatches extends Command {
             this.showUsage(ui);
             return;
         }
-        int count = Integer.parseInt(this.args.get(1));
-        int radius = Integer.parseInt(this.args.get(2));
-        double depth = Double.parseDouble(this.args.get(3));
+        int count, radius;
+        double depth;
+        try {
+            count = Integer.parseInt(this.args.get(1));
+            radius = Integer.parseInt(this.args.get(2));
+            depth = Double.parseDouble(this.args.get(3));
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
+        }
         this.addPatches(ui, count, radius, depth);
     }
     

@@ -38,7 +38,13 @@ public class ScaleHeights extends Command {
             return;
         }
         
-        double factor = Double.parseDouble(this.args.get(1));
+        double factor;
+        try {
+            factor = Double.parseDouble(this.args.get(1));
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
+        }
         if (factor <= 0.0) {
             ui.showMessage("Error, the factor must be greater than 0.");
             return;

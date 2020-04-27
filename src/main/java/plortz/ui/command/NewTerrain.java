@@ -36,8 +36,14 @@ public class NewTerrain extends Command {
             return;
         }
         
-        int width  = Integer.parseInt(args.get(1));
-        int length = Integer.parseInt(args.get(2));
+        int width, length;
+        try {
+            width  = Integer.parseInt(args.get(1));
+            length = Integer.parseInt(args.get(2));
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
+        }
         
         if (width <= 0) {
             ui.showMessage("Minimum width is 1.");

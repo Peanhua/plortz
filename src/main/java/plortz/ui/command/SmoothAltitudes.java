@@ -46,7 +46,13 @@ public class SmoothAltitudes extends Command {
         if (this.args.size() == 1) {
             filter = new MedianSmoothingFilter(3);
         } else if (this.args.size() == 3) {
-            int window_size = Integer.parseInt(this.args.get(2));
+            int window_size;
+            try {
+                window_size = Integer.parseInt(this.args.get(2));
+            } catch (Exception e) {
+                ui.showMessage("Failed to parse arguments: " + e.getMessage());
+                return;
+            }
             if (window_size < 3 || (window_size % 2) == 0) {
                 ui.showMessage("Illegal window size '" + this.args.get(2) + "', it must be an uneven integer number, minimum 3.");
                 return;

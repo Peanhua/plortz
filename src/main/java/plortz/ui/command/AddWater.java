@@ -34,9 +34,21 @@ public class AddWater extends Command {
         if (!this.requireTerrain(ui)) {
             return;
         }
-        int x = Integer.parseInt(this.args.get(1));
-        int y = Integer.parseInt(this.args.get(2));
-        double amount = Double.parseDouble(this.args.get(3));
+        if (this.args.size() != 4) {
+            ui.showMessage("Incorrect number of arguments.");
+            this.showUsage(ui);
+            return;
+        }
+        int x, y;
+        double amount;
+        try {
+            x = Integer.parseInt(this.args.get(1));
+            y = Integer.parseInt(this.args.get(2));
+            amount = Double.parseDouble(this.args.get(3));
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
+        }
         Tool tool = new plortz.tool.AddWater(new Position(x, y), amount);
         this.applyTool(ui, tool);
     }

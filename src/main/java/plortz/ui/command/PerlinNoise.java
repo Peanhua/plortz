@@ -36,11 +36,16 @@ public class PerlinNoise extends Command {
         
         double scale   = 1.0;
         double density = 0.5;
-        if (this.args.size() >= 2) {
-            scale = Double.parseDouble(this.args.get(1));
-        }
-        if (this.args.size() >= 3) {
-            density = Double.parseDouble(this.args.get(2));
+        try {
+            if (this.args.size() >= 2) {
+                scale = Double.parseDouble(this.args.get(1));
+            }
+            if (this.args.size() >= 3) {
+                density = Double.parseDouble(this.args.get(2));
+            }
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
         }
         Tool tool = new plortz.tool.PerlinNoise(scale, density, ui.getRandom());
         this.applyTool(ui, tool);

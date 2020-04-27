@@ -33,7 +33,13 @@ public class SetRandomSeed extends Command {
             this.showUsage(ui);
             return;
         }
-        long seed = Long.parseLong(this.args.get(1));
+        long seed;
+        try {
+            seed = Long.parseLong(this.args.get(1));
+        } catch (Exception e) {
+            ui.showMessage("Failed to parse arguments: " + e.getMessage());
+            return;
+        }
         ui.getRandom().setSeed(seed);
     }
 
