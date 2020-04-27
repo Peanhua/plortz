@@ -27,6 +27,17 @@ By default, the program starts in graphical user interface, but it also has a co
 To output the timing information, start with "--timing" argument, for example:
 ```mvn exec:java -Dexec.args="--timing"```
 
+## Graphical user interface
+The window is split into three parts.
+
+Starting from top, a 2d or 3d view is shown. The current mode of the view can be toggled with the button "2d/3d" on the top-left corner.
+
+In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. Make sure to de-activate the console input field for the WASD-keys to work, for example by first clicking on the message/history.
+
+In the middle of the window a messages and history of commands view is shown.
+
+At the bottom is a text input field that can be used to issue commands.
+
 
 ## Commands:
 Most commands require arguments, giving incorrect number of arguments prints the usage.
