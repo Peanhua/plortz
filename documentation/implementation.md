@@ -89,7 +89,7 @@ Apart from the water adding operation, all operations finish in less than 1 seco
 ### Secondary goal: real-time terrain generation in games
 The used scriptfile can be found from [scripts/perf-large.txt](../scripts/perf-large.txt), it was executed using the following command:
 ```
-echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
+echo "run scripts/perf-small.txt" | mvn compile exec:java -Dexec.args="--timing --no-gui"
 ```
 <table>
   <tr><th>Description</th><th>Time</th></tr>
