@@ -190,18 +190,17 @@ public class TerrainView3d extends TerrainView {
                 * AB
                 * CD
                 */
+                // Point indices:
                 int a = x + y * terrain.getWidth();
                 int b = a + 1;
                 int c = a + terrain.getWidth();
                 int d = c + 1;
-                /*
-                mesh.getFaces().addAll(c, 0, b, 0, a, 0);
-                mesh.getFaces().addAll(c, 0, d, 0, b, 0);
-                */
+                // Texture indices:
                 int ta = x + y * terrain.getWidth();
                 int tb = ta + 1;
                 int tc = ta + terrain.getWidth();
                 int td = tc + 1;
+                // The triangles:
                 mesh.getFaces().addAll(c, tc, a, ta, b, tb);
                 mesh.getFaces().addAll(b, tb, d, td, c, tc);
             }
