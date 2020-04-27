@@ -80,7 +80,7 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>smooth - edgy</td>                    <td>0.363429s</td></tr>
   <tr><td>smooth - median</td>                  <td>0.712419s</td></tr>
 </table></td>
-<td>![Time taken by operations, logarithmic scale](perf-large.png)</td>
+<td><img alt="Time taken by operations, logarithmic scale" src="perf-large.png">Time taken by operations, logarithmic scale</td>
 </tr>
 </table>
 
