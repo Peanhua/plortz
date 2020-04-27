@@ -87,7 +87,7 @@ public class TerrainView3d extends TerrainView {
         this.camera = new ControlledPerspectiveCamera();
         this.camera.setPosition(new Vector(0, -20, -100));
         this.camera.rotatePitch(-30);
-        this.camera.setFarClip(500);
+        this.camera.setFarClip(1000);
         
         Group root3D = new Group(this.camera, box, this.terrain_mesh);
         scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.DISABLED);
