@@ -28,11 +28,11 @@ To output the timing information, start with "--timing" argument, for example:
 ```mvn exec:java -Dexec.args="--timing"```
 
 ## Graphical user interface
-The window is split into three parts.
+The window is split into three parts. <img align="right" src="../screenshot.png" width="400px">
 
 Starting from top, a 2d or 3d view is shown. The current mode of the view can be toggled with the button "2d/3d" on the top-left corner.
 
-In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. Make sure to de-activate the console input field for the WASD-keys to work, for example by first clicking on the message/history. The mousewheel can be used to adjust the movement speed. <img align="right" src="../screenshot.png" width="400px">
+In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. Make sure to de-activate the console input field for the WASD-keys to work, for example by first clicking on the message/history. The mousewheel can be used to adjust the movement speed.
 
 In the middle of the window a messages and history of commands view is shown.
 
