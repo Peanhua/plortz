@@ -1,6 +1,7 @@
 # Implementation
 
 ## The program structure
+
 The program works on a rectangular area of terrain which has elevation and other data. The area is divided by square tiles, each tile containing information about the layers of soils underneath it. The data is modified using instances of tools. Only the top-most surface of the data will be in the generated output.
 
 Looking from side, the following image depicts two tiles and their soil layers next to each other. Different soil layers are colored differently:
@@ -12,11 +13,16 @@ Because each tile has its own soil layers, the soil layers are not connected bet
 ### User interfaces
 There are two different user interface modes, a graphical user interface using JavaFX, and a console user interface reading commands from stdin and outputting to stdout. Both user interfaces use the same commands, which are constructed from the user supplied command strings. The commands use the tools to perform the actions. Most tools have a one-to-one mapping with a command.
 
+### Architecture
+The basic package architecture is shown below. The ```util``` and ```observer``` -packages contain common utilities used everywhere and are not shown, also not shown are the sub-packages.
+
+![Package architecture](packages.png)
+
+
 ## Performance
 The important action happens inside the different tools. There are couple different ways to produce similar results, but there are no real overlapping of the tools created. Thus the performance testing does not try to achieve identical end products, but instead "usable" end products via different methods. A usable end product is something that would work as a terrain for some game.
 
 The primary goal of the project is to be able to pre-generate terrains to be used in games, secondary goal is to have the system operate fast enough for generating the terrains in real-time in the games.
-
 
 ### The primary goal: produce terrains
 The terrains can be generated via scripting, but to script, one has to know good parameters and tool combinations to use. Thus the users are going to use the graphical interactive user interface and its operating speed is important, user should not need to wait for minutes or hours for an operation to complete. Instead the operations should be near real-time. According to Nielsen, the operations should take less than 1 second, but a maximum of 10 seconds is tolerable: [Response Times: The 3 Important Limits by Jakob Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/).

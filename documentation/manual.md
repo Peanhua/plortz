@@ -39,6 +39,19 @@ In the middle of the window a messages and history of commands view is shown.
 At the bottom is a text input field that can be used to issue commands.
 
 
+## Output
+All output is done using Targa files. There are three output types, of which two are intended to be used by programs, and one is intended for human viewing.
+
+The ```save``` command is used to do the output, and it accepts the following options:
+* ```heightmap``` - save the altitudes as 8 bit grayscale image
+* ```soil``` - save the soil types as 24 bit color image, each soil type has unique color
+* ```color``` - combine both the altitudes and soil types as a 24 bit color image
+
+In the ```heightmap``` mode, the altitudes are normalized to [0, 1]. In the ```color``` mode, the altitudes are in range [0.1, 1].
+
+Because the output files are in low 8 bit resolution for the elevation data, the best option is to include the generating source code in the game project, if the licensing scheme used allows. The routines use double floating point numbers for high precision.
+
+
 ## Commands:
 Most commands require arguments, giving incorrect number of arguments prints the usage.
 
@@ -102,3 +115,5 @@ sheet_erosion
 sheet_erosion
 sheet_erosion
 ```
+
+For more examples, see the [scripts/](../scripts) directory.
