@@ -62,8 +62,8 @@ public class TargaWriterTest {
             this.constructed_terrain.getTile(1 + y, y).setTopSoilAmount(1.0);
             this.constructed_terrain.getTile(9 - y, y).setTopSoilAmount(1.0);
         }
-        writer = new TargaWriter(false, false);
-        rle_writer = new TargaWriter(true, false);
+        writer = new TargaWriter(false, true, false);
+        rle_writer = new TargaWriter(true, true, false);
     }
     
     @After
@@ -106,7 +106,7 @@ public class TargaWriterTest {
     
     @Test
     public void colorImageBodyContainsMoreBytesThanGrayscale() {
-        Writer color_writer = new TargaWriter(false, true);
+        Writer color_writer = new TargaWriter(false, true, true);
         assertTrue(color_writer.getBytes(constructed_terrain).length > writer.getBytes(constructed_terrain).length);
     }
 }
