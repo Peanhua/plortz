@@ -43,11 +43,26 @@ public class WriteToTargaFile extends Command {
         }
         
         String type = this.args.get(1);
-        if (!type.equals("heightmap") && !type.equals("color")) {
+        if (!type.equals("heightmap") && !type.equals("color") && !type.equals("soil")) {
             ui.showMessage("Incorrect argument #1 for <data>, expected 'heightmap' or 'color', but got '" + type + "'");
             return;
         }
-        boolean color = type.equals("color");
+        boolean color   = false;
+        boolean heights = false;
+        switch (type) {
+            case "heightmap":
+                heights = true;
+                color   = false;
+                break;
+            case "color":
+                heights = true;
+                color   = true;
+                break;
+            case "soil":
+                heights = false;
+                color   = true;
+                break;
+        }
         
         String filename = this.args.get(2);
         
@@ -60,7 +75,7 @@ public class WriteToTargaFile extends Command {
             return;
         }
         
-        Writer writer = new TargaWriter(true, color);
+        Writer writer = new TargaWriter(true, heights, color);
         try {
             writer.write(ui.getTerrain(), fp);
             fp.close();
@@ -78,7 +93,10 @@ public class WriteToTargaFile extends Command {
     public List<String> getUsage() {
         List<String> rv = new ArrayList<>();
         rv.add("Usage: " + this.args.get(0) + " <data> <filename>");
-        rv.add("Where <data> is one of: heightmap, color");
+        rv.add("Where <data> is one of: heightmap, soil, color");
+        rv.add(" heightmap = save the altitudes in grayscale");
+        rv.add(" soil = save the soil types in color");
+        rv.add(" color = save the altitudes and the soil types in color");
         return rv;
     }
 }
