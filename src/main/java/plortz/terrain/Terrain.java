@@ -34,7 +34,8 @@ import plortz.util.Static2dArray;
  */
 public class Terrain implements Iterable<Tile> {
     private final Static2dArray<Tile> tiles;
-    private final Subject             onChange;
+    private final Subject             on_change;
+    double                            sea_level;
     
     /**
      * Construct a new terrain with the bottom layers soil type given.
@@ -49,7 +50,8 @@ public class Terrain implements Iterable<Tile> {
                 this.tiles.set(x, y, new Tile(new Position(x, y), bottom_layer, 1.0));
             }
         }
-        this.onChange = new Subject();
+        this.on_change = new Subject();
+        this.sea_level = -1;
     }
     
     /**
@@ -70,7 +72,7 @@ public class Terrain implements Iterable<Tile> {
         for (int i = 0; i < this.tiles.getWidth() * this.tiles.getLength(); i++) {
             this.tiles.set(i, new Tile(source.tiles.get(i)));
         }
-        this.onChange = new Subject();
+        this.on_change = new Subject();
     }
 
     /**
@@ -88,14 +90,14 @@ public class Terrain implements Iterable<Tile> {
      * @param observer The observer object to be called upon change.
      */
     public void listenOnChange(Observer observer) {
-        this.onChange.addObserver(observer);
+        this.on_change.addObserver(observer);
     }
     
     /**
      * Cause all the onChange listeners to be called.
      */
     public void changed() {
-        this.onChange.notifyObservers();
+        this.on_change.notifyObservers();
     }
     
     public int getWidth() {
@@ -118,6 +120,30 @@ public class Terrain implements Iterable<Tile> {
             return null;
         }
         return this.tiles.get(position);
+    }
+    
+    public double getSeaLevel() {
+        return this.sea_level;
+    }
+    
+    public void setSeaLevel(double sea_level) {
+        // If the new sea level is lower, remove all current sea first:
+        if (sea_level < this.sea_level) {
+            for (var tile : this.tiles) {
+                if (tile.getAltitude(true) <= this.sea_level) {
+                    tile.setWater(-1);
+                }
+            }
+        }
+        this.sea_level = sea_level;
+        if (this.sea_level > 0.0) {
+            for (var tile : this.tiles) {
+                final double water = this.sea_level - tile.getAltitude(false);
+                if (water > 0.0) {
+                    tile.setWater(water);
+                }
+            }
+        }
     }
     
     /**

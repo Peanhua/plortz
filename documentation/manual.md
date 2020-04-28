@@ -66,6 +66,7 @@ Commands are read from the graphical console or stdin and produce no output on s
 * Comment (mainly for script files): ```#```
 * Show information about the terrain: ```info```
 * Remove water: ```remove_water```
+* Set sea level: ```sea```
 
 Example terrain generation:
 ```
@@ -78,7 +79,7 @@ perlin 0.0625 0.2
 add_soil sand 0.01 rect 250 250 500 500
 gauss 250 390 0.3 150 0.5
 sheet_erosion
-save terrain.tga
+save color terrain.tga
 ```
 
 Another example:

@@ -64,6 +64,7 @@ public class CommandFactory {
         this.commands.put("run",           Run.class);
         this.commands.put("#",             Comment.class);
         this.commands.put("remove_water",  RemoveWater.class);
+        this.commands.put("sea",           SetSeaLevel.class);
     }
     
     public Command create(String string) {
