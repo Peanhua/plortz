@@ -1,7 +1,12 @@
 # plortz
 Plortz is a software written in Java to generate rectangular areas of terrains suitable to be used in games etc. The terrains consists of data points to define the landscape elevation data and other attributes, such as the type of the land (for example dirt, sand, snow, water). These are commonly referred to as heightmaps.
 
-Plortz has two user interfaces, the default graphical using JavaFX, and a commandline. The user issues commands and can see the results immediately in the GUI. The results can be written to Targa files.
+<table>
+<tr>
+<td>Plortz has two user interfaces, the default graphical using JavaFX, and a commandline. The user issues commands and can see the results immediately in the GUI. The results can be written to Targa files.</td>
+<td><img src="screenshot.png" width="200px"></td>
+</tr>
+</table>
 
 This project is made for a course named "tiralabra", one of the requirements in the course is that all algorithms and data structures are self made.
 
