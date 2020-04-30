@@ -14,7 +14,7 @@ Because each tile has its own soil layers, the soil layers are not connected bet
 There are two different user interface modes, a graphical user interface using JavaFX, and a console user interface reading commands from stdin and outputting to stdout. Both user interfaces use the same commands, which are constructed from the user supplied command strings. The commands use the tools to perform the actions. Most tools have a one-to-one mapping with a command.
 
 ### Architecture
-The basic package architecture is shown below. The ```util``` and ```observer``` -packages contain common utilities used everywhere and are not shown, also not shown are the sub-packages.
+The basic package architecture is shown below. The ```util``` and ```observer``` -packages contain common utilities used everywhere are not shown, also not shown are the sub-packages.
 
 ![Package architecture](packages.png)
 
@@ -142,3 +142,25 @@ This project has some classes that implement the same interface, and thus can be
   <tr><td></td>         <td>Insert at start</td><td>ArrayList</td>           <td>17463111181</td></tr>
   <tr><td></td>         <td></td>               <td>FastInsertAppendList</td><td>1331947</td>    </tr>
 </table>
+
+
+## Putting it all together, flaws and improvements
+
+### Performance
+The individual operations can be considered fast enough for the purposes, except the water adding tool with larger water amounts. The water adding procedure mimics what I intuitively think is water flowing, and while it gives nice results, the implementation is slow. The slowness comes mainly from the way the lakes are filled. When the lake size is increased the water is levelled to the new height, and then the system tries to start a river from the lowest dry land position. This usually expands the river only few tiles, and the whole lake is then again passed. This is repeated a lot with small increments to the height (depth) of the lake. It could probably be sped up by making a first rough approximation of the size of the lake to be filled, and then finish up with the precise measures.
+
+When generating terrains with the perlin noise, multiple passes of different "octaves" (as they're commonly referred to) are needed. Diamond-square gives approximately same results with just one pass, also a single diamond-square pass is a bit faster than perlin noise. The perlin noise is a bit more versatile though, and can be combined with the diamond-square algorithm.
+
+For the primary goal the 3d terrain view is the bottleneck, it seems like the culprit is the JavaFX 3d system as updating even a single value in the terrain data (be it in the beginning or the end) causes a delay that is as long as the initial creation of the 3d terrain. The user experience could be improved with the current system by keeping the 3d terrain view in small chunks, and then update the chunks over time with delays, that way the user would see slow update but the user interface would not completely stall for the duration of the update. However that would increase the total time needed for each update, and in order to fully fix the very slow updates the JavaFX 3d system would need to be changed to something else, the [Lightweight Java Game Library](https://www.lwjgl.org/) would probably be a good choice. Switching to LWJGL might also require switching away from JavaFX.
+
+With the secondary goal, the terrain generation with the example cases varies between 0.5 and 1.5 seconds (again ignoring the very slow water adding system). In the worst case scenario, the maximum number of terrains needed is five, which brings the total time up to about 7.5 seconds. The size of those terrains are about 500x500, and assuming one unit is one meter, they cover about 500 meters in one direction. The maximum (5) number of terrains is needed when the player moves diagonally, which is about 1.4*500=700 meters. Thus if the players maximum speed is approximately 700m/7.5s=93 meters per second, the terrain generation is fast enough.
+
+### User interface
+The graphical user interface is very bare bones, and would greatly benefit from proper user interface elements instead of the stdin/stdout style console. More user friendly commands should also be created, with good default values and combinations of tools. Also the ability to point and click on the terrain to position the wanted effect would help users a lot. Nice advanced user interface is not part of the course, so it was deliberately left on low priority.
+
+### Others
+The sheet erosion and water adding tools are currently the only tools that emulates some kind of physics. It would be interesting to add more tools that mimic physics in some way. There could be more different types of erosions: wind erosion, water erosion (from the rivers), and shoreline erosion (lakes and sea).
+
+With some soil types, the angle of repose should vary whether the soil is under water, moist, or dry. Together with the different types of erosions this would probably create interesting results.
+
+New types of soils would be great additions. And they should be read from a resource file instead of being hard-coded into the Java source file.
