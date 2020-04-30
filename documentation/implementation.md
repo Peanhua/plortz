@@ -25,7 +25,7 @@ With the secondary goal, the terrain generation with the example cases varies be
 The graphical user interface is very bare bones, and would greatly benefit from proper user interface elements instead of the stdin/stdout style console. More user friendly commands should also be created, with good default values and combinations of tools. Also the ability to point and click on the terrain to position the wanted effect would help users a lot. Nice advanced user interface is not part of the course, so it was deliberately left on low priority.
 
 ### Other
-The sheet erosion and water adding tools are currently the only tools that emulates some kind of physics. It would be interesting to add more tools that mimic physics in some way. There could be more different types of erosions: wind erosion, water erosion (from the rivers), and shoreline erosion (lakes and sea).
+The sheet erosion and water adding tools are currently the only tools that emulates some kind of physics. It would be interesting to add more tools that mimic physics in some way. For example there could be more different types of erosions: wind erosion, water erosion (from the rivers), and shoreline erosion (lakes and sea).
 
 With some soil types, the angle of repose should vary whether the soil is under water, moist, or dry. Together with the different types of erosions this would probably create interesting results.
 
