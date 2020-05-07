@@ -29,8 +29,7 @@
         <module name="Indentation" />
         <module name="OneStatementPerLine"/>
         <module name="MethodLength">
-            <property name="tokens" value="METHOD_DEF"/>
-            <property name="max" value="20"/>
+            <property name="max" value="40"/>
             <property name="countEmpty" value="false"/>
         </module>
 

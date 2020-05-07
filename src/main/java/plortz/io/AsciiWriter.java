@@ -27,7 +27,10 @@ import plortz.terrain.Terrain;
  */
 public class AsciiWriter extends Writer {
 
-    private boolean normalize;
+    private final static byte[] NEWLINE = { '\n' };
+    
+    private final boolean normalize;
+    private byte[]        buf;
     
     /**
      * Constructor.
@@ -36,13 +39,12 @@ public class AsciiWriter extends Writer {
      */
     public AsciiWriter(boolean normalize) {
         this.normalize = normalize;
+        this.buf       = new byte[128];
     }
     
     @Override
     protected byte[] getBytes(Terrain terrain) {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        byte[] newline = { '\n' };
-        byte[] buf = new byte[128];
         
         Vector minmax = terrain.getAltitudeRange();
         
@@ -53,16 +55,20 @@ public class AsciiWriter extends Writer {
                     altitude -= minmax.getX();
                     altitude /= (minmax.getY() - minmax.getX());
                 }
-                String s = String.format("%4.2f ", altitude);
-                char[] chars = s.toCharArray();
-                for (int i = 0; i < chars.length; i++) {
-                    buf[i] = (byte) chars[i];
-                }
-                bs.write(buf, 0, chars.length);
+                this.addNumber(bs, altitude);
             }
-            bs.writeBytes(newline);
+            bs.writeBytes(NEWLINE);
         }
         
         return bs.toByteArray();
+    }
+    
+    private void addNumber(ByteArrayOutputStream bs, double number) {
+        String s = String.format("%4.2f ", number);
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            buf[i] = (byte) chars[i];
+        }
+        bs.write(buf, 0, chars.length);
     }
 }

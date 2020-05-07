@@ -27,24 +27,18 @@ import plortz.ui.UserInterface;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class Main {
+    private static boolean use_gui        = true;
+    private static boolean output_timing  = false;
+    private static boolean run_benchmarks = false;
+    
     public static void main(String args[]) {
-        boolean use_gui       = true;
-        boolean output_timing = false;
-        
-        for (String arg : args) {
-            if (arg.equals("--no-gui")) {
-                use_gui = false;
-            } else if (arg.equals("--timing")) {
-                output_timing = true;
-            } else if (arg.equals("--benchmark")) {
-                runBenchmarks();
-                return;
-            } else {
-                System.out.println("Unknown argument '" + arg + "'");
-                return;
-            }
+        if (!parseArgs(args)) {
+            return;
         }
-        
+        if (run_benchmarks) {
+            runBenchmarks();
+            return;
+        }
         UserInterface ui = null;
         if (use_gui) {
             ui = new GraphicalUI();
@@ -55,7 +49,23 @@ public class Main {
         ui.run();
     }
     
-    public static void runBenchmarks() {
+    private static boolean parseArgs(String[] args) {
+        for (String arg : args) {
+            if (arg.equals("--no-gui")) {
+                use_gui = false;
+            } else if (arg.equals("--timing")) {
+                output_timing = true;
+            } else if (arg.equals("--benchmark")) {
+                run_benchmarks = true;
+            } else {
+                System.out.println("Unknown argument '" + arg + "'");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private static void runBenchmarks() {
         var tests = Benchmark.getAllTests();
         for (var test : tests) {
             System.out.print(test.getName() + ": ");

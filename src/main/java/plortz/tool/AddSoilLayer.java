@@ -80,6 +80,13 @@ public class AddSoilLayer extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
+        for (Position pos : this.getPositions()) {
+            this.processTile(terrain, pos);
+        }
+        terrain.changed();
+    }
+
+    private List<Position> getPositions() {
         List<Position> positions = null;
         switch (this.area_type) {
             case Rectangle:
@@ -95,10 +102,7 @@ public class AddSoilLayer extends Tool {
                 positions = circle.getPositions();
                 break;
         }
-        for (Position pos : positions) {
-            this.processTile(terrain, pos);
-        }
-        terrain.changed();
+        return positions;
     }
     
     protected void processTile(Terrain terrain, Position position) {

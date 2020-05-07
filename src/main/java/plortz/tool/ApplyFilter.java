@@ -36,21 +36,8 @@ public class ApplyFilter extends Tool {
     
     @Override
     public void apply(Terrain terrain) {
-        // Pre-filtering phase:
-        if (this.filter.isPrefiltering()) {
-            for (int y = 0; y < terrain.getLength(); y++) {
-                for (int x = 0; x < terrain.getWidth(); x++) {
-                    this.filter.preFilter(terrain, x, y);
-                }
-            }
-        }
-        // Filtering phase:
-        this.new_amounts = new double[terrain.getWidth() * terrain.getLength()];
-        for (int y = 0; y < terrain.getLength(); y++) {
-            for (int x = 0; x < terrain.getWidth(); x++) {
-                this.new_amounts[x + y * terrain.getWidth()] = this.filter.filter(terrain, x, y);
-            }
-        }
+        this.preFilter(terrain);
+        this.filter(terrain);
         // Apply results:
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
@@ -60,5 +47,24 @@ public class ApplyFilter extends Tool {
         }
         terrain.zeroBottomSoilLayer();
         terrain.changed();
+    }
+    
+    private void preFilter(Terrain terrain) {
+        if (this.filter.isPrefiltering()) {
+            for (int y = 0; y < terrain.getLength(); y++) {
+                for (int x = 0; x < terrain.getWidth(); x++) {
+                    this.filter.preFilter(terrain, x, y);
+                }
+            }
+        }
+    }
+    
+    private void filter(Terrain terrain) {
+        this.new_amounts = new double[terrain.getWidth() * terrain.getLength()];
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                this.new_amounts[x + y * terrain.getWidth()] = this.filter.filter(terrain, x, y);
+            }
+        }
     }
 }

@@ -165,49 +165,49 @@ public class TargaWriter extends Writer {
      * @return 
      */
     private byte[] getCompressedBody(Terrain terrain) {
-        byte[] tmp = new byte[terrain.getWidth() * terrain.getLength() * (this.colors ? 3 : 1) * 2]; // Workspace, reserve some extra in case compression yields very bad result
-        int pos = 0;
+        ByteArrayOutputStream tmp = new ByteArrayOutputStream();
         for (int y = 0; y < terrain.getLength(); y++) {
             int x = 0;
             while (x < terrain.getWidth()) {
                 int count = this.countNextRlePacketSizeOfSameBytes(terrain, x, y);
-                if (count > 1) { // RLE encoded
-                    tmp[pos++] = (byte) (128 + (count - 1));
-                    if (this.colors) {
-                        int color = this.getImageRGB(terrain, x, y);
-                        tmp[pos++] = (byte) ((color >>  0) & 0xff); // blue
-                        tmp[pos++] = (byte) ((color >>  8) & 0xff); // green
-                        tmp[pos++] = (byte) ((color >> 16) & 0xff); // red
-                    } else {
-                        tmp[pos++] = this.getImageGray(terrain, x, y);
-                    }
-                    x += count;
-                } else { // Raw
+                if (count > 1) {
+                    this.addDataRLE(terrain, x, y, count, tmp);
+                } else {
                     count = this.countNextRlePacketSizeOfDifferentBytes(terrain, x, y);
-                    tmp[pos++] = (byte) (count - 1);
-                    for (int i = 0; i < count; i++) {
-                        if (this.colors) {
-                            int color = this.getImageRGB(terrain, x, y);
-                            tmp[pos++] = (byte) ((color >>  0) & 0xff); // blue
-                            tmp[pos++] = (byte) ((color >>  8) & 0xff); // green
-                            tmp[pos++] = (byte) ((color >> 16) & 0xff); // red
-                        } else {
-                            tmp[pos++] = this.getImageGray(terrain, x, y);
-                        }
-                        x++;
-                    }
+                    this.addDataRAW(terrain, x, y, count, tmp);
                 }
+                x += count;
             }
         }
-        
-        // todo: avoid copying
-        byte[] image = new byte[pos];
-        for (int i = 0; i < pos; i++) {
-            image[i] = tmp[i];
+        return tmp.toByteArray();
+    }
+    
+    private void addDataRLE(Terrain terrain, int x, int y, int count, ByteArrayOutputStream output) {
+        output.write((byte) (128 + (count - 1)));
+        if (this.colors) {
+            int color = this.getImageRGB(terrain, x, y);
+            output.write((byte) ((color >>  0) & 0xff)); // blue
+            output.write((byte) ((color >>  8) & 0xff)); // green
+            output.write((byte) ((color >> 16) & 0xff)); // red
+        } else {
+            output.write(this.getImageGray(terrain, x, y));
         }
-        return image;
     }
 
+    private void addDataRAW(Terrain terrain, int x, int y, int count, ByteArrayOutputStream output) {
+        output.write((byte) (count - 1));
+        for (int i = 0; i < count; i++) {
+            if (this.colors) {
+                int color = this.getImageRGB(terrain, x, y);
+                output.write((byte) ((color >>  0) & 0xff)); // blue
+                output.write((byte) ((color >>  8) & 0xff)); // green
+                output.write((byte) ((color >> 16) & 0xff)); // red
+            } else {
+                output.write(this.getImageGray(terrain, x, y));
+            }
+        }
+    }
+    
     private int countNextRlePacketSizeOfSameBytes(Terrain terrain, int start_x, int y) {
         int count = 1;
         final int p = this.getImagePixel(terrain, start_x, y);

@@ -70,34 +70,41 @@ public class AStar extends PathFinder {
                 last = current;
                 break;
             }
-            // Add neighboring positions:
-            for (Position neighbor_pos : heuristic.getNeighbors(current.position)) {
-                // Search if this neighbor already exists:
-                PathComponent existing = this.all.get(neighbor_pos);
-                // Either update the existing or add a new path component:
-                double neighbor_cost = heuristic.estimateCost(current.position, neighbor_pos);
-                if (existing != null) {
-                    // Some path to the neighbor already exists.
-                    if (neighbor_cost < existing.cost) {
-                        // This current new path is faster, so use it instead:
-                        existing.source = current;
-                        existing.cost   = neighbor_cost;
-                    }
-                } else {
-                    // No path exists to the neighbor, add it:
-                    PathComponent neighbor = new PathComponent(current, neighbor_pos, neighbor_cost);
-                    this.open.add(neighbor);
-                    this.all.put(neighbor.position, neighbor);
-                }
-            }
+            this.addNeighbors(heuristic, current);
         }
         
+        return this.getPathFromPathComponent(last);
+    }
+    
+    private void addNeighbors(PathFinderHeuristic heuristic, PathComponent current) {
+        for (Position neighbor_pos : heuristic.getNeighbors(current.position)) {
+            // Search if this neighbor already exists:
+            PathComponent existing = this.all.get(neighbor_pos);
+            // Either update the existing or add a new path component:
+            double neighbor_cost = heuristic.estimateCost(current.position, neighbor_pos);
+            if (existing != null) {
+                // Some path to the neighbor already exists.
+                if (neighbor_cost < existing.cost) {
+                    // This current new path is faster, so use it instead:
+                    existing.source = current;
+                    existing.cost   = neighbor_cost;
+                }
+            } else {
+                // No path exists to the neighbor, add it:
+                PathComponent neighbor = new PathComponent(current, neighbor_pos, neighbor_cost);
+                this.open.add(neighbor);
+                this.all.put(neighbor.position, neighbor);
+            }
+        }
+    }
+    
+    // Return list of positions from start to end:
+    private List<Position> getPathFromPathComponent(PathComponent last) {
         if (last == null) {
             // No path.
             return null;
         }
         
-        // Return list of positions from start to end:
         List<Position> path = new FastInsertList<>();
         while (last != null) {
             path.add(0, last.position);

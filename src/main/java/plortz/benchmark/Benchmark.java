@@ -45,15 +45,27 @@ public abstract class Benchmark {
      * @return The shortest execution time.
      */
     public final long run(int warm_ups, int iterations) {
-        // Warm-up:
+        this.runWarmUps(warm_ups);
+        var times = this.runTests(iterations);
+        // Return the shortest time:
+        MergeSort<Long> sorter = new MergeSort<>();
+        List<Long> tmp = new ArrayList<>(); // for mergesort
+        for (var i : times) {
+            tmp.add(0L);
+        }
+        sorter.sort(times, tmp, (a, b) -> a < b);
+        return times.get(0);
+    }
+    
+    private void runWarmUps(int warm_ups) {
         for (int i = 0; i < warm_ups; i++) {
             this.setUp();
             this.execute();
         }
-        
-        // Run the actual test:
+    }
+    
+    private List<Long> runTests(int iterations) {
         List<Long> times = new ArrayList<>();
-        List<Long> tmp = new ArrayList<>(); // for mergesort
         for (int i = 0; i < iterations; i++) {
             // Try to run garbage collection between executions:
             System.gc();
@@ -69,13 +81,8 @@ public abstract class Benchmark {
             var t_end = System.nanoTime();
             
             times.add(t_end - t_start);
-            tmp.add(0L);
         }
-
-        // Return the shortest time:
-        MergeSort<Long> sorter = new MergeSort<>();
-        sorter.sort(times, tmp, (a, b) -> a < b);
-        return times.get(0);
+        return times;
     }
 
     /**
