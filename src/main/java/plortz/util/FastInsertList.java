@@ -27,7 +27,7 @@ import java.util.ListIterator;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The element type.
  */
-public class FastInsertAppendList<E> implements List<E> {
+public class FastInsertList<E> implements List<E> {
     
     /**
      * The actual data.
@@ -48,7 +48,7 @@ public class FastInsertAppendList<E> implements List<E> {
      */
     private int last;
 
-    public FastInsertAppendList() {
+    public FastInsertList() {
         this.data  = null;
         this.first = 0;
         this.last  = 0;
@@ -213,10 +213,10 @@ public class FastInsertAppendList<E> implements List<E> {
     
 
     public class Iterator<E> implements java.util.Iterator<E> {
-        private final FastInsertAppendList<E> list;
+        private final FastInsertList<E> list;
         private int                           pos;
         
-        public Iterator(FastInsertAppendList<E> list) {
+        public Iterator(FastInsertList<E> list) {
             this.list = list;
             this.pos  = list.first;
         }

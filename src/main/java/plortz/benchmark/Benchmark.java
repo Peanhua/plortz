@@ -31,9 +31,9 @@ public abstract class Benchmark {
         ArrayList<Benchmark> tests = new ArrayList<>();
         final int addcount = 100000;
         tests.add(new AppendAtEndWithArrayList(addcount));
-        tests.add(new AppendAtEndWithFastInsertAppendList(addcount));
+        tests.add(new AppendAtEndWithFastInsertList(addcount));
         tests.add(new InsertAtStartWithArrayList(addcount));
-        tests.add(new InsertAtStartWithFastInsertAppendList(addcount));
+        tests.add(new InsertAtStartWithFastInsertList(addcount));
         return tests;
     }        
     

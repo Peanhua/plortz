@@ -14,30 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.util;
+package plortz.benchmark;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import plortz.util.FastInsertList;
 
 /**
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class FastInsertAppendListTest extends ArrayListTest {
-    @Override
-    @Before
-    public void setUp() {
-        string_list = new FastInsertAppendList<>();
-        int_list = new FastInsertAppendList<>();
+public class InsertAtStartWithFastInsertList extends InsertAtStartWithArrayList {
+    
+    public InsertAtStartWithFastInsertList(int number_count) {
+        super(number_count);
     }
     
     @Override
-    @Test
-    public void insertingAtMiddleWorks() {
-        // Slow inserting at middle is not implemented, ignoring this test.
-    }    
+    protected void setUp() {
+        this.list = new FastInsertList<>();
+    }        
+
+    @Override
+    public String getName() {
+        return "Insert at start: FastInsertList";
+    }
 }

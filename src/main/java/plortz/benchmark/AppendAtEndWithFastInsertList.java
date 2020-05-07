@@ -16,25 +16,25 @@
  */
 package plortz.benchmark;
 
-import plortz.util.FastInsertAppendList;
+import plortz.util.FastInsertList;
 
 /**
  *
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class AppendAtEndWithFastInsertAppendList extends AppendAtEndWithArrayList {
+public class AppendAtEndWithFastInsertList extends AppendAtEndWithArrayList {
     
-    public AppendAtEndWithFastInsertAppendList(int number_count) {
+    public AppendAtEndWithFastInsertList(int number_count) {
         super(number_count);
     }
     
     @Override
     protected void setUp() {
-        this.list = new FastInsertAppendList<>();
+        this.list = new FastInsertList<>();
     }        
 
     @Override
     public String getName() {
-        return "Append at end: FastInsertAppendList";
+        return "Append at end: FastInsertList";
     }
 }
