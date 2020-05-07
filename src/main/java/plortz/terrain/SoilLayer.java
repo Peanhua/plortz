@@ -29,8 +29,8 @@ public class SoilLayer {
      * Enum listing all the possible soil types.
      */
     public enum Type {
-        DIRT( 40, new Vector(0.495, 0.325, 0.080)),
-        SAND( 34, new Vector(1.000, 0.795, 0.291)),
+        DIRT(40,  new Vector(0.495, 0.325, 0.080)),
+        SAND(34,  new Vector(1.000, 0.795, 0.291)),
         CLIFF(91, new Vector(0.600, 0.600, 0.600));
         
         private final double angle_of_repose;

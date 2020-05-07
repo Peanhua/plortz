@@ -86,7 +86,7 @@ public class FloodFill {
         for (int y = 0; y < this.length; y++) {
             for (int x = 0; x < this.width; x++) {
                 if (this.borders.get(x, y) != null) {
-                    if(this.filled.get(x, y) == null) {
+                    if (this.filled.get(x, y) == null) {
                         rv.add(new Position(x, y));
                     }
                 }

@@ -23,8 +23,7 @@ package plortz.util;
  */
 public class Meth {
 
-    public static double pow(double value, int exponent)
-    {
+    public static double pow(double value, int exponent) {
         double rv = value;
         for (int i = 1; i < exponent; i++) {
             rv *= value;
