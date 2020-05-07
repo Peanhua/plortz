@@ -163,4 +163,18 @@ public class VectorTest {
         assertEquals(3.0, src.getY(), testdelta);
         assertEquals(4.0, src.getZ(), testdelta);
     }
+    
+    @Test
+    public void namedGettersAndSettersWork() {
+        double values[] = { 0, 0, 0, 0 };
+        Vector v = new Vector(values);
+        v.setX(1.0);
+        v.setY(2.0);
+        v.setZ(4.0);
+        v.setW(8.0);
+        assertEquals(v.getX(), 1.0, testdelta);
+        assertEquals(v.getY(), 2.0, testdelta);
+        assertEquals(v.getZ(), 4.0, testdelta);
+        assertEquals(v.getW(), 8.0, testdelta);
+    }
 }

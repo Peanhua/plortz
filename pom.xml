@@ -64,6 +64,7 @@
                 <version>0.8.5</version>
                 <configuration>
                     <excludes>
+                        <exclude>plortz/benchmark/*</exclude>
                         <exclude>plortz/ui/*</exclude>
                         <exclude>plortz/ui/command/*</exclude>
                         <exclude>plortz/ui/javafx/*</exclude>

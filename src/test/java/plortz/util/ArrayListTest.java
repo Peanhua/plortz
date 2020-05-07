@@ -343,6 +343,45 @@ public class ArrayListTest {
     }
     
     @Test
+    public void insertingAtNegativeIndexThrowsException() {
+        boolean exception_thrown = false;
+        try {
+            string_list.add(-1, "eka");
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+
+        exception_thrown = false;
+        try {
+            string_list.add(-999999, "eka");
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
+
+    @Test
+    public void insertingPastTheSizeThrowsException() {
+        boolean exception_thrown = false;
+        try {
+            string_list.add(string_list.size() + 1, "eka");
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+
+        exception_thrown = false;
+        try {
+            string_list.add(string_list.size() + 99999, "eka");
+        } catch (Exception e) {
+            exception_thrown = true;
+        }
+        assertTrue(exception_thrown);
+    }
+
+    
+    @Test
     public void indexOfReturnsCorrectValue() {
         String a = "eka";
         String b = "toka";

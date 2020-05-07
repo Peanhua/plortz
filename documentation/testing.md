@@ -11,7 +11,7 @@ Code coverage report can be generated using Jacoco:
 ```
 mvn jacoco:report
 ```
-The user interface code (everything under plortz.ui) is excluded from the code coverage report.
+The user interface (plortz.ui) and benchmarking (plortz.benchmark) packages are excluded from the code coverage report.
 
 There is a lack of unit tests performed on certain areas that are considered unimportant:
 * The main class responsible of starting the program.

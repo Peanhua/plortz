@@ -203,4 +203,23 @@ public class TerrainTest {
         terrain.changed();
         assertTrue(was_called);
     }
+    
+    @Test
+    public void settingHighEnoughSeaLevelMakesAllTilesHaveWater() {
+        var alts = terrain.getAltitudeRange();
+        terrain.setSeaLevel(alts.getY() + 1);
+        for(var tile : terrain) {
+            assertTrue(tile.getWater() > 0.0);
+        }
+    }
+    
+    @Test
+    public void loweringSeaLevelRemovesWater() {
+        var alts = terrain.getAltitudeRange();
+        terrain.setSeaLevel(alts.getY() + 1);
+        terrain.setSeaLevel(-1);
+        for(var tile : terrain) {
+            assertTrue(tile.getWater() < 0.0);
+        }
+    }
 }
