@@ -52,6 +52,7 @@ public class FloodFill {
     }
     
     private Static2dArray<Boolean> filled;
+    private Static2dArray<Boolean> borders;
     private List<Position>         queue;
     private int                    width;
     private int                    length;
@@ -81,38 +82,17 @@ public class FloodFill {
      * @return The positions of the border elements.
      */
     public List<Position> getBorders() {
-        List<Position> borders = new ArrayList<>();
+        List<Position> rv = new ArrayList<>();
         for (int y = 0; y < this.length; y++) {
             for (int x = 0; x < this.width; x++) {
-                if (this.filled.get(x, y)) {
-                    continue;
-                }
-                if (this.isBorder(x, y)) {
-                    borders.add(new Position(x, y));
-                }
-            }
-        }
-        return borders;
-    }
-    
-    private boolean isBorder(int x, int y) {
-        for (int dy = -1; dy <= 1; dy++) {
-            for (int dx = -1; dx <= 1; dx++) {
-                if (dx == 0 && dy == 0) {
-                    continue;
-                }
-                if (dx != 0 && dy != 0) { // Skip diagonal
-                    continue;
-                }
-                if (!this.filled.isValidPosition(x + dx, y + dy)) {
-                    continue;
-                }
-                if (this.filled.get(x + dx, y + dy)) {
-                    return true;
+                if (this.borders.get(x, y) != null) {
+                    if(this.filled.get(x, y) == null) {
+                        rv.add(new Position(x, y));
+                    }
                 }
             }
         }
-        return false;
+        return rv;
     }
     
     /**
@@ -135,7 +115,8 @@ public class FloodFill {
     public void fill(int width, int length, Position start, FloodFillCallback callback) {
         this.width   = width;
         this.length  = length;
-        this.filled  = new Static2dArray<>(width, length, false);
+        this.filled  = new Static2dArray<>(width, length);
+        this.borders = new Static2dArray<>(width, length);
         this.queue   = new ArrayList<>();
         
         this.queue.add(start);
@@ -167,29 +148,55 @@ public class FloodFill {
                 break;
             }
             
-            if (!this.filled.get(curpos)) {
+            if (this.filled.get(curpos) == null) {
                 this.filled.set(curpos, true);
+                this.setBorders(curpos);
                 callback.fill(curpos);
             }
 
-            boolean above = this.checkPosition(new Position(start, dx, -1), callback);
-            boolean below = this.checkPosition(new Position(start, dx,  1), callback);
+            final var above = this.checkPosition(new Position(start, dx, -1), callback);
+            final var below = this.checkPosition(new Position(start, dx,  1), callback);
 
             if (!above_filling && above) {
-                Position above_pos = new Position(start, dx, -1);
-                if (!this.filled.get(above_pos)) {
+                final var above_pos = new Position(start, dx, -1);
+                if (this.filled.get(above_pos) == null) {
                     this.queue.add(above_pos);
                 }
             }
             if (!below_filling && below) {
-                Position below_pos = new Position(start, dx, 1);
-                if (!this.filled.get(below_pos)) {
+                final var below_pos = new Position(start, dx, 1);
+                if (this.filled.get(below_pos) == null) {
                     this.queue.add(below_pos);
                 }
             }
 
             above_filling = above;
             below_filling = below;
+        }
+    }
+
+    /**
+     * Set the tiles around the given position as borders.
+     * Will be later used in getBorders().
+     * 
+     * @param around The filled position whose borders needs to be set.
+     */
+    private void setBorders(Position around) {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0) {
+                    continue;
+                }
+                if (dx != 0 && dy != 0) { // Skip diagonal
+                    continue;
+                }
+                final int x = around.getX() + dx;
+                final int y = around.getY() + dy;
+                if (!this.borders.isValidPosition(x, y)) {
+                    continue;
+                }
+                this.borders.set(x, y, true);
+            }
         }
     }
 }
