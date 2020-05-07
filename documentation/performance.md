@@ -32,7 +32,7 @@ echo "run scripts/perf-large.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>add random soil</td>                  <td>0.070387s</td></tr>
   <tr><td>add soil - circle</td>                <td>0.023363s</td></tr>
   <tr><td>add soil - rectangle</td>             <td>0.120971s</td></tr>
-  <tr><td>add water</td>                        <td>26.747692s</td></tr>
+  <tr><td>add water</td>                        <td>2.485424s</td></tr>
   <tr><td>diamond-square</td>                   <td>0.126948s</td></tr>
   <tr><td>gaussian hill</td>                    <td>0.064253s</td></tr>
   <tr><td>insert soil at bottom - circle</td>   <td>0.025869s</td></tr>
@@ -63,8 +63,8 @@ echo "run scripts/perf-small.txt" | mvn compile exec:java -Dexec.args="--timing 
   <tr><td>General landscape with diamond-square</td> <td>0.500796s</td></tr>
   <tr><td>Couple hills with perlin noise base</td> <td>1.389787s</td></tr>
   <tr><td>Couple hills with diamond-square base</td> <td>0.45171s</td></tr>
-  <tr><td>Couple hills and water with perlin noise base</td> <td>43.961907s</td></tr>
-  <tr><td>Couple hills and water with diamond-square base</td> <td>50.062579s</td></tr>
+  <tr><td>Couple hills and water with perlin noise base</td> <td>5.879849s</td></tr>
+  <tr><td>Couple hills and water with diamond-square base</td> <td>7.638568s</td></tr>
 </table>
 
 ![Time taken, logarithmic scale](perf-small.png)
