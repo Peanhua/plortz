@@ -19,7 +19,7 @@ There is a lack of unit tests performed on certain areas that are considered uni
 * Overrides of toString() method, those are used only for debugging purposes.
 * Some simple getter and setter methods.
 
-Test coverage report at commit (a2d706b88b01ffd9d8fdf3a03585ee08b1a919f7) made by Jacoco:
+Test coverage report at commit https://github.com/Peanhua/plortz/commit/a2d706b88b01ffd9d8fdf3a03585ee08b1a919f7 made by Jacoco:
 
 ![Test coverage at commit a2d706b88b01ffd9d8fdf3a03585ee08b1a919f7](test-coverage.png)
 
