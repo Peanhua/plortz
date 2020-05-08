@@ -1,7 +1,7 @@
 # Project specification
 Plortz is a software written in Java to generate rectangular areas of terrains suitable to be used in games etc. The terrains consists of data points to define the landscape elevation data and other attributes, such as the type of the land (for example dirt, sand, snow, water). These are commonly referred to as heightmaps.
 
-The primary goal of the project is to be able to pre-generate terrains to be used in games, secondary goal is to have the system operate fast enough for generating the terrains in real-time in the games.
+The primary goal of the project is to be able to pre-generate terrains to be used in games, secondary goal is to have the system operate fast enough for generating the terrains in real-time in the games. See [the goals](goals.md) for more information about the goals.
 
 Initial implementation will contain only one layer of the data accross the landscape. Optionally this is extended into multiple layers so that underground land formation can be taken into account when applying tools and physics simulation.
 
