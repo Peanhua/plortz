@@ -17,7 +17,7 @@
 package plortz.util;
 
 /**
- * A generic vector class.
+ * Generic vector class.
  * <p>
  * Can handle arbitrary number of dimensions.
  * The dimensions are named (in order): x, y, z, w.

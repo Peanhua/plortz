@@ -19,7 +19,7 @@ package plortz.util;
 import java.util.List;
 
 /**
- * A generic merge sorter.
+ * Generic merge sorter.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The element type.

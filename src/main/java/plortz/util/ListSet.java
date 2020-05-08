@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A simple arraylist based Set.
+ * Simple arraylist based Set.
  * <p>
  * Implements only the methods required by this application.
  * 

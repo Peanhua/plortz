@@ -22,7 +22,7 @@ import plortz.ui.UserInterface;
 import plortz.util.ArrayList;
 
 /**
- * A command to remove water from the terrain.
+ * Command to remove water from the terrain.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

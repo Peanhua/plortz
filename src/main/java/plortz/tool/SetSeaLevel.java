@@ -19,7 +19,9 @@ package plortz.tool;
 import plortz.terrain.Terrain;
 
 /**
- *
+ * Tool to set the altitude that defines the sea level.
+ * Anything below the sea level will contain water up to the sea level.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SetSeaLevel extends Tool {

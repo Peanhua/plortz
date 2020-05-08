@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.util.ArrayList;
 
 /**
- *
+ * Benchmark inserting at the beginning of a list.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class InsertAtStartWithArrayList extends Benchmark {

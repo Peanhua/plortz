@@ -19,7 +19,8 @@ package plortz.benchmark;
 import plortz.util.FastInsertList;
 
 /**
- *
+ * Benchmark inserting at the beginning of a list.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class InsertAtStartWithFastInsertList extends InsertAtStartWithArrayList {

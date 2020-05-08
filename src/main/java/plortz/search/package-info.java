@@ -1,4 +1,4 @@
 /**
- * Classes implementing searching/path finding.
+ * Searching and path finding classes.
  */
 package plortz.search;

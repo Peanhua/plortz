@@ -29,7 +29,7 @@ import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
 
 /**
- * A widget showing the current terrain as an 2d image.
+ * Widget showing the current terrain as a 2d image.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

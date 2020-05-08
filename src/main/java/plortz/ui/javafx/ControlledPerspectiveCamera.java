@@ -22,7 +22,8 @@ import javafx.scene.transform.Rotate;
 import plortz.util.Vector;
 
 /**
- *
+ * Controllable camera in 3d.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class ControlledPerspectiveCamera extends PerspectiveCamera {

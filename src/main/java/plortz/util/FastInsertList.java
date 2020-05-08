@@ -22,7 +22,7 @@ import java.util.ListIterator;
 
 
 /**
- * A list with fast insert at the start.
+ * List with fast insert at the start.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  * @param <E> The element type.

@@ -20,7 +20,8 @@ import java.util.List;
 import plortz.util.ArrayList;
 
 /**
- *
+ * Benchmark appending at the end of a list.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AppendAtEndWithArrayList extends Benchmark {

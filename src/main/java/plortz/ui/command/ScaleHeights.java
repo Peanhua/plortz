@@ -22,7 +22,7 @@ import plortz.tool.Tool;
 import plortz.ui.UserInterface;
 
 /**
- * A command to scale all the soil layers by a factor.
+ * Command to scale all the soil layers by a factor.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */

@@ -27,6 +27,11 @@ import plortz.util.MergeSort;
  */
 public abstract class Benchmark {
     
+    /**
+     * Return instances of all benchmarks.
+     * 
+     * @return List of benchmarks.
+     */
     public static List<Benchmark> getAllTests() {
         ArrayList<Benchmark> tests = new ArrayList<>();
         final int addcount = 100000;

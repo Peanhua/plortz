@@ -1,5 +1,5 @@
 /**
- * The main class, and classes that don't fit any other category.
+ * The main class used to start the program.
  */
 
 package plortz;

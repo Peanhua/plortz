@@ -19,7 +19,8 @@ package plortz.benchmark;
 import plortz.util.FastInsertList;
 
 /**
- *
+ * Benchmark appending at the end of a list.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class AppendAtEndWithFastInsertList extends AppendAtEndWithArrayList {

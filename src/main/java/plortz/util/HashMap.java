@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A map using hash table.
+ * Map using hash table.
  * <p>
  * Implements only the methods required by this application.
  * 

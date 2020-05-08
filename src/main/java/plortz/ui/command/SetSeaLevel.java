@@ -22,7 +22,8 @@ import plortz.ui.UserInterface;
 import plortz.util.ArrayList;
 
 /**
- *
+ * Command to set the altitude that defines the sea level.
+ * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 public class SetSeaLevel extends Command {

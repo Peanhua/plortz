@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A set implementation using hashing.
+ * Set implementation using hashing.
  * <p>
  * Implements only the methods required by this application.
  * 
