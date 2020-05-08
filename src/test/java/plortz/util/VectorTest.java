@@ -172,9 +172,44 @@ public class VectorTest {
         v.setY(2.0);
         v.setZ(4.0);
         v.setW(8.0);
-        assertEquals(v.getX(), 1.0, testdelta);
-        assertEquals(v.getY(), 2.0, testdelta);
-        assertEquals(v.getZ(), 4.0, testdelta);
-        assertEquals(v.getW(), 8.0, testdelta);
+        assertEquals(1.0, v.getX(), testdelta);
+        assertEquals(2.0, v.getY(), testdelta);
+        assertEquals(4.0, v.getZ(), testdelta);
+        assertEquals(8.0, v.getW(), testdelta);
+    }
+    
+    @Test
+    public void lengthIsCalculatedCorrectly() {
+        Vector v1 = new Vector(0, 0);
+        Vector v2 = new Vector(1, 0);
+        Vector v3 = new Vector(0, 1);
+        Vector v4 = new Vector(1, 1);
+        Vector v5 = new Vector(3, 4);
+        Vector v6 = new Vector(3, 7);
+        assertEquals(0, v1.getLength(), testdelta);
+        assertEquals(1, v2.getLength(), testdelta);
+        assertEquals(1, v3.getLength(), testdelta);
+        assertEquals(1.41421356237309504880, v4.getLength(), testdelta);
+        assertEquals(5, v5.getLength(), testdelta);
+        assertEquals(7.61577310586390828566, v6.getLength(), testdelta);
+    }
+    
+    @Test
+    public void dotProductIsCalculatedCorrectly() {
+        {
+            Vector v1 = new Vector(0, 0, 0);
+            Vector v2 = new Vector(0, 0, 0);
+            assertEquals(0, v1.getDotProduct(v2), testdelta);
+        }
+        {
+            Vector v1 = new Vector(2, 1);
+            Vector v2 = new Vector(-2, 4);
+            assertEquals(0, v1.getDotProduct(v2), testdelta);
+        }
+        {
+            Vector v1 = new Vector(1, 3, -5);
+            Vector v2 = new Vector(4, -2, -1);
+            assertEquals(3, v1.getDotProduct(v2), testdelta);
+        }
     }
 }
