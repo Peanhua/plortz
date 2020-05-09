@@ -205,6 +205,7 @@ public class TargaWriter extends Writer {
             } else {
                 output.write(this.getImageGray(terrain, x, y));
             }
+            x++;
         }
     }
     
