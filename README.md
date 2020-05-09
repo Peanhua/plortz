@@ -6,7 +6,7 @@ Plortz has two user interfaces, the default graphical using JavaFX, and a comman
 This project is made for a course named "tiralabra", one of the requirements in the course is that all algorithms and data structures are self made.
 
 ## Requirements
-Maven and Java 11.
+Java 11 and JavaFX 14, Maven is used for build automation.
 
 ## Documentation:
 * [User manual](documentation/manual.md)
