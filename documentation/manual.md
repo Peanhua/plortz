@@ -27,6 +27,18 @@ By default, the program starts in graphical user interface, but it also has a co
 To output the timing information, start with "--timing" argument, for example:
 ```mvn exec:java -Dexec.args="--timing"```
 
+#### Running the release
+The packaged jar file requires JavaFX, which can be downloaded for example from [Gluon](https://gluonhq.com/products/javafx/). Download and unzip the proper package for your system, and then define the ```--module-path``` and ```--add-modules``` to add the ```javafx.controls``` module:
+```
+$ java --module-path ./javafx-sdk-11.0.2/lib --add-modules=javafx.controls -jar plortz-1.0-SNAPSHOT.jar
+```
+
+Command-line arguments can be given directly, for example:
+```
+$ java --module-path ./javafx-sdk-11.0.2/lib --add-modules=javafx.controls -jar plortz-1.0-SNAPSHOT.jar --timing
+```
+
+
 ## Graphical user interface
 The window is split into three parts. <img align="right" src="../screenshot.png" width="400px">
 

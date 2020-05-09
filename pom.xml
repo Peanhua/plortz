@@ -25,6 +25,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>plortz.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -69,6 +81,7 @@
                         <exclude>plortz/ui/command/*</exclude>
                         <exclude>plortz/ui/javafx/*</exclude>
                     </excludes>
+                    <rules />
                 </configuration>
                 <executions>
                     <execution>
