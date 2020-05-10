@@ -8,7 +8,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>11</maven.compiler.release>
+        <lwjgl.version>3.2.3</lwjgl.version>
+        <lwjgl.natives>natives-linux</lwjgl.natives>
     </properties>
+    <dependencyManagement>
+	<dependencies>
+	    <dependency>
+		<groupId>org.lwjgl</groupId>
+		<artifactId>lwjgl-bom</artifactId>
+		<version>${lwjgl.version}</version>
+		<scope>import</scope>
+		<type>pom</type>
+	    </dependency>
+	</dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -17,10 +30,59 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>14</version>
-        </dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-assimp</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-glfw</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-openal</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-opengl</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-stb</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-assimp</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-glfw</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-openal</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-opengl</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-stb</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
     </dependencies>
     <build>
         <plugins>
@@ -79,7 +141,6 @@
                         <exclude>plortz/benchmark/*</exclude>
                         <exclude>plortz/ui/*</exclude>
                         <exclude>plortz/ui/command/*</exclude>
-                        <exclude>plortz/ui/javafx/*</exclude>
                     </excludes>
                     <rules />
                 </configuration>
@@ -122,14 +183,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.4</version>
-                <configuration>
-                    <mainClass>plortz.ui.javafx.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
