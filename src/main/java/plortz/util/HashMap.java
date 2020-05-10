@@ -114,7 +114,7 @@ public class HashMap<K, V> implements Map<K, V> {
     }
     
     private int getBucketIndex(K key) {
-        return Meth.abs(key.hashCode()) % this.buckets.size();
+        return Math.abs(key.hashCode()) % this.buckets.size();
     }
     
     @Override
