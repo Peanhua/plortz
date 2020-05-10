@@ -16,12 +16,12 @@
  */
 package plortz.tool;
 
+import java.util.ArrayList;
 import java.util.List;
 import plortz.util.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.search.AStar;
-import plortz.util.ArrayList;
 import plortz.search.BreadthFirstSearch;
 import plortz.search.FloodFill;
 import plortz.search.PathFinder;

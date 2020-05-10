@@ -16,12 +16,12 @@
  */
 package plortz.tool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import plortz.util.Position;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.util.ArrayList;
 
 /**
  * Rolls loose land mass downhill.

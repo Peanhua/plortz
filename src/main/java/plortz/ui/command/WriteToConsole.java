@@ -16,8 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.ArrayList;
 import java.util.List;
-import plortz.util.ArrayList;
 import plortz.io.AsciiWriter;
 import plortz.io.Writer;
 import plortz.ui.UserInterface;

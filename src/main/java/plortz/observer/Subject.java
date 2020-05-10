@@ -16,8 +16,8 @@
  */
 package plortz.observer;
 
+import java.util.ArrayList;
 import java.util.List;
-import plortz.util.ArrayList;
 
 /**
  * Observer pattern, the subject object.

@@ -16,8 +16,8 @@
  */
 package plortz.benchmark;
 
+import java.util.ArrayList;
 import java.util.List;
-import plortz.util.ArrayList;
 
 /**
  * Benchmark appending at the end of a list.

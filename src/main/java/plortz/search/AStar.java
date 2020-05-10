@@ -16,11 +16,11 @@
  */
 package plortz.search;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 import plortz.util.FastInsertList;
-import plortz.util.HashMap;
 import plortz.util.Position;
-import plortz.util.PriorityQueue;
 
 /**
  * A-Star path finding algorithm.

@@ -16,8 +16,8 @@
  */
 package plortz.search;
 
+import java.util.ArrayList;
 import java.util.List;
-import plortz.util.ArrayList;
 import plortz.util.Position;
 
 /**

@@ -16,6 +16,7 @@
  */
 package plortz.ui.javafx;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
@@ -30,7 +31,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
-import plortz.util.ArrayList;
 
 /**
  * The JavaFX application class responsible of setting up the JavaFX stuffs.

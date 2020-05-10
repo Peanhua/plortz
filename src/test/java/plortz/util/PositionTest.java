@@ -16,6 +16,7 @@
  */
 package plortz.util;
 
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

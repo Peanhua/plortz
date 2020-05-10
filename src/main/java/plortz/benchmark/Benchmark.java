@@ -16,9 +16,9 @@
  */
 package plortz.benchmark;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import plortz.util.ArrayList;
-import plortz.util.MergeSort;
 
 /**
  * Abstract base class for performance tests.
@@ -53,12 +53,11 @@ public abstract class Benchmark {
         this.runWarmUps(warm_ups);
         var times = this.runTests(iterations);
         // Return the shortest time:
-        MergeSort<Long> sorter = new MergeSort<>();
         List<Long> tmp = new ArrayList<>(); // for mergesort
         for (var i : times) {
             tmp.add(0L);
         }
-        sorter.sort(times, tmp, (a, b) -> a < b);
+        Collections.sort(times);
         return times.get(0);
     }
     

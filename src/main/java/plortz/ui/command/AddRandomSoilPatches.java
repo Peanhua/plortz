@@ -16,9 +16,9 @@
  */
 package plortz.ui.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import plortz.util.ArrayList;
 import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;

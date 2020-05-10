@@ -16,10 +16,10 @@
  */
 package plortz.ui.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import plortz.tool.Tool;
 import plortz.ui.UserInterface;
-import plortz.util.ArrayList;
 
 /**
  * Command to set the altitude that defines the sea level.

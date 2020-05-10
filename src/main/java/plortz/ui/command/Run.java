@@ -17,10 +17,10 @@
 package plortz.ui.command;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import plortz.ui.UserInterface;
-import plortz.util.ArrayList;
 
 /**
  * Command to run a script file.

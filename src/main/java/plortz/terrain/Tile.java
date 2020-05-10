@@ -16,10 +16,10 @@
  */
 package plortz.terrain;
 
+import java.util.ArrayList;
 import plortz.util.Position;
 import java.util.List;
 import plortz.util.Vector;
-import plortz.util.ArrayList;
 
 /**
  * A single tile in the Terrain.

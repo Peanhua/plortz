@@ -16,8 +16,8 @@
  */
 package plortz.ui.command;
 
+import java.util.ArrayList;
 import java.util.List;
-import plortz.util.ArrayList;
 import plortz.tool.Tool;
 import plortz.tool.filters.AverageSmoothingFilter;
 import plortz.tool.filters.EdgeDetectingSmoothingFilter;

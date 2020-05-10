@@ -16,12 +16,12 @@
  */
 package plortz.tool;
 
+import java.util.ArrayList;
 import java.util.List;
 import plortz.util.Position;
 import plortz.terrain.SoilLayer;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
-import plortz.util.ArrayList;
 import plortz.util.Circle;
 
 /**

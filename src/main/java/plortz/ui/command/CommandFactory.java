@@ -17,10 +17,10 @@
 package plortz.ui.command;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import plortz.util.HashMap;
-import plortz.util.ArrayList;
 
 /**
  * Singleton factory to generate command object from given command string.

@@ -16,13 +16,13 @@
  */
 package plortz.search;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import plortz.util.ArrayList;
 import plortz.util.Position;
 import plortz.util.Static2dArray;
 import static org.junit.Assert.*;
