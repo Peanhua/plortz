@@ -14,23 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package plortz.ui;
+package plortz.ui.lwjgui;
+
+import lwjgui.scene.Node;
+
 
 /**
- * User interface with JavaFX.
+ * Abstract base class for all the custom widgets.
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-public class GraphicalUI extends UserInterface {
+public abstract class Widget {
+    private Node root;
     
-    @Override
-    public void run() {
-        plortz.ui.lwjgui.Main.run(this);
+    public Widget() {
+        this.root = null;
     }
     
-    @Override
-    public void stop() {
-        super.stop();
-        //Platform.exit();
+    public final Node getRootNode() {
+        if (this.root == null) {
+            this.root = this.createUserInterface();
+        }
+        return this.root;
     }
+    
+    /**
+     * Create the user interface nodes to represent this widget.
+     * 
+     * @return A node containing all the nodes of this widget
+     */
+    protected abstract Node createUserInterface();
+    
+    /**
+     * Refresh any dynamic content of this widget.
+     */
+    public abstract void refresh();
 }
