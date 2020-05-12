@@ -16,6 +16,7 @@
  */
 package plortz.ui.lwjgui;
 
+import lwjgui.LWJGUI;
 import lwjgui.event.KeyEvent;
 import lwjgui.scene.Node;
 import lwjgui.scene.control.Label;
@@ -23,6 +24,7 @@ import lwjgui.scene.control.ScrollPane;
 import lwjgui.scene.control.TextField;
 import lwjgui.scene.layout.Pane;
 import lwjgui.scene.layout.VBox;
+import org.lwjgl.glfw.GLFW;
 import plortz.ui.UserInterface;
 import plortz.ui.command.Command;
 import plortz.ui.command.CommandFactory;
@@ -37,6 +39,7 @@ public class Console extends Widget {
     private final UserInterface  user_interface;
     private final CommandFactory command_factory;
     TextField                    console_cmd;
+    ScrollPane                   console_messages_pane;
     VBox                         console_messages;
 
     public Console(UserInterface user_interface) {
@@ -50,42 +53,39 @@ public class Console extends Widget {
     protected Node createUserInterface() {
         Pane pane = new VBox();
         
-        ScrollPane console_message_pane = new ScrollPane();
-        pane.getChildren().add(console_message_pane);
-        console_message_pane.setPrefHeight(200);
+        this.console_messages_pane = new ScrollPane();
+        pane.getChildren().add(this.console_messages_pane);
+        this.console_messages_pane.setPrefHeight(200);
         this.console_messages = new VBox();
-        console_message_pane.setContent(this.console_messages);
+        this.console_messages_pane.setContent(this.console_messages);
         //console_message_pane.vvalueProperty().bind(this.console_messages.heightProperty());
         
-        console_cmd = new TextField();
-        pane.getChildren().add(console_cmd);
-        //console_cmd.addEventHandler(KeyEvent.KEY_PRESSED,  (event) -> this.onCmdKeyPressed(event));
-        //console_cmd.addEventHandler(KeyEvent.KEY_RELEASED, (event) -> this.onCmdKeyReleased(event));
+        this.console_cmd = new TextField();
+        pane.getChildren().add(this.console_cmd);
+        
+        this.console_cmd.setOnKeyPressed((event) -> this.onCmdKeyPressed(event));
+        this.console_cmd.setOnKeyReleased((event) -> this.onCmdKeyReleased(event));
         
         return pane;
     }
     
     private void onCmdKeyPressed(KeyEvent event) {
-        /*
-        switch (event.getCode()) {
-            case UP:
+        switch (event.key) {
+            case GLFW.GLFW_KEY_UP:
                 this.goHistoryUp();
                 break;
-            case DOWN:
+            case GLFW.GLFW_KEY_DOWN:
                 this.goHistoryDown();
                 break;
         }
-*/
     }
 
     private void onCmdKeyReleased(KeyEvent event) {
-        /*
-        switch (event.getCode()) {
-            case ENTER:
+        switch (event.key) {
+            case GLFW.GLFW_KEY_ENTER:
                 this.processInput();
                 break;
         }
-*/
     }
     
     private void processInput() {
@@ -103,7 +103,7 @@ public class Console extends Widget {
         String previous = this.user_interface.getCommandHistory().previous();
         if (previous != null) {
             this.console_cmd.setText(previous);
-           // Platform.runLater(() -> console_cmd.positionCaret(previous.length()));
+            console_cmd.setCaretPosition(previous.length());
         }
     }
     
@@ -111,7 +111,7 @@ public class Console extends Widget {
         String next = this.user_interface.getCommandHistory().next();
         if (next != null) {
             this.console_cmd.setText(next);
-            //Platform.runLater(() -> console_cmd.positionCaret(next.length()));
+            console_cmd.setCaretPosition(next.length());
         } else {
             this.console_cmd.clear();
         }
@@ -119,10 +119,12 @@ public class Console extends Widget {
 
     @Override
     public void refresh() {
-        
     }
     
     private void onMessage() {
         this.console_messages.getChildren().add(new Label(this.user_interface.getMessage()));
+        LWJGUI.runLater(() -> {
+            this.console_messages_pane.setVvalue(1);
+        });
     }
 }
