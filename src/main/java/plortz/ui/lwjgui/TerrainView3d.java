@@ -16,6 +16,24 @@
  */
 package plortz.ui.lwjgui;
 
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import lwjgui.event.KeyEvent;
+import org.lwjgl.system.MemoryUtil;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import lwjgui.gl.GenericShader;
+import lwjgui.gl.Renderer;
+import lwjgui.scene.Context;
+import org.joml.AxisAngle4f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
@@ -26,113 +44,218 @@ import plortz.ui.UserInterface;
  * 
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
-/*
-public class TerrainView3d extends TerrainView {
-    private MeshView      terrain_mesh;
-    private SubScene      scene3d;
+
+public class TerrainView3d implements Renderer {
+    // The user interface this widget is part of:
+    private UserInterface user_interface;
+
     // The terrain size for which the current mesh is constructed for:
-    private int           terrain_mesh_width;
-    private int           terrain_mesh_length;
-    private WritableImage terrain_mesh_texture;
-    // Camera controls:
-    private boolean         camera_controls;
-    private final Vector    mouse_oldpos;
-    private double          camera_rotate_speed;
-    private int             camera_movement_speed;
-    private ControlledPerspectiveCamera camera;
+    private int terrain_mesh_width;
+    private int terrain_mesh_length;
+    private int vertex_count;
+    
+    // OpenGL objects:
+    private GenericShader shader;
+    private int vao;
+    private int vbo;
+    
+    // Camera:
+    Matrix4f model;
+    Matrix4f view;
+    Matrix4f proj;
+    Vector3f camera_pos;
+    float    camera_yaw;
+    float    camera_pitch;
+
     
     public TerrainView3d(UserInterface ui) {
-        super(ui);
-        this.terrain_mesh         = null;
-        this.scene3d              = null;
-        this.terrain_mesh_width   = 0;
-        this.terrain_mesh_length  = 0;
-        this.terrain_mesh_texture = null;
-        this.camera_controls      = false;
-        this.mouse_oldpos         = new Vector(0, 0);
-        this.camera_rotate_speed   = 0.15;
-        this.camera_movement_speed = 3;
+        this.user_interface = ui;
+        this.terrain_mesh_width  = 0;
+        this.terrain_mesh_length = 0;
+        this.shader = new GenericShader();
+        this.vbo = glGenBuffers();
+        this.vao = glGenVertexArrays();
+        this.model = new Matrix4f();
+        this.view = new Matrix4f();
+        this.proj = new Matrix4f();
+        this.camera_pos = new Vector3f(0, 10, -1);
+        this.camera_yaw = 0;
+        this.camera_pitch = 0;
+        Vector3f UP = new Vector3f(0.0f, 0.0f, 1.0f);
+        this.proj.setPerspective((float) Math.toRadians(45.0f), (float) 1024 / 768, 0.1f, 2000.0f);
+        
+        ui.listenOnTerrainChange(() -> {
+            this.updateGeometry();
+            this.user_interface.getTerrain().listenOnChange(() -> {
+                this.updateGeometry();
+            });
+        });
+
+        this.updateGeometry();
+    }
+    
+    private void updateGeometry() {
+        
+        Terrain terrain = this.user_interface.getTerrain();
+        if (terrain == null) {
+            return;
+        }
+
+        Vector minmax = terrain.getAltitudeRange();
+        float offsetx = -terrain.getWidth() / 2;
+        float offsety = -terrain.getLength() / 2;
+        var points = new ArrayList<Float>();
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                Tile t = terrain.getTile(x, y);
+                points.add(offsetx + x);
+                points.add(offsety + y);
+                points.add((float) (t.getAltitude(true) - minmax.getX()));
+                //mesh.getTexCoords().addAll(((float) x + 0.5f) / (float) terrain.getWidth(), ((float) y + 0.5f) / (float) terrain.getLength());
+            }
+        }
+        
+        this.vertex_count = (terrain.getWidth() - 1) * (terrain.getLength() - 1) * 2 * 3;
+                 
+        int vertSize = 3; // vec3 in shader
+        int texSize = 2; // vec2 in shader
+        int colorSize = 4; // vec4 in shader
+        int size = vertSize + texSize + colorSize; // Stride length
+        int bytes = Float.BYTES; // Bytes per element (float)
+			
+        FloatBuffer buffer = MemoryUtil.memAllocFloat(vertex_count * size);
+        for (int y = 0; y < terrain.getLength() - 1; y++) {
+            for (int x = 0; x < terrain.getWidth() - 1; x++) {
+                /*
+                * Generate a quad from two triangles:
+                * AB
+                * CD
+                */
+                // Point indices:
+                int a = x + y * terrain.getWidth();
+                int b = a + 1;
+                int c = a + terrain.getWidth();
+                int d = c + 1;
+                // Texture indices:
+                int ta = x + y * terrain.getWidth();
+                int tb = ta + 1;
+                int tc = ta + terrain.getWidth();
+                int td = tc + 1;
+                // The triangles:
+                buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                
+                buffer.put(points.get(a * 3 + 0)).put(points.get(a * 3 + 1)).put(points.get(a * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+
+                buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                
+
+                buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                
+                buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+
+                buffer.put(points.get(d * 3 + 0)).put(points.get(d * 3 + 1)).put(points.get(d * 3 + 2));
+                buffer.put(0.0f).put(0.0f);
+                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+            }
+        }
+        buffer.flip();
+
+        glBindBuffer(GL_ARRAY_BUFFER, this.vbo);
+        glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+
+        glBindVertexArray(this.vao);
+        glEnableVertexAttribArray(0); // layout 0 shader
+        glEnableVertexAttribArray(1); // layout 1 shader
+        glEnableVertexAttribArray(2); // layout 2 shader
+        int vertOffset = 0;
+        glVertexAttribPointer( 0, vertSize,  GL_FLOAT, false, size * bytes, vertOffset );
+        int texOffset = vertSize * bytes;
+        glVertexAttribPointer( 1, texSize,   GL_FLOAT, false, size * bytes, texOffset );
+        int colorOffset = texOffset + texSize * bytes;
+        glVertexAttribPointer( 2, colorSize, GL_FLOAT, false, size * bytes, colorOffset );
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
     }
     
     @Override
-    protected Node createUserInterface() {
-        super.createUserInterface();
-        
-        this.terrain_mesh = new MeshView();
-        this.container.getChildren().add(this.terrain_mesh);
-        
-        //AmbientLight light = new AmbientLight(Color.YELLOW);
-        //light.setTranslateZ(1);
+    public void render(Context context) {
+        glClearColor(0,0,0,1);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
-        Box box = new Box(0.5, 0.5, 0.5);
-        box.setMaterial(new PhongMaterial(Color.WHITE));
+        var terrain = this.user_interface.getTerrain();
+        if(terrain == null) {
+            return;
+        }
         
-        PhongMaterial m = new PhongMaterial(Color.RED);
-        this.terrain_mesh.setMaterial(m);
-        //light.getScope().add(this.terrain_mesh);
+        this.shader.bind();
         
-        this.camera = new ControlledPerspectiveCamera();
-        this.camera.setPosition(new Vector(0, -20, -100));
-        this.camera.rotatePitch(-30);
-        this.camera.setFarClip(1000);
-        
-        Group root3D = new Group(this.camera, box, this.terrain_mesh);
-        scene3d = new SubScene(root3D, 1, 1, true, SceneAntialiasing.DISABLED);
-        scene3d.setFill(Color.BLACK);
-        scene3d.setCamera(this.camera);
-        
-        this.container.setCenter(scene3d);
+        //System.out.println("yaw=" + this.camera_yaw + ", pitch=" + this.camera_pitch);
+        this.view = new Matrix4f();
+        /*
+        this.view.rotate(this.camera_yaw, new Vector3f(0.0f, 0.0f, 1.0f));
+        this.view.rotateLocalX(this.camera_pitch);
+        */
+        var eye = new Vector3f(0, 0, 0);
+        var cen = new Vector3f(0, 1, 0);
+        this.view.lookAt(eye, cen, new Vector3f(0, 0, 1));
 
-        scene3d.setOnMousePressed((e) -> {
-            this.camera_controls = true;
-            this.mouse_oldpos.setX(e.getSceneX());
-            this.mouse_oldpos.setY(e.getSceneY());
-            scene3d.setCursor(Cursor.NONE);
-        });
-        scene3d.setOnMouseReleased((e) -> {
-            this.camera_controls = false;
-            scene3d.setCursor(Cursor.DEFAULT);
-        });
-        scene3d.setOnMouseDragged((e) -> {
-            Vector mouse_pos = new Vector(e.getSceneX(), e.getSceneY());
-            this.camera.rotatePitch(-this.camera_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
-            this.camera.rotateYaw(this.camera_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
-            this.mouse_oldpos.set(mouse_pos);
-        });
-        scene3d.setOnScroll((e) -> {
-            boolean changed = false;
-            if (e.getDeltaY() < 0.0) {
-                this.camera_movement_speed--;
-                if (this.camera_movement_speed < 1) {
-                    this.camera_movement_speed = 1;
-                } else {
-                    changed = true;
-                }
-            } else if (e.getDeltaY() > 0.0) {
-                this.camera_movement_speed++;
-                if (this.camera_movement_speed > 10) {
-                    this.camera_movement_speed = 10;
-                } else {
-                    changed = true;
-                }
-            }
-            if (changed) {
-                this.user_interface.showMessage("Movement speed: " + this.camera_movement_speed);
-            }
-        });
-        return this.container;
+        var q = new Quaternionf();
+        q.identity();
+        q.rotateAxis((float) -Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
+        q.rotateAxis((float) Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
+        this.view.rotate(q);
+        this.view.translate(this.camera_pos);
+
+        shader.setWorldMatrix(this.model);
+        shader.setViewMatrix(this.view);
+        shader.setProjectionMatrix(this.proj);
+
+        glBindVertexArray(this.vao);
+        glDrawArrays(GL_TRIANGLES, 0, this.vertex_count);
     }
     
-
-    @Override
-    protected void onResized() {
-        super.onResized();
-        this.scene3d.setWidth(this.width);
-        this.scene3d.setHeight(this.height);
-        this.refresh();
+    private float coTangent(float angle) {
+        return (float)(1f / Math.tan(angle));
     }
-
-
+    
+    private float degreesToRadians(float degrees) {
+        return degrees * (float)(Math.PI / 180d);
+    }
+    
+    public void rotateCameraX(float angle) {
+        this.camera_yaw += angle;
+    }
+    
+    public void rotateCameraY(float angle) {
+        this.camera_pitch += angle;
+    }
+    
+    public void moveCameraForward(double amount) {
+        var forward = new Vector3f(0, -1, 0);
+        var q = new Quaternionf();
+        q.identity();
+        q.rotateAxis((float) -Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
+        q.rotateAxis((float) Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
+        forward.rotate(q);
+        forward = forward.mul((float) amount);
+        this.camera_pos.add(forward);
+    }
+    
+    public void moveCameraRight(float amount) {
+    }
+    
+    /*
     @Override
     public void refresh() {
         Terrain terrain = this.user_interface.getTerrain();
@@ -229,26 +352,35 @@ public class TerrainView3d extends TerrainView {
         }
         return image;
     }
+*/
 
-    @Override
     public void onKeyPressed(KeyEvent event) {
-        if (!this.camera_controls) {
+        System.out.println("TerrainView3d.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
+        if (event.isConsumed()) {
             return;
         }
-        double factor = (double) this.camera_movement_speed / 5.0;
-        switch (event.getCode()) {
-            case W:
-                this.camera.moveForward(3.0 * factor);
+        double factor = 1.0 / 5.0;
+        switch (event.key) {
+            case GLFW.GLFW_KEY_W:
+                this.moveCameraForward(3.0 * factor);
                 break;
-            case A:
-                this.camera.moveRight(-1.0 * factor);
+            case GLFW.GLFW_KEY_A:
+                //this.camera.moveRight(-1.0 * factor);
                 break;
-            case S:
-                this.camera.moveForward(-3.0 * factor);
+            case GLFW.GLFW_KEY_S:
+                this.moveCameraForward(-3.0 * factor);
                 break;
-            case D:
-                this.camera.moveRight(1.0 * factor);
+            case GLFW.GLFW_KEY_D:
+                //this.camera.moveRight(1.0 * factor);
                 break;
         }
+        event.consume();
     }
-}*/
+
+    public void onKeyReleased(KeyEvent event) {
+        if (event.isConsumed()) {
+            return;
+        }
+        event.consume();
+    }
+}

@@ -18,11 +18,14 @@ package plortz.ui.lwjgui;
 
 import java.util.ArrayList;
 import java.util.List;
+import lwjgui.LWJGUI;
 import lwjgui.LWJGUIApplication;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
+import lwjgui.scene.control.Button;
 import lwjgui.scene.control.ToolBar;
 import lwjgui.scene.layout.BorderPane;
+import lwjgui.scene.layout.StackPane;
 import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
 
@@ -34,12 +37,11 @@ import plortz.ui.UserInterface;
 public class Main extends LWJGUIApplication {
     
     private static UserInterface my_ui = null;
-    private int                  current_terrain_view;
+    public static Window main_window = null;
     
     /**
      * Called by JavaFX, the starting point of the applications user interface code.
      * 
-     * @param stage The stage.
      */
     @Override
     public void start(String[] args, Window window) {
@@ -47,7 +49,11 @@ public class Main extends LWJGUIApplication {
             my_ui = new GraphicalUI();
         }
         
+        main_window = window;
+        
         BorderPane root = new BorderPane();
+        root.setBackgroundLegacy(null);
+        
         Scene scene = new Scene(root, 1024, 768);
         window.setScene(scene);
         window.setTitle("Plortz");
@@ -58,54 +64,13 @@ public class Main extends LWJGUIApplication {
         
         Widget console = new Console(my_ui);
         root.setBottom(console.getRootNode());
-       /* 
-        this.current_terrain_view = 0;
-        List<TerrainView> tvs = new ArrayList<>();
-        tvs.add(new TerrainView2d(my_ui));
+       
+        var tv = new TerrainView3d(my_ui);
+        window.setRenderingCallback(tv);
         
-        if (Platform.isSupported(ConditionalFeature.SCENE3D)) {
-            tvs.add(new TerrainView3d(my_ui));
-        }
+        root.setOnKeyPressed((event) -> tv.onKeyPressed(event));
+        root.setOnKeyReleased((event) -> tv.onKeyReleased(event));
 
-        StackPane terrain_view_container = new StackPane();
-        tvs.forEach((t) -> {
-            terrain_view_container.getChildren().add(t.getRootNode());
-        });
-        root.setCenter(terrain_view_container);
-
-        // Need to catch keyboard events here because for some reason they're not received in the stackpane and its children:
-        root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            tvs.forEach((t) -> {
-                t.onKeyPressed(e);
-            });
-        });
-        root.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
-            tvs.forEach((t) -> {
-                t.onKeyReleased(e);
-            });
-        });
-            
-        if (tvs.size() > 0) {
-            Button button = new Button("2d/3d");
-            button.setOnAction(e -> {
-                TerrainView tv = tvs.get(this.current_terrain_view);
-                tv.setActive(false);
-                
-                this.current_terrain_view++;
-                if (this.current_terrain_view >= tvs.size()) {
-                    this.current_terrain_view = 0;
-                }
-                
-                tv = tvs.get(this.current_terrain_view);
-                tv.getRootNode().toFront();
-                tv.setActive(true);
-            });
-            root.setLeft(button);
-        }
-        
-        tvs.get(this.current_terrain_view).getRootNode().toFront();
-        tvs.get(this.current_terrain_view).setActive(true);
-        */
         my_ui.showMessage("Welcome to Plortz.");
         my_ui.showMessage("Type \"help\" to get started.");
     }

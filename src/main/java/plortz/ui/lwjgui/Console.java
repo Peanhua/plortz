@@ -62,7 +62,15 @@ public class Console extends Widget {
         
         this.console_cmd = new TextField();
         pane.getChildren().add(this.console_cmd);
-        
+        /*
+        var f = new TextField();
+        f.setOnKeyPressed((event) -> 
+                        System.out.println("f.onKeyPressed(" + event.getKeyName() + "): consumed=" 
+                                + event.isConsumed() + ", event=" + event)
+        );
+
+        pane.getChildren().add(f);
+        */
         this.console_cmd.setOnKeyPressed((event) -> this.onCmdKeyPressed(event));
         this.console_cmd.setOnKeyReleased((event) -> this.onCmdKeyReleased(event));
         
@@ -70,6 +78,15 @@ public class Console extends Widget {
     }
     
     private void onCmdKeyPressed(KeyEvent event) {
+        /*
+        if (!this.console_cmd.isEditing()) {
+            return;
+        }
+*/
+        System.out.println("Console.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
+        if (event.isConsumed()) {
+            return;
+        }
         switch (event.key) {
             case GLFW.GLFW_KEY_UP:
                 this.goHistoryUp();
@@ -78,14 +95,19 @@ public class Console extends Widget {
                 this.goHistoryDown();
                 break;
         }
+        event.consume();
     }
 
     private void onCmdKeyReleased(KeyEvent event) {
+        if (event.isConsumed()) {
+            return;
+        }
         switch (event.key) {
             case GLFW.GLFW_KEY_ENTER:
                 this.processInput();
                 break;
         }
+        event.consume();
     }
     
     private void processInput() {

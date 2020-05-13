@@ -16,6 +16,8 @@
  */
 package plortz.ui;
 
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+
 /**
  * User interface with JavaFX.
  * 
@@ -31,6 +33,6 @@ public class GraphicalUI extends UserInterface {
     @Override
     public void stop() {
         super.stop();
-        //Platform.exit();
+        plortz.ui.lwjgui.Main.main_window.close();
     }
 }
