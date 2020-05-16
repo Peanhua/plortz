@@ -98,8 +98,28 @@
         <dependency>
 	    <groupId>com.github.orange451</groupId>
 	    <artifactId>LWJGUI</artifactId>
-	    <version>pre-mt</version>
+	    <version>master-SNAPSHOT</version>
         </dependency>
+        <!--
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-nanovg</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-tinyfd</artifactId>
+	</dependency>        
+	<dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-nanovg</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+        <dependency>
+	    <groupId>org.lwjgl</groupId>
+	    <artifactId>lwjgl-tinyfd</artifactId>
+	    <classifier>${lwjgl.natives}</classifier>
+	</dependency>
+        -->
     </dependencies>
     <build>
         <plugins>
