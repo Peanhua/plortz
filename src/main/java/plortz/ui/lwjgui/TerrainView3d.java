@@ -33,13 +33,13 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.OpenGLPane;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
+import plortz.util.Camera;
 
 /**
  * Widget showing the current terrain in 3d.
@@ -63,11 +63,8 @@ public class TerrainView3d extends Widget implements Renderer {
     
     // Camera:
     private Matrix4f model;
-    private Matrix4f view;
     private Matrix4f proj;
-    private Vector3f camera_pos;
-    private float    camera_yaw;
-    private float    camera_pitch;
+    private Camera   camera;
     private boolean  camera_controls;
     private Vector   mouse_oldpos;
     private double   camera_rotate_speed;
@@ -77,19 +74,19 @@ public class TerrainView3d extends Widget implements Renderer {
         this.user_interface = ui;
         this.terrain_mesh_width  = 0;
         this.terrain_mesh_length = 0;
+
         this.shader = new GenericShader();
         this.vbo = glGenBuffers();
         this.vao = glGenVertexArrays();
+
         this.model = new Matrix4f();
-        this.view = new Matrix4f();
         this.proj = new Matrix4f();
-        this.camera_pos = new Vector3f(0, 10, -1);
-        this.camera_yaw = 0;
-        this.camera_pitch = 0;
-        this.camera_controls = false;
-        this.camera_rotate_speed   = 0.15;
-        this.mouse_oldpos = new Vector(0, 0);
         this.proj.setPerspective((float) Math.toRadians(45.0f), (float) 1024 / 768, 0.1f, 2000.0f);
+        this.camera = new Camera();
+        this.camera.setPosition(0, -10, 1);
+        this.camera_controls     = false;
+        this.camera_rotate_speed = 0.15;
+        this.mouse_oldpos        = new Vector(0, 0);
         
         ui.listenOnTerrainChange(() -> {
             this.updateGeometry();
@@ -127,7 +124,6 @@ public class TerrainView3d extends Widget implements Renderer {
         if (terrain == null) {
             return;
         }
-
         Vector minmax = terrain.getAltitudeRange();
         float offsetx = -terrain.getWidth() / 2;
         float offsety = -terrain.getLength() / 2;
@@ -227,60 +223,12 @@ public class TerrainView3d extends Widget implements Renderer {
         
         this.shader.bind();
         
-        //System.out.println("yaw=" + this.camera_yaw + ", pitch=" + this.camera_pitch);
-        this.view = new Matrix4f();
-        /*
-        this.view.rotate(this.camera_yaw, new Vector3f(0.0f, 0.0f, 1.0f));
-        this.view.rotateLocalX(this.camera_pitch);
-        */
-        var eye = new Vector3f(0, 0, 0);
-        var cen = new Vector3f(0, 1, 0);
-        this.view.lookAt(eye, cen, new Vector3f(0, 0, 1));
-
-        var q = new Quaternionf();
-        q.identity();
-        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
-        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
-        //q.rotateAxis((float) -Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
-        this.view.rotate(q);
-        this.view.translate(this.camera_pos);
-
         shader.setWorldMatrix(this.model);
-        shader.setViewMatrix(this.view);
+        shader.setViewMatrix(this.camera.getTransformMatrix());
         shader.setProjectionMatrix(this.proj);
 
         glBindVertexArray(this.vao);
         glDrawArrays(GL_TRIANGLES, 0, this.vertex_count);
-    }
-    
-    public void rotateCameraYaw(double angle) {
-        this.camera_yaw += angle;
-    }
-    
-    public void rotateCameraPitch(double angle) {
-        this.camera_pitch += angle;
-    }
-    
-    public void moveCameraForward(double amount) {
-        var forward = new Vector3f(0, -1, 0);
-        var q = new Quaternionf();
-        q.identity();
-        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
-        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
-        forward.rotate(q);
-        forward = forward.mul((float) amount);
-        this.camera_pos.add(forward);
-    }
-    
-    public void moveCameraRight(double amount) {
-        var forward = new Vector3f(0, -1, 0);
-        var q = new Quaternionf();
-        q.identity();
-        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
-        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
-        forward.rotate(q);
-        forward = forward.mul((float) amount);
-        this.camera_pos.add(forward);
     }
     
     /*
@@ -390,19 +338,19 @@ public class TerrainView3d extends Widget implements Renderer {
         if (!this.camera_controls) {
             return;
         }
-        double factor = 1.0 / 5.0;
+        float factor = 1.0f / 5.0f;
         switch (event.key) {
             case GLFW.GLFW_KEY_W:
-                this.moveCameraForward(3.0 * factor);
+                this.camera.moveForward(3.0f * factor);
                 break;
             case GLFW.GLFW_KEY_A:
-                this.moveCameraRight(-1.0 * factor);
+                this.camera.moveRight(-1.0f * factor);
                 break;
             case GLFW.GLFW_KEY_S:
-                this.moveCameraForward(-3.0 * factor);
+                this.camera.moveForward(-3.0f * factor);
                 break;
             case GLFW.GLFW_KEY_D:
-                this.moveCameraRight(1.0 * factor);
+                this.camera.moveRight(1.0f * factor);
                 break;
         }
         event.consume();
@@ -436,9 +384,8 @@ public class TerrainView3d extends Widget implements Renderer {
     public void onMouseDragged(MouseEvent event) {
         //System.out.println("TerrainView3d.onMouseDragged()");
         Vector mouse_pos = new Vector(event.mouseX, event.mouseY);
-        this.rotateCameraPitch(this.camera_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
-        this.rotateCameraYaw(this.camera_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
-        System.out.println("yaw=" + this.camera_yaw + ", pitch=" + this.camera_pitch);
+        this.camera.rotatePitch((float) (this.camera_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY())));
+        this.camera.rotateYaw((float) (this.camera_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX())));
         this.mouse_oldpos.set(mouse_pos);
     }
 
