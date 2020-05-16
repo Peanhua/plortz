@@ -19,6 +19,7 @@ package plortz.ui.lwjgui;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import lwjgui.event.KeyEvent;
+import lwjgui.event.MouseEvent;
 import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -29,7 +30,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
-import org.joml.AxisAngle4f;
+import lwjgui.scene.Node;
+import lwjgui.scene.layout.OpenGLPane;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -45,7 +47,7 @@ import plortz.ui.UserInterface;
  * @author Joni Yrjana {@literal <joniyrjana@gmail.com>}
  */
 
-public class TerrainView3d implements Renderer {
+public class TerrainView3d extends Widget implements Renderer {
     // The user interface this widget is part of:
     private UserInterface user_interface;
 
@@ -60,12 +62,15 @@ public class TerrainView3d implements Renderer {
     private int vbo;
     
     // Camera:
-    Matrix4f model;
-    Matrix4f view;
-    Matrix4f proj;
-    Vector3f camera_pos;
-    float    camera_yaw;
-    float    camera_pitch;
+    private Matrix4f model;
+    private Matrix4f view;
+    private Matrix4f proj;
+    private Vector3f camera_pos;
+    private float    camera_yaw;
+    private float    camera_pitch;
+    private boolean  camera_controls;
+    private Vector   mouse_oldpos;
+    private double   camera_rotate_speed;
 
     
     public TerrainView3d(UserInterface ui) {
@@ -81,7 +86,9 @@ public class TerrainView3d implements Renderer {
         this.camera_pos = new Vector3f(0, 10, -1);
         this.camera_yaw = 0;
         this.camera_pitch = 0;
-        Vector3f UP = new Vector3f(0.0f, 0.0f, 1.0f);
+        this.camera_controls = false;
+        this.camera_rotate_speed   = 0.15;
+        this.mouse_oldpos = new Vector(0, 0);
         this.proj.setPerspective((float) Math.toRadians(45.0f), (float) 1024 / 768, 0.1f, 2000.0f);
         
         ui.listenOnTerrainChange(() -> {
@@ -92,6 +99,26 @@ public class TerrainView3d implements Renderer {
         });
 
         this.updateGeometry();
+    }
+
+    @Override
+    protected Node createUserInterface() {
+        OpenGLPane pane = new OpenGLPane();
+        pane.setRendererCallback(this);
+        pane.setFillToParentWidth(true);
+        pane.setFillToParentHeight(true);
+
+        pane.setOnKeyPressed((event)    -> this.onKeyPressed(event));
+        pane.setOnKeyReleased((event)   -> this.onKeyReleased(event));
+        pane.setOnMousePressed((event)  -> this.onMousePressed(event));
+        pane.setOnMouseReleased((event) -> this.onMouseReleased(event));
+        pane.setOnMouseDragged((event)  -> this.onMouseDragged(event));
+
+        return pane;
+    }
+
+    @Override
+    public void refresh() {
     }
     
     private void updateGeometry() {
@@ -189,7 +216,7 @@ public class TerrainView3d implements Renderer {
     }
     
     @Override
-    public void render(Context context) {
+    public void render(Context context, int width, int height) {
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 
@@ -212,8 +239,9 @@ public class TerrainView3d implements Renderer {
 
         var q = new Quaternionf();
         q.identity();
-        q.rotateAxis((float) -Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
-        q.rotateAxis((float) Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
+        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
+        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
+        //q.rotateAxis((float) -Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
         this.view.rotate(q);
         this.view.translate(this.camera_pos);
 
@@ -225,19 +253,11 @@ public class TerrainView3d implements Renderer {
         glDrawArrays(GL_TRIANGLES, 0, this.vertex_count);
     }
     
-    private float coTangent(float angle) {
-        return (float)(1f / Math.tan(angle));
-    }
-    
-    private float degreesToRadians(float degrees) {
-        return degrees * (float)(Math.PI / 180d);
-    }
-    
-    public void rotateCameraX(float angle) {
+    public void rotateCameraYaw(double angle) {
         this.camera_yaw += angle;
     }
     
-    public void rotateCameraY(float angle) {
+    public void rotateCameraPitch(double angle) {
         this.camera_pitch += angle;
     }
     
@@ -245,14 +265,22 @@ public class TerrainView3d implements Renderer {
         var forward = new Vector3f(0, -1, 0);
         var q = new Quaternionf();
         q.identity();
-        q.rotateAxis((float) -Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
-        q.rotateAxis((float) Math.toRadians(camera_pitch), new Vector3f(1, 0, 0));
+        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
+        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
         forward.rotate(q);
         forward = forward.mul((float) amount);
         this.camera_pos.add(forward);
     }
     
-    public void moveCameraRight(float amount) {
+    public void moveCameraRight(double amount) {
+        var forward = new Vector3f(0, -1, 0);
+        var q = new Quaternionf();
+        q.identity();
+        q.rotateAxis((float) Math.toRadians(camera_yaw), new Vector3f(0, 0, 1));
+        q.rotateLocalX((float) -Math.toRadians(camera_pitch));
+        forward.rotate(q);
+        forward = forward.mul((float) amount);
+        this.camera_pos.add(forward);
     }
     
     /*
@@ -355,8 +383,11 @@ public class TerrainView3d implements Renderer {
 */
 
     public void onKeyPressed(KeyEvent event) {
-        System.out.println("TerrainView3d.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
+        //System.out.println("TerrainView3d.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
         if (event.isConsumed()) {
+            return;
+        }
+        if (!this.camera_controls) {
             return;
         }
         double factor = 1.0 / 5.0;
@@ -365,13 +396,13 @@ public class TerrainView3d implements Renderer {
                 this.moveCameraForward(3.0 * factor);
                 break;
             case GLFW.GLFW_KEY_A:
-                //this.camera.moveRight(-1.0 * factor);
+                this.moveCameraRight(-1.0 * factor);
                 break;
             case GLFW.GLFW_KEY_S:
                 this.moveCameraForward(-3.0 * factor);
                 break;
             case GLFW.GLFW_KEY_D:
-                //this.camera.moveRight(1.0 * factor);
+                this.moveCameraRight(1.0 * factor);
                 break;
         }
         event.consume();
@@ -381,6 +412,34 @@ public class TerrainView3d implements Renderer {
         if (event.isConsumed()) {
             return;
         }
+        if(!this.camera_controls) {
+            return;
+        }
         event.consume();
     }
+    
+    public void onMousePressed(MouseEvent event) {
+        //System.out.println("TerrainView3d.onMousePressed()");
+        this.getRootNode().getWindow().getContext().setSelected(this.getRootNode());
+        this.camera_controls = true;
+        this.mouse_oldpos.setX(event.mouseX);
+        this.mouse_oldpos.setY(event.mouseY);
+        event.consume();
+    }
+
+    public void onMouseReleased(MouseEvent event) {
+        //System.out.println("TerrainView3d.onMouseReleased()");
+        this.camera_controls = false;
+        event.consume();
+    }
+    
+    public void onMouseDragged(MouseEvent event) {
+        //System.out.println("TerrainView3d.onMouseDragged()");
+        Vector mouse_pos = new Vector(event.mouseX, event.mouseY);
+        this.rotateCameraPitch(this.camera_rotate_speed * (mouse_pos.getY() - this.mouse_oldpos.getY()));
+        this.rotateCameraYaw(this.camera_rotate_speed * (mouse_pos.getX() - this.mouse_oldpos.getX()));
+        System.out.println("yaw=" + this.camera_yaw + ", pitch=" + this.camera_pitch);
+        this.mouse_oldpos.set(mouse_pos);
+    }
+
 }
