@@ -16,16 +16,13 @@
  */
 package plortz.ui.lwjgui;
 
-import java.util.ArrayList;
-import java.util.List;
-import lwjgui.LWJGUI;
 import lwjgui.LWJGUIApplication;
+import lwjgui.event.listener.EventListener;
+import lwjgui.event.listener.MouseButtonListener;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
-import lwjgui.scene.control.Button;
 import lwjgui.scene.control.ToolBar;
 import lwjgui.scene.layout.BorderPane;
-import lwjgui.scene.layout.StackPane;
 import plortz.ui.GraphicalUI;
 import plortz.ui.UserInterface;
 
@@ -66,10 +63,7 @@ public class Main extends LWJGUIApplication {
         root.setBottom(console.getRootNode());
        
         var tv = new TerrainView3d(my_ui);
-        window.setRenderingCallback(tv);
-        
-        root.setOnKeyPressed((event) -> tv.onKeyPressed(event));
-        root.setOnKeyReleased((event) -> tv.onKeyReleased(event));
+        root.setCenter(tv.getRootNode());
 
         my_ui.showMessage("Welcome to Plortz.");
         my_ui.showMessage("Type \"help\" to get started.");
