@@ -44,49 +44,43 @@ public class Console extends Widget {
 
     public Console(UserInterface user_interface) {
         super();
-        this.user_interface  = user_interface;
-        this.command_factory = CommandFactory.getInstance();
+        this.user_interface   = user_interface;
+        this.command_factory  = CommandFactory.getInstance();
+        this.console_messages = null;
         this.user_interface.listenOnMessage(() -> this.onMessage());
     }
     
     @Override
     protected Node createUserInterface() {
         Pane pane = new VBox();
-        
+        pane.setFillToParentWidth(true);
+
         this.console_messages_pane = new ScrollPane();
         pane.getChildren().add(this.console_messages_pane);
+        this.console_messages_pane.setFillToParentWidth(true);
         this.console_messages_pane.setPrefHeight(200);
         this.console_messages = new VBox();
         this.console_messages_pane.setContent(this.console_messages);
-        //console_message_pane.vvalueProperty().bind(this.console_messages.heightProperty());
         
         this.console_cmd = new TextField();
         pane.getChildren().add(this.console_cmd);
-        /*
-        var f = new TextField();
-        f.setOnKeyPressed((event) -> 
-                        System.out.println("f.onKeyPressed(" + event.getKeyName() + "): consumed=" 
-                                + event.isConsumed() + ", event=" + event)
-        );
-
-        pane.getChildren().add(f);
-        */
+        this.console_cmd.setFillToParentWidth(true);
+        
         this.console_cmd.setOnKeyPressed((event) -> this.onCmdKeyPressed(event));
         this.console_cmd.setOnKeyReleased((event) -> this.onCmdKeyReleased(event));
-        
+
         return pane;
     }
     
     private void onCmdKeyPressed(KeyEvent event) {
-        /*
+        //System.out.println("Console.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
         if (!this.console_cmd.isEditing()) {
             return;
         }
-*/
-        System.out.println("Console.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
         if (event.isConsumed()) {
             return;
         }
+
         switch (event.key) {
             case GLFW.GLFW_KEY_UP:
                 this.goHistoryUp();
@@ -144,6 +138,9 @@ public class Console extends Widget {
     }
     
     private void onMessage() {
+        if (this.console_messages == null) {
+            return;
+        }
         this.console_messages.getChildren().add(new Label(this.user_interface.getMessage()));
         LWJGUI.runLater(() -> {
             this.console_messages_pane.setVvalue(1);
