@@ -74,13 +74,9 @@ public class Console extends Widget {
     
     private void onCmdKeyPressed(KeyEvent event) {
         //System.out.println("Console.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
-        if (!this.console_cmd.isEditing()) {
-            return;
-        }
         if (event.isConsumed()) {
             return;
         }
-
         switch (event.key) {
             case GLFW.GLFW_KEY_UP:
                 this.goHistoryUp();
