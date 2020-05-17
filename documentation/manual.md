@@ -2,12 +2,12 @@
 
 Plortz is a software written in Java to generate rectangular areas of terrains suitable to be used in games etc. The terrains consists of data points to define the landscape elevation data and other attributes, such as the type of the land (for example dirt, sand, snow, water). These are commonly referred to as heightmaps.
 
-Plortz has two user interfaces, the default graphical using JavaFX, and a commandline. The user issues commands and can see the results immediately in the GUI. The results can be written to Targa files.
+Plortz has two user interfaces, the default graphical using LWJGUI, and a commandline. The user issues commands and can see the results immediately in the GUI. The results can be written to Targa files.
 
 ## Requirements
 Java 11, LWJGL, LWJGUI, and their requirements.
 
-Maven is used for build automation, and might be easier to use also for running the program as it will automatically download JavaFX and set the appropriate module loading stuffs.
+Maven is used for build automation, and is the primary way of running this program.
 
 ## Maven goals:
 * Checkstyle: ```mvn jxr:jxr checkstyle:checkstyle```
@@ -31,9 +31,9 @@ To output the timing information, start with ```--timing``` argument, for exampl
 ## Graphical user interface
 The window is split into three parts. <img align="right" src="../screenshot.png" width="400px">
 
-Starting from top, a 2d or 3d view is shown. The current mode of the view can be toggled with the button "2d/3d" on the top-left corner.
+Starting from top, a 3d view is shown.
 
-In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. The mousewheel can be used to adjust the movement speed.
+The mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. The mousewheel can be used to adjust the movement speed.
 
 In the middle of the window a messages and history of commands view is shown.
 
