@@ -71,6 +71,8 @@ public class TerrainView3d extends Widget implements Renderer {
     private int      camera_movement_speed;
     private int      moving_forward;
     private int      moving_right;
+    private int      proj_window_width;
+    private int      proj_window_height;
     
     public TerrainView3d(UserInterface ui) {
         this.user_interface = ui;
@@ -82,7 +84,8 @@ public class TerrainView3d extends Widget implements Renderer {
         this.model = new Matrix4f();
         this.model.identity();
         this.proj = new Matrix4f();
-        this.proj.setPerspective((float) Math.toRadians(30.0f), (float) 1024 / 768, 0.1f, 2000.0f);
+        this.proj_window_width = -1;
+        this.proj_window_height = -1;
         this.camera = new Camera();
         this.camera.setPosition(0, -10, 4);
         this.camera_controls       = false;
@@ -234,6 +237,12 @@ public class TerrainView3d extends Widget implements Renderer {
     
     @Override
     public void render(Context context, int width, int height) {
+        if (this.proj_window_width != width || this.proj_window_height != height) {
+            this.proj_window_width = width;
+            this.proj_window_height = height;
+            this.proj.setPerspective((float) Math.toRadians(30.0f), (float) width / (float) height, 0.1f, 2000.0f);
+        }
+        
         this.updateGeometry();
         
         float factor = (float) this.camera_movement_speed / 3.0f;
