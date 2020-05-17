@@ -5,7 +5,7 @@ Plortz is a software written in Java to generate rectangular areas of terrains s
 Plortz has two user interfaces, the default graphical using JavaFX, and a commandline. The user issues commands and can see the results immediately in the GUI. The results can be written to Targa files.
 
 ## Requirements
-Java 11 and JavaFX 14.
+Java 11, LWJGL, LWJGUI, and their requirements.
 
 Maven is used for build automation, and might be easier to use also for running the program as it will automatically download JavaFX and set the appropriate module loading stuffs.
 
@@ -21,24 +21,11 @@ Maven is used for build automation, and might be easier to use also for running 
 * Generate javadoc: ```mvn javadoc:javadoc```
 
 ### Running
-The program can also be run with ```mvn javafx:run``` in addition to the normal ```mvn exec:java```.
-
 By default, the program starts in graphical user interface, but it also has a command-line user interface which can be activated by specifying ```--no-gui``` when starting:
 ```mvn exec:java -Dexec.args="--no-gui"```
 
 To output the timing information, start with ```--timing``` argument, for example:
 ```mvn exec:java -Dexec.args="--timing"```
-
-#### Running the release
-The packaged jar file requires JavaFX, which can be downloaded for example from [Gluon](https://gluonhq.com/products/javafx/). Download and unzip the proper package for your system, and then define the ```--module-path``` and ```--add-modules``` to add the ```javafx.controls``` module. For example:
-```
-$ java --module-path ./javafx-sdk-11.0.2/lib --add-modules=javafx.controls -jar plortz-1.0-SNAPSHOT.jar
-```
-
-Command-line arguments can be given directly, for example:
-```
-$ java --module-path ./javafx-sdk-11.0.2/lib --add-modules=javafx.controls -jar plortz-1.0-SNAPSHOT.jar --timing
-```
 
 
 ## Graphical user interface
@@ -46,7 +33,7 @@ The window is split into three parts. <img align="right" src="../screenshot.png"
 
 Starting from top, a 2d or 3d view is shown. The current mode of the view can be toggled with the button "2d/3d" on the top-left corner.
 
-In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. Make sure to de-activate the console input field for the WASD-keys to work, for example by first clicking on the message/history. The mousewheel can be used to adjust the movement speed.
+In the 3d mode the mouse and keyboard can be used to rotate and move around. Hold mouse button down on the view and move mouse to rotate, also while holding the mouse button down WASD -keys can be used to move relative to the current looking direction. The mousewheel can be used to adjust the movement speed.
 
 In the middle of the window a messages and history of commands view is shown.
 

@@ -5,7 +5,7 @@ Plortz has two user interfaces, the default graphical using JavaFX, and a comman
 
 
 ## Requirements
-Java 11 and JavaFX 14, Maven is used for build automation.
+Java 11, LWJGL, LWJGUI, and Maven is used for build automation.
 
 ## Documentation:
 * [User manual](documentation/manual.md)
