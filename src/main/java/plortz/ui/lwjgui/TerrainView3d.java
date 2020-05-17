@@ -16,12 +16,11 @@
  */
 package plortz.ui.lwjgui;
 
-import java.net.URL;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Scanner;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
+import lwjgui.gl.GenericShader;
 import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -29,29 +28,12 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import lwjgui.gl.GenericShader;
 import lwjgui.gl.Renderer;
 import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.OpenGLPane;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
-import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glDeleteProgram;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
-import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
-import static org.lwjgl.opengl.GL20.glShaderSource;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
@@ -74,7 +56,7 @@ public class TerrainView3d extends Widget implements Renderer {
     private int vertex_count;
     
     // OpenGL objects:
-    private GenericShader shader;
+    private Shader shader;
     private int vao;
     private int vbo;
     
@@ -92,7 +74,8 @@ public class TerrainView3d extends Widget implements Renderer {
         this.terrain_mesh_width  = 0;
         this.terrain_mesh_length = 0;
 
-        this.shader = new GenericShader();
+        this.shader = new Shader("plortz/shaders/TerrainView3d");
+        //this.shader = new GenericShader();
         this.vbo = glGenBuffers();
         this.vao = glGenVertexArrays();
 
@@ -111,8 +94,7 @@ public class TerrainView3d extends Widget implements Renderer {
                 this.updateGeometry();
             });
         });
-        this.loadShader("plortz/shaders/TerrainView3d.vert", GL_VERTEX_SHADER);
-        this.loadShader("plortz/shaders/TerrainView3d.frag", GL_FRAGMENT_SHADER);
+
         this.updateGeometry();
     }
 
@@ -136,58 +118,6 @@ public class TerrainView3d extends Widget implements Renderer {
     public void refresh() {
     }
     
-    private String loadStringResource(String name) {
-        URL url = this.getClass().getClassLoader().getResource(name);
-        try {
-            var in = url.openStream();
-            var reader = new Scanner(in);
-            var sb = new StringBuilder();
-            while (reader.hasNextLine()) {
-                sb.append(reader.nextLine());
-                sb.append("\n");
-            }
-            return sb.toString();
-            
-        } catch (Exception e) {
-            System.out.println("Failed to load resource '" + name + "': " + e.getMessage());
-            return null;
-        }
-    }
-    
-    private int loadShader(String resource_name, int type) {
-        String source = this.loadStringResource(resource_name);
-
-        int s = glCreateShader(type);
-        glShaderSource(s, source);
-        glCompileShader(s);
-        var success = glGetShaderi(s, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
-            System.out.println("Failed to compile shader '" + resource_name + "': " + glGetShaderInfoLog(s, 9999));
-            glDeleteShader(s);
-            return -1;
-        }
-        return s;
-    }
-    
-    private int loadShaderProgram(String name) {
-        int vertex_shader = this.loadShader(name + ".vert", GL_VERTEX_SHADER);
-        int fragment_shader = this.loadShader(name + ".frag", GL_FRAGMENT_SHADER);
-        if (vertex_shader == -1 || fragment_shader == -1) {
-            return -1;
-        }
-        int program = glCreateProgram();
-        glAttachShader(program, vertex_shader);
-        glAttachShader(program, fragment_shader);
-        glLinkProgram(program);
-        var success = glGetProgrami(program, GL_LINK_STATUS);
-        if (success == GL_FALSE) {
-            System.out.println("Failed to link shader program '" + name + "': " + glGetProgramInfoLog(program, 9999));
-            glDeleteProgram(program);
-            glDeleteShader(vertex_shader);
-            glDeleteShader(fragment_shader);
-        }
-        return program;
-    }
     
     private void updateGeometry() {
         
@@ -285,7 +215,7 @@ public class TerrainView3d extends Widget implements Renderer {
     @Override
     public void render(Context context, int width, int height) {
         glClearColor(0,0,0,1);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         var terrain = this.user_interface.getTerrain();
         if(terrain == null) {
@@ -294,7 +224,7 @@ public class TerrainView3d extends Widget implements Renderer {
         
         this.shader.bind();
         
-        shader.setWorldMatrix(this.model);
+        shader.setModelMatrix(this.model);
         shader.setViewMatrix(this.camera.getTransformMatrix());
         shader.setProjectionMatrix(this.proj);
 
