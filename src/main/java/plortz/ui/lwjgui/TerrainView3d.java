@@ -19,7 +19,6 @@ package plortz.ui.lwjgui;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import org.lwjgl.system.MemoryUtil;
@@ -41,7 +40,6 @@ import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
 import plortz.util.Camera;
-import plortz.util.MersenneTwister;
 
 /**
  * Widget showing the current terrain in 3d.
@@ -135,12 +133,32 @@ public class TerrainView3d extends Widget implements Renderer {
         float offsetx = -terrain.getWidth() / 2;
         float offsety = -terrain.getLength() / 2;
         var points = new ArrayList<Float>();
+        var colors = new ArrayList<Vector>();
         for (int y = 0; y < terrain.getLength(); y++) {
             for (int x = 0; x < terrain.getWidth(); x++) {
                 Tile t = terrain.getTile(x, y);
                 points.add(offsetx + x);
                 points.add(offsety + y);
                 points.add((float) (t.getAltitude(true) - minmax.getX()));
+                colors.add(this.getTileColor(t));
+            }
+        }
+        var normals = new ArrayList<Vector3f>();
+        for (int y = 0; y < terrain.getLength(); y++) {
+            for (int x = 0; x < terrain.getWidth(); x++) {
+                if (y == terrain.getLength() - 1 || x == terrain.getWidth() - 1) {
+                    normals.add(new Vector3f(0, 0, 1));
+                    continue;
+                }
+                int a = x + y * terrain.getWidth();
+                int b = a + 1;
+                int c = a + terrain.getWidth();
+                int d = c + 1;
+                
+                var v1 = new Vector3f(0, 0, points.get(a * 3 + 2));
+                var v2 = new Vector3f(0, 1, points.get(c * 3 + 2));
+                var v3 = new Vector3f(1, 0, points.get(b * 3 + 2));
+                normals.add(this.calculateNormal(v1, v2, v3));
             }
         }
         
@@ -152,7 +170,6 @@ public class TerrainView3d extends Widget implements Renderer {
         int size = vertSize + colorSize + normalSize; // Stride length
         int bytes = Float.BYTES; // Bytes per element (float)
 
-        Random r = new MersenneTwister(0);
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertex_count * size);
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
@@ -166,31 +183,14 @@ public class TerrainView3d extends Widget implements Renderer {
                 int b = a + 1;
                 int c = a + terrain.getWidth();
                 int d = c + 1;
-                // Normal:
-                var n = this.calculateNormal(
-                        new Vector3f(0, 0, points.get(a * 3 + 2)),
-                        new Vector3f(0, 1, points.get(c * 3 + 2)),
-                        new Vector3f(1, 0, points.get(b * 3 + 2))
-                );
-                var color = new Vector3f(r.nextFloat(), r.nextFloat(), r.nextFloat());
                 // The triangles:
-                if (false) {
-                this.addPoint(buffer, points, color, n, a);
-                this.addPoint(buffer, points, color, n, c);
-                this.addPoint(buffer, points, color, n, b);
+                this.addPoint(buffer, points, colors.get(a), normals.get(a), a);
+                this.addPoint(buffer, points, colors.get(b), normals.get(b), b);
+                this.addPoint(buffer, points, colors.get(c), normals.get(c), c);
 
-                this.addPoint(buffer, points, color, n, c);
-                this.addPoint(buffer, points, color, n, d);
-                this.addPoint(buffer, points, color, n, b);
-                } else {
-                this.addPoint(buffer, points, color, n, a);
-                this.addPoint(buffer, points, color, n, b);
-                this.addPoint(buffer, points, color, n, c);
-
-                this.addPoint(buffer, points, color, n, b);
-                this.addPoint(buffer, points, color, n, d);
-                this.addPoint(buffer, points, color, n, c);
-                }
+                this.addPoint(buffer, points, colors.get(b), normals.get(b), b);
+                this.addPoint(buffer, points, colors.get(d), normals.get(d), d);
+                this.addPoint(buffer, points, colors.get(c), normals.get(c), c);
             }
         }
         buffer.flip();
@@ -220,9 +220,9 @@ public class TerrainView3d extends Widget implements Renderer {
         return cMa.cross(bMa).normalize();
     }
     
-    private void addPoint(FloatBuffer buffer, List<Float> points, Vector3f color, Vector3f normal, int pos) {
+    private void addPoint(FloatBuffer buffer, List<Float> points, Vector color, Vector3f normal, int pos) {
         buffer.put(points.get(pos * 3 + 0)).put(points.get(pos * 3 + 1)).put(points.get(pos * 3 + 2));
-        buffer.put(color.x).put(color.y).put(color.z).put(1.0f);
+        buffer.put((float) color.getX()).put((float) color.getY()).put((float) color.getZ()).put(1.0f);
         buffer.put(normal.x).put(normal.y).put(normal.z);
     }
     
@@ -352,6 +352,21 @@ public class TerrainView3d extends Widget implements Renderer {
         return image;
     }
 */
+    /**
+     * Return the color of the given tile.
+     * 
+     * @param tile The tile.
+     * @return     The color.
+     */
+    protected Vector getTileColor(Tile tile) {
+        Vector rgb;
+        if (tile.getWater() > 0.0) {
+            rgb = new Vector(0, 0, 1);
+        } else {
+            rgb = tile.getTopSoil().getRGB();
+        }
+        return rgb;
+    }
 
     public void onKeyPressed(KeyEvent event) {
         //System.out.println("TerrainView3d.onKeyPressed(" + event.getKeyName() + "): consumed=" + event.isConsumed() + ", event=" + event);
