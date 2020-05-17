@@ -17,10 +17,8 @@
 package plortz.ui.lwjgui;
 
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.Scanner;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
@@ -58,6 +56,7 @@ public class Shader {
     private int model_matrix_location;
     private int view_matrix_location;
     private int projection_matrix_location;
+    private int normal_matrix_location;
     private final float[] matrix_buf;
     private int texId;
     
@@ -67,19 +66,6 @@ public class Shader {
         this.checkError();
         this.getLocations();
         this.checkError();
-		// Generic white texture
-		texId = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-		int wid = 1;
-		int hei = 1;
-		ByteBuffer data = BufferUtils.createByteBuffer(wid*hei*4);
-		while(data.hasRemaining()) {
-			data.put((byte) (255 & 0xff));
-		}
-		data.flip();
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, wid, hei, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         this.checkError();
     }
     
@@ -92,20 +78,38 @@ public class Shader {
         this.checkError();
     }
     
-    public void setModelMatrix(Matrix4f mat) {
+    public void setMVP(Matrix4f model, Matrix4f view, Matrix4f projection) {
+        this.setModelMatrix(model);
+        this.setViewMatrix(view);
+        this.setProjectionMatrix(projection);
+        Matrix4f n = new Matrix4f(view);
+        n.mul(model);
+        n.invert();
+        n.transpose();
+        this.setNormalMatrix(n);
+    }
+    
+    private void setModelMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(model_matrix_location, false, this.matrix_buf);
         this.checkError();
     }
-    public void setViewMatrix(Matrix4f mat) {
+    
+    private void setViewMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(view_matrix_location, false, this.matrix_buf);
         this.checkError();
     }
 
-    public void setProjectionMatrix(Matrix4f mat) {
+    private void setProjectionMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(projection_matrix_location, false, this.matrix_buf);
+        this.checkError();
+    }
+    
+    private void setNormalMatrix(Matrix4f mat) {
+        mat.get(this.matrix_buf);
+        glUniformMatrix4fv(normal_matrix_location, false, this.matrix_buf);
         this.checkError();
     }
 
@@ -136,8 +140,9 @@ public class Shader {
     }
     
     private int loadShader(String resource_name, int type) {
+        //System.out.println("Loading: " + resource_name);
         String source = this.loadStringResource(resource_name);
-
+        //System.out.println(source);
         int s = glCreateShader(type);
         glShaderSource(s, source);
         glCompileShader(s);
@@ -147,7 +152,6 @@ public class Shader {
             glDeleteShader(s);
             return -1;
         }
-        System.out.println(source);
         return s;
     }
     
@@ -161,8 +165,9 @@ public class Shader {
         glAttachShader(this.shader_program_id, this.vertex_shader_id);
         glAttachShader(this.shader_program_id, this.fragment_shader_id);
         
-        glBindAttribLocation(this.shader_program_id, 0, "inPos");
-        glBindAttribLocation(this.shader_program_id, 1, "inTexCoord");
+        glBindAttribLocation(this.shader_program_id, 0, "in_position");
+        glBindAttribLocation(this.shader_program_id, 1, "in_color");
+        glBindAttribLocation(this.shader_program_id, 2, "in_normal");
         
         glLinkProgram(this.shader_program_id);
         var success = glGetProgrami(this.shader_program_id, GL_LINK_STATUS);
@@ -178,13 +183,15 @@ public class Shader {
     }
     
     private void getLocations() {
-        this.projection_matrix_location = this.getLocation("projectionMatrix");
-        this.view_matrix_location       = this.getLocation("viewMatrix");
-        this.model_matrix_location      = this.getLocation("worldMatrix");
+        this.model_matrix_location      = this.getLocation("model_matrix");
+        this.view_matrix_location       = this.getLocation("view_matrix");
+        this.projection_matrix_location = this.getLocation("projection_matrix");
+        this.normal_matrix_location     = this.getLocation("normal_matrix");
     }
     
     private int getLocation(String name) {
         var loc = glGetUniformLocation(this.shader_program_id, name);
+        this.checkError();
         if (loc < 0) {
             System.out.println("Failed to get location for '" + name + "'.");
         }

@@ -1,16 +1,23 @@
-#version 120
+#version 330
 
-varying vec3 normal;
-varying vec3 position;
-varying vec4 ShadowCoord;
+uniform mat4 normal_matrix;
+uniform mat4 model_matrix;
+uniform mat4 pillu;
+uniform mat4 view_matrix;
+uniform mat4 projection_matrix;
+
+layout(location=0) in vec3 in_position;
+layout(location=1) in vec4 in_color;
+layout(location=2) in vec3 in_normal;
+
+out vec3 v2f_position;
+out vec3 v2f_normal;
+out vec4 v2f_color;
 
 void main()
 {
-  ShadowCoord = gl_TextureMatrix[7] * gl_Vertex;
-
-  normal = normalize(gl_NormalMatrix * gl_Normal);
-  position = (gl_ModelViewMatrix * gl_Vertex).xyz;
-  gl_FrontColor = gl_Color;
-  gl_Position = ftransform();
-  gl_TexCoord[0] = /* gl_TextureMatrix[0] * */ gl_MultiTexCoord0;
+  v2f_position = (view_matrix * model_matrix * vec4(in_position, 1)).xyz;
+  v2f_color = in_color;
+  v2f_normal = normalize(normal_matrix * vec4(in_normal, 1)).xyz;
+  gl_Position = projection_matrix * view_matrix * model_matrix * vec4(in_position, 1);
 }

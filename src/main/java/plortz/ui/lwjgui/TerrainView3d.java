@@ -75,7 +75,6 @@ public class TerrainView3d extends Widget implements Renderer {
         this.terrain_mesh_length = 0;
 
         this.shader = new Shader("plortz/shaders/TerrainView3d");
-        //this.shader = new GenericShader();
         this.vbo = glGenBuffers();
         this.vao = glGenVertexArrays();
 
@@ -144,7 +143,8 @@ public class TerrainView3d extends Widget implements Renderer {
         int vertSize = 3; // vec3 in shader
         int texSize = 2; // vec2 in shader
         int colorSize = 4; // vec4 in shader
-        int size = vertSize + texSize + colorSize; // Stride length
+        int normalSize = 3;
+        int size = vertSize + colorSize + normalSize; // Stride length
         int bytes = Float.BYTES; // Bytes per element (float)
 			
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertex_count * size);
@@ -167,29 +167,29 @@ public class TerrainView3d extends Widget implements Renderer {
                 int td = tc + 1;
                 // The triangles:
                 buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
                 
                 buffer.put(points.get(a * 3 + 0)).put(points.get(a * 3 + 1)).put(points.get(a * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
 
                 buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
                 
 
                 buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
                 
                 buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
 
                 buffer.put(points.get(d * 3 + 0)).put(points.get(d * 3 + 1)).put(points.get(d * 3 + 2));
-                buffer.put(0.0f).put(0.0f);
                 buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
+                buffer.put(0.0f).put(0.0f).put(1.0f);
             }
         }
         buffer.flip();
@@ -201,12 +201,13 @@ public class TerrainView3d extends Widget implements Renderer {
         glEnableVertexAttribArray(0); // layout 0 shader
         glEnableVertexAttribArray(1); // layout 1 shader
         glEnableVertexAttribArray(2); // layout 2 shader
-        int vertOffset = 0;
-        glVertexAttribPointer( 0, vertSize,  GL_FLOAT, false, size * bytes, vertOffset );
-        int texOffset = vertSize * bytes;
-        glVertexAttribPointer( 1, texSize,   GL_FLOAT, false, size * bytes, texOffset );
-        int colorOffset = texOffset + texSize * bytes;
-        glVertexAttribPointer( 2, colorSize, GL_FLOAT, false, size * bytes, colorOffset );
+        int offset = 0;
+        glVertexAttribPointer(0, vertSize,  GL_FLOAT, false, size * bytes, offset);
+        offset += vertSize * bytes;
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, size * bytes, offset);
+        offset += colorSize * bytes;
+        glVertexAttribPointer(2, normalSize, GL_FLOAT, false, size * bytes, offset);
+        offset += normalSize * bytes;
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -223,10 +224,7 @@ public class TerrainView3d extends Widget implements Renderer {
         }
         
         this.shader.bind();
-        
-        shader.setModelMatrix(this.model);
-        shader.setViewMatrix(this.camera.getTransformMatrix());
-        shader.setProjectionMatrix(this.proj);
+        shader.setMVP(this.model, this.camera.getTransformMatrix(), this.proj);
 
         glBindVertexArray(this.vao);
         glDrawArrays(GL_TRIANGLES, 0, this.vertex_count);
