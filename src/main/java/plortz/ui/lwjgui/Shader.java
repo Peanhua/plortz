@@ -19,6 +19,8 @@ package plortz.ui.lwjgui;
 import java.net.URL;
 import java.util.Scanner;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;
@@ -58,11 +60,12 @@ public class Shader {
     private int normal_matrix_location;
     private int sun_position_location;
     private final float[] matrix_buf;
-    private final float[] sun_position;
+    private final float[] vec3_buf;
+    private Vector3f sun_position;
     
     public Shader(String name) {
         this.matrix_buf = new float[4 * 4];
-        this.sun_position = new float[3];
+        this.vec3_buf = new float[3];
         this.loadShaderProgram(name);
         this.getLocations();
         this.bind();
@@ -75,21 +78,28 @@ public class Shader {
     }
     
     private void setSunPosition(float x, float y, float z) {
-        this.sun_position[0] = x;
-        this.sun_position[1] = y;
-        this.sun_position[2] = z;
-        glUniform3fv(this.sun_position_location, this.sun_position);
+        this.sun_position = new Vector3f(x, y, z);
     }
     
     public void setMVP(Matrix4f model, Matrix4f view, Matrix4f projection) {
         this.setModelMatrix(model);
         this.setViewMatrix(view);
         this.setProjectionMatrix(projection);
+        
         Matrix4f n = new Matrix4f(view);
         n.mul(model);
         n.invert();
         n.transpose();
         this.setNormalMatrix(n);
+
+        var m = new Matrix4f(view).mul(model);
+        var sunpos = new Vector4f(this.sun_position, 1);
+        sunpos.mul(m);
+        this.vec3_buf[0] = sunpos.x;
+        this.vec3_buf[1] = sunpos.y;
+        this.vec3_buf[2] = sunpos.z;
+        glUniform3fv(this.sun_position_location, this.vec3_buf);
+
         this.checkError("setMVP");
     }
     

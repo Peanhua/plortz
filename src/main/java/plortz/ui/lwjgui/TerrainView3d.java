@@ -55,6 +55,7 @@ public class TerrainView3d extends Widget implements Renderer {
     private int terrain_mesh_width;
     private int terrain_mesh_length;
     private int vertex_count;
+    private boolean dirty;
     
     // OpenGL objects:
     private Shader shader;
@@ -93,9 +94,9 @@ public class TerrainView3d extends Widget implements Renderer {
         this.moving_right   = 0;
         
         ui.listenOnTerrainChange(() -> {
-            this.updateGeometry();
+            this.dirty = true;
             this.user_interface.getTerrain().listenOnChange(() -> {
-                this.updateGeometry();
+                this.dirty = true;
             });
         });
 
@@ -120,11 +121,16 @@ public class TerrainView3d extends Widget implements Renderer {
 
     @Override
     public void refresh() {
+        this.dirty = true;
     }
     
     
     private void updateGeometry() {
-        
+        if (!this.dirty) {
+            return;
+        }
+        this.dirty = false;
+
         Terrain terrain = this.user_interface.getTerrain();
         if (terrain == null) {
             return;
@@ -215,9 +221,9 @@ public class TerrainView3d extends Widget implements Renderer {
     }
     
     private Vector3f calculateNormal(Vector3f a, Vector3f b, Vector3f c) {
-        Vector3f cMa = new Vector3f(c).sub(a);
-        Vector3f bMa = new Vector3f(b).sub(a);
-        return cMa.cross(bMa).normalize();
+        Vector3f ca = new Vector3f(c).sub(a);
+        Vector3f ba = new Vector3f(b).sub(a);
+        return ca.cross(ba).normalize();
     }
     
     private void addPoint(FloatBuffer buffer, List<Float> points, Vector color, Vector3f normal, int pos) {
@@ -228,6 +234,8 @@ public class TerrainView3d extends Widget implements Renderer {
     
     @Override
     public void render(Context context, int width, int height) {
+        this.updateGeometry();
+        
         float factor = 1.0f / 2.0f;
         if (this.moving_forward != 0) {
             this.camera.moveForward(3.0f * factor * (float) this.moving_forward);

@@ -18,8 +18,7 @@ const float material_shininess = 16f;
 void main()
 {
   vec3 normal = normalize(v2f_normal);
-  vec3 sunpos = vec3(view_matrix * model_matrix * vec4(sun_position, 1));
-  vec3 light_direction = normalize(sunpos - v2f_position);
+  vec3 light_direction = normalize(sun_position - v2f_position);
 
   float lambertian = max(dot(light_direction, normal), 0.0f);
   float specular = 0.0f;
