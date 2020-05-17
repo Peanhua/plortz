@@ -18,6 +18,8 @@ package plortz.ui.lwjgui;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
 import lwjgui.gl.GenericShader;
@@ -33,12 +35,14 @@ import lwjgui.scene.Context;
 import lwjgui.scene.Node;
 import lwjgui.scene.layout.OpenGLPane;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import plortz.util.Vector;
 import plortz.terrain.Terrain;
 import plortz.terrain.Tile;
 import plortz.ui.UserInterface;
 import plortz.util.Camera;
+import plortz.util.MersenneTwister;
 
 /**
  * Widget showing the current terrain in 3d.
@@ -67,7 +71,8 @@ public class TerrainView3d extends Widget implements Renderer {
     private boolean  camera_controls;
     private Vector   mouse_oldpos;
     private double   camera_rotate_speed;
-
+    private int      moving_forward;
+    private int      moving_right;
     
     public TerrainView3d(UserInterface ui) {
         this.user_interface = ui;
@@ -79,13 +84,16 @@ public class TerrainView3d extends Widget implements Renderer {
         this.vao = glGenVertexArrays();
 
         this.model = new Matrix4f();
+        this.model.identity();
         this.proj = new Matrix4f();
         this.proj.setPerspective((float) Math.toRadians(45.0f), (float) 1024 / 768, 0.1f, 2000.0f);
         this.camera = new Camera();
-        this.camera.setPosition(0, -10, 1);
+        this.camera.setPosition(0, -10, 4);
         this.camera_controls     = false;
         this.camera_rotate_speed = 0.15;
         this.mouse_oldpos        = new Vector(0, 0);
+        this.moving_forward = 0;
+        this.moving_right   = 0;
         
         ui.listenOnTerrainChange(() -> {
             this.updateGeometry();
@@ -134,19 +142,18 @@ public class TerrainView3d extends Widget implements Renderer {
                 points.add(offsetx + x);
                 points.add(offsety + y);
                 points.add((float) (t.getAltitude(true) - minmax.getX()));
-                //mesh.getTexCoords().addAll(((float) x + 0.5f) / (float) terrain.getWidth(), ((float) y + 0.5f) / (float) terrain.getLength());
             }
         }
         
         this.vertex_count = (terrain.getWidth() - 1) * (terrain.getLength() - 1) * 2 * 3;
                  
-        int vertSize = 3; // vec3 in shader
-        int texSize = 2; // vec2 in shader
-        int colorSize = 4; // vec4 in shader
+        int vertSize = 3;
+        int colorSize = 4;
         int normalSize = 3;
         int size = vertSize + colorSize + normalSize; // Stride length
         int bytes = Float.BYTES; // Bytes per element (float)
-			
+
+        Random r = new MersenneTwister();
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertex_count * size);
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
@@ -160,36 +167,31 @@ public class TerrainView3d extends Widget implements Renderer {
                 int b = a + 1;
                 int c = a + terrain.getWidth();
                 int d = c + 1;
-                // Texture indices:
-                int ta = x + y * terrain.getWidth();
-                int tb = ta + 1;
-                int tc = ta + terrain.getWidth();
-                int td = tc + 1;
+                // Normal:
+                var n = this.calculateNormal(
+                        new Vector3f(0, 0, points.get(a * 3 + 2)),
+                        new Vector3f(0, 1, points.get(c * 3 + 2)),
+                        new Vector3f(1, 0, points.get(b * 3 + 2))
+                );
+                var color = new Vector3f(r.nextFloat(), r.nextFloat(), r.nextFloat());
                 // The triangles:
-                buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
-                
-                buffer.put(points.get(a * 3 + 0)).put(points.get(a * 3 + 1)).put(points.get(a * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
+                if (false) {
+                this.addPoint(buffer, points, color, n, a);
+                this.addPoint(buffer, points, color, n, c);
+                this.addPoint(buffer, points, color, n, b);
 
-                buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
-                
+                this.addPoint(buffer, points, color, n, c);
+                this.addPoint(buffer, points, color, n, d);
+                this.addPoint(buffer, points, color, n, b);
+                } else {
+                this.addPoint(buffer, points, color, n, a);
+                this.addPoint(buffer, points, color, n, b);
+                this.addPoint(buffer, points, color, n, c);
 
-                buffer.put(points.get(c * 3 + 0)).put(points.get(c * 3 + 1)).put(points.get(c * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
-                
-                buffer.put(points.get(b * 3 + 0)).put(points.get(b * 3 + 1)).put(points.get(b * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
-
-                buffer.put(points.get(d * 3 + 0)).put(points.get(d * 3 + 1)).put(points.get(d * 3 + 2));
-                buffer.put(1.0f).put(0.0f).put(0.0f).put(1.0f);
-                buffer.put(0.0f).put(0.0f).put(1.0f);
+                this.addPoint(buffer, points, color, n, b);
+                this.addPoint(buffer, points, color, n, d);
+                this.addPoint(buffer, points, color, n, c);
+                }
             }
         }
         buffer.flip();
@@ -213,10 +215,32 @@ public class TerrainView3d extends Widget implements Renderer {
         glBindVertexArray(0);
     }
     
+    private Vector3f calculateNormal(Vector3f a, Vector3f b, Vector3f c) {
+        Vector3f cMa = new Vector3f(c).sub(a);
+        Vector3f bMa = new Vector3f(b).sub(a);
+        return cMa.cross(bMa).normalize();
+    }
+    
+    private void addPoint(FloatBuffer buffer, List<Float> points, Vector3f color, Vector3f normal, int pos) {
+        buffer.put(points.get(pos * 3 + 0)).put(points.get(pos * 3 + 1)).put(points.get(pos * 3 + 2));
+        buffer.put(color.x).put(color.y).put(color.z).put(1.0f);
+        buffer.put(normal.x).put(normal.y).put(normal.z);
+    }
+    
     @Override
     public void render(Context context, int width, int height) {
+        float factor = 1.0f / 10.0f;
+        if (this.moving_forward != 0) {
+            this.camera.moveForward(3.0f * factor * (float) this.moving_forward);
+        }
+        if (this.moving_right != 0) {
+            this.camera.moveRight(1.0f * factor * (float) this.moving_right);
+        }
+        
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
 
         var terrain = this.user_interface.getTerrain();
         if(terrain == null) {
@@ -224,7 +248,7 @@ public class TerrainView3d extends Widget implements Renderer {
         }
         
         this.shader.bind();
-        shader.setMVP(this.model, this.camera.getTransformMatrix(), this.proj);
+        this.shader.setMVP(this.model, this.camera.getTransformMatrix(), this.proj);
 
         glBindVertexArray(this.vao);
         glDrawArrays(GL_TRIANGLES, 0, this.vertex_count);
@@ -340,16 +364,16 @@ public class TerrainView3d extends Widget implements Renderer {
         float factor = 1.0f / 5.0f;
         switch (event.key) {
             case GLFW.GLFW_KEY_W:
-                this.camera.moveForward(3.0f * factor);
+                this.moving_forward = 1;
                 break;
             case GLFW.GLFW_KEY_A:
-                this.camera.moveRight(-1.0f * factor);
+                this.moving_right = -1;
                 break;
             case GLFW.GLFW_KEY_S:
-                this.camera.moveForward(-3.0f * factor);
+                this.moving_forward = -1;
                 break;
             case GLFW.GLFW_KEY_D:
-                this.camera.moveRight(1.0f * factor);
+                this.moving_right = 1;
                 break;
         }
         event.consume();
@@ -361,6 +385,16 @@ public class TerrainView3d extends Widget implements Renderer {
         }
         if(!this.camera_controls) {
             return;
+        }
+        switch (event.key) {
+            case GLFW.GLFW_KEY_W:
+            case GLFW.GLFW_KEY_S:
+                this.moving_forward = 0;
+                break;
+            case GLFW.GLFW_KEY_A:
+            case GLFW.GLFW_KEY_D:
+                this.moving_right = 0;
+                break;
         }
         event.consume();
     }
@@ -377,6 +411,8 @@ public class TerrainView3d extends Widget implements Renderer {
     public void onMouseReleased(MouseEvent event) {
         //System.out.println("TerrainView3d.onMouseReleased()");
         this.camera_controls = false;
+        this.moving_forward = 0;
+        this.moving_right = 0;
         event.consume();
     }
     
