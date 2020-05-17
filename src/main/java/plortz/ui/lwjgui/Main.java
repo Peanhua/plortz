@@ -17,8 +17,6 @@
 package plortz.ui.lwjgui;
 
 import lwjgui.LWJGUIApplication;
-import lwjgui.event.listener.EventListener;
-import lwjgui.event.listener.MouseButtonListener;
 import lwjgui.scene.Scene;
 import lwjgui.scene.Window;
 import lwjgui.scene.control.ToolBar;
@@ -72,8 +70,8 @@ public class Main extends LWJGUIApplication {
     /**
      * A wrapper function to setup the static variables required by this user interface.
      * <p>
-     * The use of static variables are needed because JavaFX calls a static method,
-     * but the user interface object is already created when the JavaFX portion is initialized in this application.
+     * The use of static variables are needed because LWJGUI calls a static method,
+     * but the user interface object is already created when the LWJGUI portion is initialized in this application.
      * 
      * @param my_ui The user interface instance to use.
      */

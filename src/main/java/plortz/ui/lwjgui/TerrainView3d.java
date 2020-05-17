@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
+import lwjgui.event.ScrollEvent;
 import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -52,8 +53,6 @@ public class TerrainView3d extends Widget implements Renderer {
     private UserInterface user_interface;
 
     // The terrain size for which the current mesh is constructed for:
-    private int terrain_mesh_width;
-    private int terrain_mesh_length;
     private int vertex_count;
     private boolean dirty;
     
@@ -69,13 +68,12 @@ public class TerrainView3d extends Widget implements Renderer {
     private boolean  camera_controls;
     private Vector   mouse_oldpos;
     private double   camera_rotate_speed;
+    private int      camera_movement_speed;
     private int      moving_forward;
     private int      moving_right;
     
     public TerrainView3d(UserInterface ui) {
         this.user_interface = ui;
-        this.terrain_mesh_width  = 0;
-        this.terrain_mesh_length = 0;
 
         this.shader = new Shader("plortz/shaders/TerrainView3d");
         this.vbo = glGenBuffers();
@@ -87,11 +85,12 @@ public class TerrainView3d extends Widget implements Renderer {
         this.proj.setPerspective((float) Math.toRadians(30.0f), (float) 1024 / 768, 0.1f, 2000.0f);
         this.camera = new Camera();
         this.camera.setPosition(0, -10, 4);
-        this.camera_controls     = false;
-        this.camera_rotate_speed = 0.15;
-        this.mouse_oldpos        = new Vector(0, 0);
-        this.moving_forward = 0;
-        this.moving_right   = 0;
+        this.camera_controls       = false;
+        this.camera_rotate_speed   = 0.15;
+        this.camera_movement_speed = 3;
+        this.mouse_oldpos          = new Vector(0, 0);
+        this.moving_forward        = 0;
+        this.moving_right          = 0;
         
         ui.listenOnTerrainChange(() -> {
             this.dirty = true;
@@ -115,7 +114,8 @@ public class TerrainView3d extends Widget implements Renderer {
         pane.setOnMousePressed((event)  -> this.onMousePressed(event));
         pane.setOnMouseReleased((event) -> this.onMouseReleased(event));
         pane.setOnMouseDragged((event)  -> this.onMouseDragged(event));
-
+        pane.setOnMouseScrolled((event) -> this.onMouseScrolled(event));
+        
         return pane;
     }
 
@@ -236,7 +236,7 @@ public class TerrainView3d extends Widget implements Renderer {
     public void render(Context context, int width, int height) {
         this.updateGeometry();
         
-        float factor = 1.0f / 2.0f;
+        float factor = (float) this.camera_movement_speed / 3.0f;
         if (this.moving_forward != 0) {
             this.camera.moveForward(3.0f * factor * (float) this.moving_forward);
         }
@@ -446,4 +446,25 @@ public class TerrainView3d extends Widget implements Renderer {
         this.mouse_oldpos.set(mouse_pos);
     }
 
+    public void onMouseScrolled(ScrollEvent event) {
+        boolean changed = false;
+        if (event.y < 0.0) {
+            this.camera_movement_speed--;
+            if (this.camera_movement_speed < 1) {
+                this.camera_movement_speed = 1;
+            } else {
+                changed = true;
+            }
+        } else if (event.y > 0.0) {
+            this.camera_movement_speed++;
+            if (this.camera_movement_speed > 10) {
+                this.camera_movement_speed = 10;
+            } else {
+                changed = true;
+            }
+        }
+        if (changed) {
+            this.user_interface.showMessage("Movement speed: " + this.camera_movement_speed);
+        }
+    }
 }
