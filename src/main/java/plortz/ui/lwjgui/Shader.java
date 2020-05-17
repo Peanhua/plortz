@@ -19,11 +19,9 @@ package plortz.ui.lwjgui;
 import java.net.URL;
 import java.util.Scanner;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glGetError;
-import org.lwjgl.opengl.GL13;
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
@@ -43,6 +41,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
+import static org.lwjgl.opengl.GL20.glUniform3fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
 /**
@@ -57,25 +56,29 @@ public class Shader {
     private int view_matrix_location;
     private int projection_matrix_location;
     private int normal_matrix_location;
+    private int sun_position_location;
     private final float[] matrix_buf;
-    private int texId;
+    private final float[] sun_position;
     
     public Shader(String name) {
         this.matrix_buf = new float[4 * 4];
+        this.sun_position = new float[3];
         this.loadShaderProgram(name);
-        this.checkError();
         this.getLocations();
-        this.checkError();
-        this.checkError();
+        this.bind();
+        this.setSunPosition(1000, 0, 1000);
     }
     
-    public void bind() {
+    public final void bind() {
         glUseProgram(this.shader_program_id);
-        this.checkError();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        this.checkError();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-        this.checkError();
+        this.checkError("glUseProgram");
+    }
+    
+    private void setSunPosition(float x, float y, float z) {
+        this.sun_position[0] = x;
+        this.sun_position[1] = y;
+        this.sun_position[2] = z;
+        glUniform3fv(this.sun_position_location, this.sun_position);
     }
     
     public void setMVP(Matrix4f model, Matrix4f view, Matrix4f projection) {
@@ -87,37 +90,38 @@ public class Shader {
         n.invert();
         n.transpose();
         this.setNormalMatrix(n);
+        this.checkError("setMVP");
     }
     
     private void setModelMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(model_matrix_location, false, this.matrix_buf);
-        this.checkError();
+        this.checkError("setModelMatrix");
     }
     
     private void setViewMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(view_matrix_location, false, this.matrix_buf);
-        this.checkError();
+        this.checkError("setViewMatrix");
     }
 
     private void setProjectionMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(projection_matrix_location, false, this.matrix_buf);
-        this.checkError();
+        this.checkError("setProjectionMatrix");
     }
     
     private void setNormalMatrix(Matrix4f mat) {
         mat.get(this.matrix_buf);
         glUniformMatrix4fv(normal_matrix_location, false, this.matrix_buf);
-        this.checkError();
+        this.checkError("setNormalMatrix");
     }
 
 
-    private void checkError() {
+    private void checkError(String func) {
         var error = glGetError();
         if (error != GL_NO_ERROR) {
-            System.out.println("GL error: " + error);
+            System.out.println("GL error at " + func + ": " + error);
         }
     }
     
@@ -187,11 +191,12 @@ public class Shader {
         this.view_matrix_location       = this.getLocation("view_matrix");
         this.projection_matrix_location = this.getLocation("projection_matrix");
         this.normal_matrix_location     = this.getLocation("normal_matrix");
+        this.sun_position_location      = this.getLocation("sun_position");
     }
     
     private int getLocation(String name) {
         var loc = glGetUniformLocation(this.shader_program_id, name);
-        this.checkError();
+        this.checkError("glGetUniformLocation");
         if (loc < 0) {
             System.out.println("Failed to get location for '" + name + "'.");
         }

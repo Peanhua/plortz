@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Random;
 import lwjgui.event.KeyEvent;
 import lwjgui.event.MouseEvent;
-import lwjgui.gl.GenericShader;
 import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -86,7 +85,7 @@ public class TerrainView3d extends Widget implements Renderer {
         this.model = new Matrix4f();
         this.model.identity();
         this.proj = new Matrix4f();
-        this.proj.setPerspective((float) Math.toRadians(45.0f), (float) 1024 / 768, 0.1f, 2000.0f);
+        this.proj.setPerspective((float) Math.toRadians(30.0f), (float) 1024 / 768, 0.1f, 2000.0f);
         this.camera = new Camera();
         this.camera.setPosition(0, -10, 4);
         this.camera_controls     = false;
@@ -153,7 +152,7 @@ public class TerrainView3d extends Widget implements Renderer {
         int size = vertSize + colorSize + normalSize; // Stride length
         int bytes = Float.BYTES; // Bytes per element (float)
 
-        Random r = new MersenneTwister();
+        Random r = new MersenneTwister(0);
         FloatBuffer buffer = MemoryUtil.memAllocFloat(vertex_count * size);
         for (int y = 0; y < terrain.getLength() - 1; y++) {
             for (int x = 0; x < terrain.getWidth() - 1; x++) {
@@ -229,7 +228,7 @@ public class TerrainView3d extends Widget implements Renderer {
     
     @Override
     public void render(Context context, int width, int height) {
-        float factor = 1.0f / 10.0f;
+        float factor = 1.0f / 2.0f;
         if (this.moving_forward != 0) {
             this.camera.moveForward(3.0f * factor * (float) this.moving_forward);
         }
@@ -237,7 +236,7 @@ public class TerrainView3d extends Widget implements Renderer {
             this.camera.moveRight(1.0f * factor * (float) this.moving_right);
         }
         
-        glClearColor(0,0,0,1);
+        glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
         glCullFace(GL_BACK);
@@ -362,7 +361,6 @@ public class TerrainView3d extends Widget implements Renderer {
         if (!this.camera_controls) {
             return;
         }
-        float factor = 1.0f / 5.0f;
         switch (event.key) {
             case GLFW.GLFW_KEY_W:
                 this.moving_forward = 1;
